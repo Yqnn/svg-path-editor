@@ -1,0 +1,142 @@
+:host {
+    display: block;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+.footer {
+    text-decoration: none;
+    position: fixed;
+    left:0;
+    height:28px;
+    width: 300px;
+    bottom:0px;
+    background-color: #111111;
+    color:#AAAAAA;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    fill:#AAAAAA;
+    .mat-icon {
+        width:20px;
+        height: 20px;
+        margin:4px 8px 4px 0;
+    }
+    &:hover {
+        color:white;
+        fill:white;
+        text-decoration: underline;
+    }
+}
+
+
+/* UI */
+.left-column {
+    width:300px;
+    padding-bottom:32px;
+    margin-bottom: 28px;
+    overflow:auto;
+    background-color:#252526;
+}
+
+input.svg-value {
+    width:38px;
+    text-align: center;
+    font-size: 10px;
+    margin-left:1px;
+    margin-right:1px;
+    padding-left:1px;
+    padding-right:1px;
+}
+
+.type-token {
+    margin:0 1px;
+    font-size: 12px;
+    line-height: 20px;
+    height: 20px;
+    width: 20px;
+    text-align: center;
+    background-color:rgba(255, 128, 0, 0.5);
+    color:#c8c8c8;
+    border-style: solid;
+    border-width: 0 0 1px 0;
+    border-radius: 2px 2px 0 0;
+    border-color: #c8c8c8;
+    cursor: pointer;
+}
+.type-token-relative {
+    background-color:rgba(128, 0, 255, 0.5);
+}
+.row>.type-token {
+    flex-shrink: 0;
+}
+div.hovered {
+    background-color: #37373d;
+}
+div.dragged {
+    background-color:#094771;
+}
+
+
+
+/* Drawings */
+.drawings {
+    svg {
+        background-color:#1e1e1e;
+    }
+    path {
+        fill:rgba(255,255,255,0.25);
+        stroke:white;
+    }
+    path.hovered {
+        stroke: red;
+        fill: none;
+    }
+    path.dragged {
+        stroke: rgb(0, 174, 255);
+        fill: none;
+    }
+    line.grid {
+        stroke:#353536;
+    }
+    line.control {
+        stroke:gray;
+    }
+    line.hovered {
+        stroke:red;
+    }
+    circle {
+        cursor: pointer;
+        stroke: transparent;
+    }
+    circle.control {
+        fill:gray;
+    }
+    circle.target {
+        fill:white;
+    }
+    circle.hovered {
+        fill:red;
+    }
+    circle.dragged {
+        fill:rgb(0, 174, 255);
+    }
+    svg.preview {
+        background-color:white;
+    }
+    svg.preview path {
+        fill:black;
+        stroke:none;
+    }
+    svg.preview path.hovered {
+        stroke: red;
+        fill: none;
+    }
+    svg.preview circle,
+    svg.preview line {
+        display: none;
+    }
+}

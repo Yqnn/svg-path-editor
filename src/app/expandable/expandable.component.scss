@@ -1,0 +1,26 @@
+:host {
+    margin-bottom: 8px;
+    display: block;
+}
+div.title {
+    color:white;
+    cursor: pointer;
+    background-color: #383838;
+    margin: 0;
+    padding: 2px 8px;
+    font-size:14px;
+    font-weight: normal;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    user-select: none;
+    -webkit-user-select: none;
+    span {
+        flex-grow: 1;
+    }
+}
+
+.panel {
+    transition: max-height 200ms;
+    overflow:hidden;
+}
