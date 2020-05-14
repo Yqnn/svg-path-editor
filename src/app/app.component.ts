@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { Svg, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from './svg';
 import { Subject } from 'rxjs';
-import { bufferTime, map, filter } from 'rxjs/operators';
+import { bufferTime, map, filter, throttleTime, buffer } from 'rxjs/operators';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit {
   strokeWidth: number;
 
 
-  draggedEvt: MouseEvent;
+  draggedEvt: MouseEvent | TouchEvent;
   draggedPoint: SvgPoint;
   focusedItem: SvgItem;
   hoveredItem: SvgItem;
@@ -65,9 +65,10 @@ export class AppComponent implements AfterViewInit {
     matRegistry.addSvgIcon('github', sanitizer.bypassSecurityTrustResourceUrl('./assets/github.svg'));
 
     this.reloadPath(this.rawPath, true);
+
+    const throttler = throttleTime(50, undefined, {leading:false, trailing:true});
     this.wheel$
-      .pipe( bufferTime(50) )
-      .pipe( filter(ev => ev.length > 0) )
+      .pipe( buffer(this.wheel$.pipe(throttler)) )
       .pipe( map(ev => ({
           event: ev[0],
           deltaY: ev.reduce((acc, cur) => acc + cur.deltaY, 0)
@@ -331,10 +332,11 @@ export class AppComponent implements AfterViewInit {
     this.controlPoints = this.parsedPath.controlLocations();
   }
 
-  eventToLocation(event: MouseEvent): {x: number, y: number} {
+  eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
-    const x = this.viewPortX + (event.clientX - rect.left) * this.strokeWidth;
-    const y = this.viewPortY + (event.clientY - rect.top) * this.strokeWidth;
+    let touch = event instanceof MouseEvent ? event : event.touches[idx];
+    const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
+    const y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
     return {x, y};
   }
 
@@ -356,7 +358,7 @@ export class AppComponent implements AfterViewInit {
     this.draggedPoint = item;
   }
 
-  startDragCanvas(event: MouseEvent) {
+  startDragCanvas(event: MouseEvent | TouchEvent) {
     this.draggedEvt = event;
     this.wasCanvasDragged = false;
   }
@@ -371,7 +373,7 @@ export class AppComponent implements AfterViewInit {
     this.draggedIsNew = false;
   }
 
-  drag(event: MouseEvent) {
+  drag(event: MouseEvent | TouchEvent) {
     if (this.draggedPoint || this.draggedEvt) {
       event.stopPropagation();
       const pt = this.eventToLocation(event);
@@ -388,11 +390,35 @@ export class AppComponent implements AfterViewInit {
         this.afertModelChange();
       } else {
         this.wasCanvasDragged = true;
-        const oriPt = this.eventToLocation(this.draggedEvt);
-        this.updateViewPort(
-          this.viewPortX + (oriPt.x - pt.x), this.viewPortY + (oriPt.y - pt.y),
-          this.viewPortWidth, this.viewPortHeight
-        );
+        if (
+          window.TouchEvent
+          && this.draggedEvt instanceof TouchEvent
+          && event instanceof TouchEvent
+          && this.draggedEvt.touches.length >= 2
+          && event.touches.length >= 2)
+        {
+          // Pinch to Zoom
+          const pt2 = this.eventToLocation(event, 1);
+          const oriPt = this.eventToLocation(this.draggedEvt, 0);
+          const oriPt2 = this.eventToLocation(this.draggedEvt, 1);
+          const ptm = {x:0.5*(pt.x+pt2.x) , y:0.5*(pt.y+pt2.y)};
+          const oriPtm ={x:0.5*(oriPt.x+oriPt2.x) , y:0.5*(oriPt.y+oriPt2.y)};
+          const delta = {x: oriPtm.x - ptm.x , y: oriPtm.y - ptm.y};
+          const k =
+            Math.sqrt((oriPt.x-oriPt2.x)*(oriPt.x-oriPt2.x) + (oriPt.y-oriPt2.y)*(oriPt.y-oriPt2.y))/
+            Math.sqrt((pt.x-pt2.x)*(pt.x-pt2.x) + (pt.y-pt2.y)*(pt.y-pt2.y));
+          const w = k * this.viewPortWidth;
+          const h = k * this.viewPortHeight;
+          const x = this.viewPortX + delta.x + ((ptm.x - this.viewPortX) - k * (ptm.x - this.viewPortX));
+          const y = this.viewPortY + delta.y + ((ptm.y - this.viewPortY) - k * (ptm.y - this.viewPortY));
+          this.updateViewPort(x, y, w, h);
+        } else {
+          const oriPt = this.eventToLocation(this.draggedEvt);
+          this.updateViewPort(
+            this.viewPortX + (oriPt.x - pt.x), this.viewPortY + (oriPt.y - pt.y),
+            this.viewPortWidth, this.viewPortHeight
+          );
+        }
         this.draggedEvt = event;
       }
     }
