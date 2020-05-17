@@ -1,213 +1,222 @@
-<div style="display:flex;flex-direction:row;height: 100%;">
-    <div class="left-column" cdk-scrollable>
-        
-        <app-expandable panelTitle="Path" [opened]="true">
-            <div class="row">
-                <div class="input-block" style="flex-grow:1"> 
-                    <label class="opaque">Path</label>
-                    <textarea
-                        [ngModel]="rawPath"
-                        (ngModelChange)="reloadPath($event, true)"
-                        class="app-input"
-                        style="height:100px;"
-                        placeholder="Paste any SVG path here"
-                    ></textarea>
+<div style="display:flex;flex-direction:row;height: 100%;" @leftColumnParent>
+    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="refreshCanvasSize()" style="width:300px">
+        <div class="left-column" cdk-scrollable>  
+            <app-expandable panelTitle="Path" [opened]="true">
+                <div class="row">
+                    <div class="input-block" style="flex-grow:1"> 
+                        <label class="opaque">Path</label>
+                        <textarea
+                            [ngModel]="rawPath"
+                            (ngModelChange)="reloadPath($event, true)"
+                            class="app-input"
+                            style="height:100px;"
+                            placeholder="Paste any SVG path here"
+                        ></textarea>
+                    </div>
                 </div>
-            </div>
-            <div style="text-align: center;">
-                <button mat-mini-fab
-                    color="primary"
-                    [matMenuTriggerFor]="appCreate"
-                    [matMenuTriggerData]="{item:null, idx:-1}"
-                    matTooltip="Append new command"
-                    matTooltipPosition="right"
+                <div style="text-align: center;">
+                    <button mat-mini-fab
+                        color="primary"
+                        style="font-size: 1px; transform: none;"
+                        [matMenuTriggerFor]="appCreate"
+                        [matMenuTriggerData]="{item:null, idx:-1}"
+                        matTooltip="Append new command"
+                        matTooltipPosition="right"
+                    >
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>            
+            </app-expandable>
+
+            <app-expandable panelTitle="Configuration" [opened]="true">
+                <div class="row">
+                    <div class="input-block">
+                        <label>X</label>
+                        <input
+                            class="app-input"
+                            [ngModel]="viewPortX"
+                            (ngModelChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)" 
+                        >
+                    </div>
+                    <div class="input-block">
+                        <label>Y</label>
+                        <input
+                            class="app-input"
+                            [ngModel]="viewPortY"
+                            (ngModelChange)="updateViewPort(viewPortX, $event, viewPortWidth, viewPortHeight)"
+                        >
+                    </div>
+                    <div class="input-block">
+                        <label>Width</label>
+                        <input
+                            class="app-input"
+                            [ngModel]="viewPortWidth"
+                            (ngModelChange)="updateViewPort(viewPortX, viewPortY, $event, null)" 
+                        >
+                    </div>
+                    <div class="input-block">
+                        <label>Height</label>
+                        <input
+                            class="app-input"
+                            [ngModel]="viewPortHeight"
+                            (ngModelChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
+                        >
+                    </div>
+                    <button
+                        mat-flat-button
+                        (click)="zoomAuto()"
+                        matTooltip="Automatically set view port"
+                        matTooltipPosition="right"
+                    >AUTO</button>
+                </div>
+                <div class="row">
+                    <div class="input-block" style="flex-grow: 1;"
+                        matTooltip="Number of decimals to keep when a point is dragged"
+                        matTooltipPosition="right"
+                    >
+                        <label>Decimals on mouse drag</label>
+                        <input [(ngModel)]="decimals" class="app-input">
+                    </div>
+                </div>
+                <div class="row">
+                    <mat-checkbox [(ngModel)]="preview">Preview</mat-checkbox>
+                </div>
+            </app-expandable>
+
+            <app-expandable panelTitle="Path Operations" [opened]="true">
+                <div class="row">
+                    <div class="input-block" style="flex:1">
+                        <label>Scale X</label>
+                        <input
+                            [(ngModel)]="scaleX"
+                            class="app-input"
+                        >
+                    </div>
+                    <div class="input-block" style="flex:1">
+                        <label>Scale Y</label>
+                        <input [(ngModel)]="scaleY" class="app-input">
+                    </div>
+                    <button
+                        mat-flat-button
+                        (click)="scale(scaleX, scaleY)"
+                        style="flex:1"
+                        matTooltip="Scale the full path with provided values"
+                        matTooltipPosition="right"
+                    >Scale</button>
+                </div>
+
+                <div class="row">
+                    <div class="input-block" style="flex:1">
+                        <label>Translate X</label>
+                        <input [(ngModel)]="translateX" class="app-input">
+                    </div>
+                    <div class="input-block" style="flex:1">
+                        <label>Translate Y</label>
+                        <input [(ngModel)]="translateY" class="app-input">
+                    </div>
+                    <button
+                        mat-flat-button
+                        (click)="translate(translateX, translateY)"
+                        style="flex:1"
+                        matTooltip="Translate the full path with provided values"
+                        matTooltipPosition="right"
+                    >Translate</button>
+                </div>
+                
+                <div class="row">
+                    <div class="input-block" style="flex:2">
+                        <label>Number of decimals</label>
+                        <input [(ngModel)]="roundValuesDecimals" class="app-input">
+                    </div>
+                    <button
+                        mat-flat-button 
+                        (click)="roundValues(roundValuesDecimals)"
+                        style="flex:1"
+                        matTooltip="Round all values, input the number of decimals to keep"
+                        matTooltipPosition="right"
+                    >Round</button>
+                </div>
+                <div class="row">
+                    <button mat-flat-button 
+                        (click)="setRelative(true)"
+                        matTooltip="Convert all commands to relative"
+                        style="flex:1"
+                    >Convert to relative</button>
+                    <button mat-flat-button 
+                        (click)="setRelative(false)"
+                        matTooltip="Convert all commands to absolute"
+                        style="flex:1"
+                    >Convert to absolute</button>
+                </div>
+            </app-expandable>
+
+
+            <app-expandable panelTitle="Commands" [opened]="true">
+                <div *ngFor="let item of parsedPath.path; let j=index" 
+                    (mouseenter)="hoveredItem=item"
+                    (mouseleave)="hoveredItem=null"
+                    [ngClass]="{
+                        hovered:item===hoveredItem && !draggedPoint,
+                        dragged:(draggedPoint && item===draggedPoint.itemReference) || (focusedItem === item)
+                    }"
+                    class="row"
+                    style="padding-top:1px; padding-bottom:1px;"
+                    (click)="focusedItem=item"
                 >
-                    <mat-icon>add</mat-icon>
-                </button>
-            </div>            
-        </app-expandable>
+                    <div
+                        class="type-token"
+                        [ngClass]="{'type-token-relative':item.relative}"
+                        style="user-select: none;-webkit-user-select: none;"
+                        (click)="item.setRelative(!item.relative); afertModelChange();"
+                    >{{item.getType()}}</div>
+                    <ng-container *ngFor="let value of item.values; let i = index; trackBy:trackByIndex">
+                        <mat-checkbox *ngIf="item.getType().toLowerCase()==='a' && (i==3 || i==4)"
+                            [ngModel]="value"
+                            (ngModelChange)="setValue(item,i,$event?'1':'0');"
+                            (focus)="focusedItem=item"
+                            class="small-checkbox"
+                            matTooltipClass="app-tooltip"
+                            [matTooltip]="getTooltip(item, i)"
+                        ></mat-checkbox>
+                        <input *ngIf="!(item.getType().toLowerCase()==='a' && (i==3 || i==4))"
+                            type="text"
+                            [ngModel]="formatNumber(value)" 
+                            (ngModelChange)="setValue(item,i,$event);"
+                            class="svg-value app-input"
+                            (focus)="focusedItem=item"
+                            matTooltipClass="app-tooltip"
+                            [matTooltip]="getTooltip(item, i)"
+                        >
+                    </ng-container>
 
-        <app-expandable panelTitle="Configuration" [opened]="true">
-            <div class="row">
-                <div class="input-block">
-                    <label>X</label>
-                    <input
-                        class="app-input"
-                        [ngModel]="viewPortX"
-                        (ngModelChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)" 
+                    <div style="flex:1"></div>
+                    <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{item:item, idx:j}"
                     >
+                        <mat-icon svgIcon="more"></mat-icon>
+                    </button>
                 </div>
-                <div class="input-block">
-                    <label>Y</label>
-                    <input
-                        class="app-input"
-                        [ngModel]="viewPortY"
-                        (ngModelChange)="updateViewPort(viewPortX, $event, viewPortWidth, viewPortHeight)"
-                    >
-                </div>
-                <div class="input-block">
-                    <label>Width</label>
-                    <input
-                        class="app-input"
-                        [ngModel]="viewPortWidth"
-                        (ngModelChange)="updateViewPort(viewPortX, viewPortY, $event, null)" 
-                    >
-                </div>
-                <div class="input-block">
-                    <label>Height</label>
-                    <input
-                        class="app-input"
-                        [ngModel]="viewPortHeight"
-                        (ngModelChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
-                    >
-                </div>
-                <button
-                    mat-flat-button
-                    (click)="zoomAuto()"
-                    matTooltip="Automatically set view port"
-                    matTooltipPosition="right"
-                >AUTO</button>
-            </div>
-            <div class="row">
-                <div class="input-block" style="flex-grow: 1;"
-                    matTooltip="Number of decimals to keep when a point is dragged"
-                    matTooltipPosition="right"
-                >
-                    <label>Decimals on mouse drag</label>
-                    <input [(ngModel)]="decimals" class="app-input">
-                </div>
-            </div>
-            <div class="row">
-                <mat-checkbox [(ngModel)]="preview">Preview</mat-checkbox>
-            </div>
-        </app-expandable>
-
-        <app-expandable panelTitle="Path Operations" [opened]="true">
-            <div class="row">
-                <div class="input-block" style="flex:1">
-                    <label>Scale X</label>
-                    <input
-                        [(ngModel)]="scaleX"
-                        class="app-input"
-                    >
-                </div>
-                <div class="input-block" style="flex:1">
-                    <label>Scale Y</label>
-                    <input [(ngModel)]="scaleY" class="app-input">
-                </div>
-                <button
-                    mat-flat-button
-                    (click)="scale(scaleX, scaleY)"
-                    style="flex:1"
-                    matTooltip="Scale the full path with provided values"
-                    matTooltipPosition="right"
-                >Scale</button>
-            </div>
-
-            <div class="row">
-                <div class="input-block" style="flex:1">
-                    <label>Translate X</label>
-                    <input [(ngModel)]="translateX" class="app-input">
-                </div>
-                <div class="input-block" style="flex:1">
-                    <label>Translate Y</label>
-                    <input [(ngModel)]="translateY" class="app-input">
-                </div>
-                <button
-                    mat-flat-button
-                    (click)="translate(translateX, translateY)"
-                    style="flex:1"
-                    matTooltip="Translate the full path with provided values"
-                    matTooltipPosition="right"
-                >Translate</button>
-            </div>
-            
-            <div class="row">
-                <div class="input-block" style="flex:2">
-                    <label>Number of decimals</label>
-                    <input [(ngModel)]="roundValuesDecimals" class="app-input">
-                </div>
-                <button
-                    mat-flat-button 
-                    (click)="roundValues(roundValuesDecimals)"
-                    style="flex:1"
-                    matTooltip="Round all values, input the number of decimals to keep"
-                    matTooltipPosition="right"
-                >Round</button>
-            </div>
-            <div class="row">
-                <button mat-flat-button 
-                    (click)="setRelative(true)"
-                    matTooltip="Convert all commands to relative"
-                    style="flex:1"
-                >Convert to relative</button>
-                <button mat-flat-button 
-                    (click)="setRelative(false)"
-                    matTooltip="Convert all commands to absolute"
-                    style="flex:1"
-                >Convert to absolute</button>
-            </div>
-        </app-expandable>
-
-
-        <app-expandable panelTitle="Commands" [opened]="true">
-            <div *ngFor="let item of parsedPath.path; let j=index" 
-                (mouseenter)="hoveredItem=item"
-                (mouseleave)="hoveredItem=null"
-                [ngClass]="{
-                    hovered:item===hoveredItem && !draggedPoint,
-                    dragged:(draggedPoint && item===draggedPoint.itemReference) || (focusedItem === item)
-                }"
-                class="row"
-                style="padding-top:1px; padding-bottom:1px;"
-                (click)="focusedItem=item"
-            >
-                <div
-                    class="type-token"
-                    [ngClass]="{'type-token-relative':item.relative}"
-                    style="user-select: none;-webkit-user-select: none;"
-                    (click)="item.setRelative(!item.relative); afertModelChange();"
-                >{{item.getType()}}</div>
-                <ng-container *ngFor="let value of item.values; let i = index; trackBy:trackByIndex">
-                    <mat-checkbox *ngIf="item.getType().toLowerCase()==='a' && (i==3 || i==4)"
-                        [ngModel]="value"
-                        (ngModelChange)="setValue(item,i,$event?'1':'0');"
-                        (focus)="focusedItem=item"
-                        class="small-checkbox"
-                        matTooltipClass="app-tooltip"
-                        [matTooltip]="getTooltip(item, i)"
-                    ></mat-checkbox>
-                    <input *ngIf="!(item.getType().toLowerCase()==='a' && (i==3 || i==4))"
-                        type="text"
-                        [ngModel]="formatNumber(value)" 
-                        (ngModelChange)="setValue(item,i,$event);"
-                        class="svg-value app-input"
-                        (focus)="focusedItem=item"
-                        matTooltipClass="app-tooltip"
-                        [matTooltip]="getTooltip(item, i)"
-                    >
-                </ng-container>
-
-                <div style="flex:1"></div>
-                <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{item:item, idx:j}"
-                >
-                    <mat-icon svgIcon="more"></mat-icon>
-                </button>
-            </div>
-        </app-expandable>
+            </app-expandable>
+        </div>
     </div>
     <div style="flex:1; align-self:stretch;position: relative;overflow:hidden" class="drawings">
-        <button mat-mini-fab *ngIf="!draggedPoint && focusedItem && !preview"
+        <button mat-mini-fab *ngIf="(!draggedPoint && focusedItem && !preview) || parsedPath.path.length===0"
             color="primary"
-            style="position: absolute;"
+            class="add-button"
             [ngStyle]="{
-                'left': (focusedItem.targetLocation().x-viewPortX)/strokeWidth+'px',
-                'top': (focusedItem.targetLocation().y-viewPortY)/strokeWidth+'px'
+                'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-viewPortX)/strokeWidth+'px',
+                'top': ((focusedItem ? focusedItem.targetLocation().y : 0)-viewPortY)/strokeWidth+'px'
             }"
             [matMenuTriggerFor]="appCreate"
             [matMenuTriggerData]="{item:focusedItem, idx:-1}"
         >
             <mat-icon>add</mat-icon>
+        </button>
+
+        <button mat-raised-button
+            style="position: absolute; left:0; top:8px; border-radius: 0; min-width:16px; padding:8px 2px"
+            (click)="toggleLeftPanel()"
+        >
+            <mat-icon>{{isLeftPanelOpened?'arrow_left':'arrow_right'}}</mat-icon>
         </button>
 
         <svg [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight"
@@ -293,7 +302,7 @@
                         [attr.r]="3*strokeWidth"
                         (mousedown)="startDrag(loc);$event.stopPropagation()"
                         (touchstart)="startDrag(loc);$event.preventDefault();$event.stopPropagation()"
-                        [attr.stroke-width]="5*strokeWidth"
+                        [attr.stroke-width]="12*strokeWidth"
                         (mouseenter)="hoveredItem=loc.itemReference; $event.stopPropagation()"
                         (mouseleave)="hoveredItem=null" 
                         [ngClass]="{
@@ -311,9 +320,9 @@
                         [attr.r]="3*strokeWidth"
                         (mousedown)="startDrag(loc);$event.stopPropagation()"
                         (touchstart)="startDrag(loc);$event.preventDefault();$event.stopPropagation()"
-                        [attr.stroke-width]="5*strokeWidth"
-                        (mouseenter)="hoveredItem=loc.itemReference;  $event.stopPropagation()"
-                        (mouseleave)="hoveredItem=null" 
+                        [attr.stroke-width]="12*strokeWidth"
+                        (mouseenter)="hoveredItem=loc.itemReference;  $event.stopPropagation();x(true,loc)"
+                        (mouseleave)="hoveredItem=null;x(false,loc)" 
                         [ngClass]="{
                             hovered:loc.itemReference===hoveredItem && !draggedPoint,
                             dragged:loc.itemReference===focusedItem
@@ -326,7 +335,7 @@
 </div>
 
 
-<a class="footer" href="https://github.com/Yqnn/svg-path-editor" target="_blank">
+<a *ngIf="isLeftPanelOpened"  class="footer" href="https://github.com/Yqnn/svg-path-editor" target="_blank">
     <mat-icon svgIcon="github"></mat-icon> Bug reports &amp; feedback
 </a>
 

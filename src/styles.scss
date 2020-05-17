@@ -4,12 +4,18 @@ html {
     scrollbar-color: #565656 #393939;
     scrollbar-width: thin;
     color:white;
+    background-color: #1e1e1e;
 }
 html, body {
     margin:0;
     padding:0;
     height: 100%;
     overflow: hidden;
+    /* Following lines could prevent elastic scrolling in mobile Safari,
+     * but deteriorates performances a lot:  * /
+    width:100%;
+    position: fixed;
+    */
 }
   
 ::-webkit-scrollbar {

@@ -37,9 +37,9 @@
 .left-column {
     width:300px;
     padding-bottom:32px;
-    margin-bottom: 28px;
     overflow:auto;
     background-color:#252526;
+    height: calc(100% - 28px);
 }
 
 input.svg-value {
@@ -84,6 +84,15 @@ div.dragged {
 
 /* Drawings */
 .drawings {
+    &:hover .add-button {
+        display: block;
+    }
+    .add-button {
+        display: none;
+        position: absolute;
+        font-size: 1px;
+    }
+
     svg {
         background-color:#1e1e1e;
     }
