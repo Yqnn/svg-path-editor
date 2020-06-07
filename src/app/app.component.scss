@@ -80,8 +80,15 @@ div.dragged {
     background-color:#094771;
 }
 
+div.row.snap-option.active input,
+div.row.snap-option.active label {
+    color: #737373;
+}
 
-
+div.row.snap-option.active input {
+    background: #333;
+    border-color: transparent;
+ }
 
 /* Drawings */
 .drawings {

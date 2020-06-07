@@ -48,6 +48,7 @@ export class AppComponent implements AfterViewInit {
   preview = false;
   showTicks = false;
   minifyOutput = false;
+  snapToGrid = true;
   tickInterval = 5;
   roundValuesDecimals = 1;
 
@@ -56,7 +57,7 @@ export class AppComponent implements AfterViewInit {
   scaleY = 1;
   translateX = 0;
   translateY = 0;
-  decimals = 0;
+  decimalPrecision = 3;
 
   // Canvas Data:
   canvasWidth = 100;
@@ -108,6 +109,10 @@ export class AppComponent implements AfterViewInit {
       }
     }
   }
+
+  get decimals() {
+    return  this.snapToGrid ? 0 : this.decimalPrecision;
+ }
 
   ngAfterViewInit() {
     setTimeout(() => {
