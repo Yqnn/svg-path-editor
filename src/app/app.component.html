@@ -81,6 +81,15 @@
                 <div class="row">
                     <mat-checkbox [(ngModel)]="preview">Preview</mat-checkbox>
                 </div>
+                <div class="row tick-options">
+                    <mat-checkbox [(ngModel)]="showTicks">Show Ticks</mat-checkbox>
+                    <div class="input-block">
+                        <label>Interval</label>
+                        <input class="app-input" [(ngModel)]="tickInterval" >
+                    </div>
+
+                </div>
+
             </app-expandable>
 
             <app-expandable panelTitle="Path Operations" [opened]="true">
@@ -252,14 +261,27 @@
                 />
                 <line *ngFor="let x of xGrid; trackBy:trackByIndex"
                     class="grid"
+                    [ngClass]="{'tick': showTicks && x % tickInterval === 0 }"
                     [attr.x1]="x"
                     [attr.y1]="viewPortY"
                     [attr.x2]="x"
                     [attr.y2]="viewPortY + viewPortHeight"
                     [attr.stroke-width]="strokeWidth"
                 />
+
+                <ng-container *ngIf="!preview && showTicks">
+                    <ng-container *ngFor="let y of yGrid; trackBy:trackByIndex">
+                        <text class="tick" *ngIf="y % tickInterval ==  0" x="-0.15" [attr.y]="y - 0.15">{{ y }}</text>
+                    </ng-container>
+
+                    <ng-container *ngFor="let x of xGrid; trackBy:trackByIndex">
+                        <text class="tick" *ngIf="x != 0 && x % tickInterval == 0" y="-0.15" [attr.x]="x - 0.15">{{ x }}</text>
+                    </ng-container>
+                </ng-container>
+
                 <line *ngFor="let y of yGrid; trackBy:trackByIndex"
                     class="grid"
+                    [ngClass]="{'tick': showTicks && y % tickInterval === 0 }"
                     [attr.x1]="viewPortX"
                     [attr.y1]="y"
                     [attr.x2]="viewPortX + viewPortWidth"

@@ -80,6 +80,16 @@ div.dragged {
     background-color:#094771;
 }
 
+div.row.tick-options {
+    display: flex;
+    justify-content: space-between;
+}
+
+div.row.tick-options input {
+    width: 80px;
+}
+
+
 
 
 /* Drawings */
@@ -111,6 +121,11 @@ div.dragged {
     line.grid {
         stroke:#353536;
     }
+
+    line.grid.tick {
+        stroke: #454545;
+    }
+
     line.control {
         stroke:gray;
     }
@@ -148,4 +163,17 @@ div.dragged {
     svg.preview line {
         display: none;
     }
+
+    text.tick {
+        fill: #595959;
+        text-anchor: end;
+        font-size: 0.7px;
+        /* Prevent accidental selection of axis markers on drag */
+        cursor: default;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
 }
