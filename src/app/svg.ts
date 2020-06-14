@@ -152,8 +152,8 @@ export abstract class SvgItem {
     public resetControlPoints(previousTarget: SvgItem) {
     }
 
-    public translate(x: number, y: number) {
-        if (!this.relative) {
+    public translate(x: number, y: number, force = false) {
+        if (!this.relative || force) {
             this.values.forEach( (val, idx) => {
                 this.values[idx] = val + (idx % 2 === 0 ? x : y);
             });
@@ -363,7 +363,7 @@ class HorizontalLineTo extends SvgItem {
 }
 class VerticalLineTo extends SvgItem {
     static readonly key = 'V';
-    public translate(x: number, y: number) {
+    public translate(x: number, y: number, force = false) {
         if (!this.relative) {
             this.values[0] += y;
         }
@@ -387,7 +387,7 @@ class VerticalLineTo extends SvgItem {
 }
 class EllipticalArcTo extends SvgItem {
     static readonly key = 'A';
-    public translate(x: number, y: number) {
+    public translate(x: number, y: number, force = false) {
         if (!this.relative) {
             this.values[5] += x;
             this.values[6] += y;
@@ -418,7 +418,7 @@ class EllipticalArcTo extends SvgItem {
         this.values[6] *= ky;
 
         // New sweep flag
-        this.values[4] = kx*ky >= 0 ? this.values[4] : 1-this.values[4];
+        this.values[4] = kx * ky >= 0 ? this.values[4] : 1 - this.values[4];
     }
     public refreshAbsolutePoints(origin: Point, previous: SvgItem) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
@@ -441,8 +441,8 @@ export class Svg {
     }
 
     translate(dx: number, dy: number): Svg {
-        this.path.forEach( (it) => {
-            it.translate(dx, dy);
+        this.path.forEach( (it, idx) => {
+            it.translate(dx, dy, idx === 0);
         });
         this.refreshAbsolutePositions();
         return this;

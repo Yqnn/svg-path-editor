@@ -84,7 +84,7 @@ export class AppComponent implements AfterViewInit {
 
     this.reloadPath(this.rawPath, true);
 
-    const throttler = throttleTime(50, undefined, {leading:false, trailing:true});
+    const throttler = throttleTime(50, undefined, {leading: false, trailing: true});
     this.wheel$
       .pipe( buffer(this.wheel$.pipe(throttler)) )
       .pipe( map(ev => ({
@@ -356,7 +356,7 @@ export class AppComponent implements AfterViewInit {
 
   eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
-    let touch = event instanceof MouseEvent ? event : event.touches[idx];
+    const touch = event instanceof MouseEvent ? event : event.touches[idx];
     const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
     const y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
     return {x, y};
@@ -402,7 +402,7 @@ export class AppComponent implements AfterViewInit {
     this.draggedPoint = item;
   }
 
-  x(enter:boolean, el:any) {
+  x(enter: boolean, el: any) {
     console.log(enter, el);
   }
 
