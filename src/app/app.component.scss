@@ -163,17 +163,11 @@ div.row.tick-options input {
     svg.preview line {
         display: none;
     }
-
     text.tick {
         fill: #595959;
         text-anchor: end;
-        font-size: 0.7px;
         /* Prevent accidental selection of axis markers on drag */
         cursor: default;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
         user-select: none;
     }
-
 }

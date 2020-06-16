@@ -271,11 +271,11 @@
 
                 <ng-container *ngIf="!preview && showTicks">
                     <ng-container *ngFor="let y of yGrid; trackBy:trackByIndex">
-                        <text class="tick" *ngIf="y % tickInterval ==  0" x="-0.15" [attr.y]="y - 0.15">{{ y }}</text>
+                        <text class="tick" *ngIf="y % tickInterval ===  0" [attr.x]="-4*strokeWidth" [attr.y]="y - 4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}" >{{ y }}</text>
                     </ng-container>
 
                     <ng-container *ngFor="let x of xGrid; trackBy:trackByIndex">
-                        <text class="tick" *ngIf="x != 0 && x % tickInterval == 0" y="-0.15" [attr.x]="x - 0.15">{{ x }}</text>
+                        <text class="tick" *ngIf="x != 0 && x % tickInterval === 0" [attr.x]="x - 4*strokeWidth" [attr.y]="-4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}">{{ x }}</text>
                     </ng-container>
                 </ng-container>
 
