@@ -41,6 +41,8 @@ export class AppComponent implements AfterViewInit {
   viewPortWidth = 30;
   viewPortHeight = 30;
   preview = false;
+  showTicks = false;
+  tickInterval = 5;
   roundValuesDecimals = 1;
 
   //  Path operations panel inputs:
