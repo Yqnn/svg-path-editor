@@ -32,8 +32,13 @@ export class AppComponent implements AfterViewInit {
   controlPoints: SvgControlPoint[] = [];
 
   // Raw path:
-  rawPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1`;
+  _rawPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1`;
   invalidSyntax = false;
+
+  // Undo/redo
+  history: string[] = [];
+  historyCursor = -1;
+  historyDisabled = false;
 
   // Configuration panel inputs:
   viewPortX = 0;
@@ -107,6 +112,54 @@ export class AppComponent implements AfterViewInit {
     window.addEventListener('resize', () => {
       this.refreshCanvasSize();
     });
+  }
+
+  get rawPath(): string {
+    return this._rawPath;
+  }
+  set rawPath(value: string) {
+      this._rawPath = value;
+      this.pushHistory();
+  }
+
+  setHistoryDisabled(value: boolean) {
+    this.historyDisabled = value;
+    if (!value) {
+      this.pushHistory();
+    }
+  }
+
+  pushHistory() {
+    if (!this.historyDisabled && this.rawPath !== this.history[this.historyCursor]) {
+      this.historyCursor ++;
+      this.history.splice(this.historyCursor, this.history.length - this.historyCursor, this.rawPath);
+    }
+  }
+
+  canUndo(): boolean {
+    return this.historyCursor > 0;
+  }
+
+  undo() {
+    if (this.canUndo()) {
+      this.historyDisabled = true;
+      this.historyCursor --;
+      this.reloadPath(this.history[this.historyCursor]);
+      this.historyDisabled = false;
+    }
+  }
+
+  canRedo(): boolean {
+    return this.historyCursor < this.history.length - 1;
+  }
+
+  redo() {
+    if (this.canRedo()) {
+      this.historyDisabled = true;
+      this.historyCursor ++;
+      this.reloadPath(this.history[this.historyCursor]);
+      this.historyDisabled = false;
+    }
   }
 
   refreshCanvasSize() {
@@ -191,6 +244,7 @@ export class AppComponent implements AfterViewInit {
         }
         this.parsedPath.insert(newItem, after);
       }
+      this.setHistoryDisabled(true);
       this.afertModelChange();
 
       this.focusedItem = newItem;
@@ -353,7 +407,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   toggleLeftPanel() {
-    this.isLeftPanelOpened=!this.isLeftPanelOpened;
+    this.isLeftPanelOpened = !this.isLeftPanelOpened;
   }
 
   eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
@@ -375,13 +429,13 @@ export class AppComponent implements AfterViewInit {
       const pt2 = this.eventToLocation(event, 1);
       const oriPt = this.eventToLocation(previousEvent, 0);
       const oriPt2 = this.eventToLocation(previousEvent, 1);
-      const ptm = {x:0.5*(pt.x+pt2.x) , y:0.5*(pt.y+pt2.y)};
-      const oriPtm ={x:0.5*(oriPt.x+oriPt2.x) , y:0.5*(oriPt.y+oriPt2.y)};
+      const ptm = {x: 0.5 * (pt.x + pt2.x) , y: 0.5 * (pt.y + pt2.y)};
+      const oriPtm = {x: 0.5 * (oriPt.x + oriPt2.x) , y: 0.5 * (oriPt.y + oriPt2.y)};
       const delta = {x: oriPtm.x - ptm.x , y: oriPtm.y - ptm.y};
       const k =
-        Math.sqrt((oriPt.x-oriPt2.x)*(oriPt.x-oriPt2.x) + (oriPt.y-oriPt2.y)*(oriPt.y-oriPt2.y))/
-        Math.sqrt((pt.x-pt2.x)*(pt.x-pt2.x) + (pt.y-pt2.y)*(pt.y-pt2.y));
-      return {zoom:k, delta, center:ptm};
+        Math.sqrt((oriPt.x - oriPt2.x) * (oriPt.x - oriPt2.x) + (oriPt.y - oriPt2.y) * (oriPt.y - oriPt2.y)) /
+        Math.sqrt((pt.x - pt2.x) * (pt.x - pt2.x) + (pt.y - pt2.y) * (pt.y - pt2.y));
+      return {zoom: k, delta, center: ptm};
     }
     return null;
   }
@@ -397,15 +451,12 @@ export class AppComponent implements AfterViewInit {
   }
 
   startDrag(item: SvgPoint ) {
+    this.setHistoryDisabled(true);
     if (item.itemReference.getType().toLowerCase() === 'z') {
       return;
     }
     this.focusedItem = item.itemReference;
     this.draggedPoint = item;
-  }
-
-  x(enter: boolean, el: any) {
-    console.log(enter, el);
   }
 
   startDragCanvas(event: MouseEvent | TouchEvent) {
@@ -414,6 +465,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   stopDrag() {
+    if (this.draggedPoint && this.draggedEvt) {
+      this.drag(this.draggedEvt);
+    }
+    this.setHistoryDisabled(false);
+
     if (!this.draggedPoint && !this.wasCanvasDragged) {
       // unselect action
       this.focusedItem = null;

@@ -11,6 +11,8 @@
                             class="app-input"
                             style="height:100px;"
                             placeholder="Paste any SVG path here"
+                            (focus)="setHistoryDisabled(true)"
+                            (blur)="setHistoryDisabled(false)"
                         ></textarea>
                     </div>
                 </div>
@@ -228,6 +230,27 @@
             <mat-icon>{{isLeftPanelOpened?'arrow_left':'arrow_right'}}</mat-icon>
         </button>
 
+        <button mat-mini-fab
+            color="basic"
+            style="font-size: 1px; transform: none;position: absolute; right:56px; top:8px;"
+            matTooltip="Undo"
+            matTooltipPosition="below"
+            (click)="undo()"
+            [disabled]="!canUndo()"
+        >
+            <mat-icon>undo</mat-icon>
+        </button>
+        <button mat-mini-fab
+            color="basic"
+            style="font-size: 1px; transform: none;position: absolute; right:8px; top:8px;"
+            matTooltip="Redo"
+            matTooltipPosition="below"
+            (click)="redo()"
+            [disabled]="!canRedo()"
+        >
+            <mat-icon>redo</mat-icon>
+        </button>
+
         <svg [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight"
             [ngClass]="{preview:preview}"
             xmlns="http://www.w3.org/2000/svg"
@@ -343,8 +366,8 @@
                         (mousedown)="startDrag(loc);$event.stopPropagation()"
                         (touchstart)="startDrag(loc);$event.preventDefault();$event.stopPropagation()"
                         [attr.stroke-width]="12*strokeWidth"
-                        (mouseenter)="hoveredItem=loc.itemReference;  $event.stopPropagation();x(true,loc)"
-                        (mouseleave)="hoveredItem=null;x(false,loc)" 
+                        (mouseenter)="hoveredItem=loc.itemReference;  $event.stopPropagation()"
+                        (mouseleave)="hoveredItem=null" 
                         [ngClass]="{
                             hovered:loc.itemReference===hoveredItem && !draggedPoint,
                             dragged:loc.itemReference===focusedItem
