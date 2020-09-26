@@ -80,94 +80,17 @@ div.dragged {
     background-color:#094771;
 }
 
-div.row.tick-options {
-    display: flex;
-    justify-content: space-between;
-}
-
-div.row.tick-options input {
-    width: 80px;
-}
-
 
 
 
 /* Drawings */
 .drawings {
-    &:hover .add-button {
+    &:hover .add-button, .add-button.opened {
         display: block;
     }
     .add-button {
         display: none;
         position: absolute;
         font-size: 1px;
-    }
-
-    svg {
-        background-color:#1e1e1e;
-    }
-    path {
-        fill:rgba(255,255,255,0.25);
-        stroke:white;
-    }
-    path.hovered {
-        stroke: red;
-        fill: none;
-    }
-    path.dragged {
-        stroke: rgb(0, 174, 255);
-        fill: none;
-    }
-    line.grid {
-        stroke:#353536;
-    }
-
-    line.grid.tick {
-        stroke: #454545;
-    }
-
-    line.control {
-        stroke:gray;
-    }
-    line.hovered {
-        stroke:red;
-    }
-    circle {
-        cursor: pointer;
-        stroke: transparent;
-    }
-    circle.control {
-        fill:gray;
-    }
-    circle.target {
-        fill:white;
-    }
-    circle.hovered {
-        fill:red;
-    }
-    circle.dragged {
-        fill:rgb(0, 174, 255);
-    }
-    svg.preview {
-        background-color:white;
-    }
-    svg.preview path {
-        fill:black;
-        stroke:none;
-    }
-    svg.preview path.hovered {
-        stroke: red;
-        fill: none;
-    }
-    svg.preview circle,
-    svg.preview line {
-        display: none;
-    }
-    text.tick {
-        fill: #595959;
-        text-anchor: end;
-        /* Prevent accidental selection of axis markers on drag */
-        cursor: default;
-        user-select: none;
     }
 }

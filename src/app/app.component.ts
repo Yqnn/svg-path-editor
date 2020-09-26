@@ -1,10 +1,9 @@
-import { Component, ViewChild, ElementRef, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, AfterViewInit, HostBinding, HostListener } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Svg, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from './svg';
-import { Subject } from 'rxjs';
-import { map, throttleTime, buffer } from 'rxjs/operators';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+
 
 @Component({
   selector: 'app-root',
@@ -22,10 +21,6 @@ import { DomSanitizer } from '@angular/platform-browser';
   ]
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('canvas') canvas: ElementRef;
-
-  wheel$ = new Subject<WheelEvent>();
-
   // Svg path data model:
   parsedPath: Svg;
   targetPoints: SvgPoint[] = [];
@@ -47,6 +42,7 @@ export class AppComponent implements AfterViewInit {
   viewPortHeight = 30;
   preview = false;
   showTicks = false;
+  minifyOutput = false;
   tickInterval = 5;
   roundValuesDecimals = 1;
 
@@ -58,14 +54,11 @@ export class AppComponent implements AfterViewInit {
   decimals = 0;
 
   // Canvas Data:
-  canvasWidth: number;
-  canvasHeight: number;
+  canvasWidth: number = 100;
+  canvasHeight: number = 100;
   strokeWidth: number;
-  xGrid = Array(this.viewPortWidth + 1).fill(null).map((x, i) => i);
-  yGrid = Array(this.viewPortHeight + 1).fill(null).map((x, i) => i);
 
   // Dragged & hovered elements
-  draggedEvt: MouseEvent | TouchEvent;
   draggedPoint: SvgPoint;
   focusedItem: SvgItem;
   hoveredItem: SvgItem;
@@ -74,13 +67,13 @@ export class AppComponent implements AfterViewInit {
 
   // UI State
   isLeftPanelOpened = true;
+  isContextualMenuOpened = false;
 
   // Utility functions:
   trackByIndex = (idx, _) => idx;
   formatNumber = (v) => formatNumber(v, 4);
 
   constructor(
-    private changeDetectorRef: ChangeDetectorRef,
     matRegistry: MatIconRegistry,
     sanitizer: DomSanitizer
   ) {
@@ -90,28 +83,30 @@ export class AppComponent implements AfterViewInit {
     matRegistry.addSvgIcon('github', sanitizer.bypassSecurityTrustResourceUrl('./assets/github.svg'));
 
     this.reloadPath(this.rawPath, true);
+  }
 
-    const throttler = throttleTime(50, undefined, {leading: false, trailing: true});
-    this.wheel$
-      .pipe( buffer(this.wheel$.pipe(throttler)) )
-      .pipe( map(ev => ({
-          event: ev[0],
-          deltaY: ev.reduce((acc, cur) => acc + cur.deltaY, 0)
-      })))
-      .subscribe(this.mousewheel.bind(this));
+  @HostListener('document:keydown', ['$event']) onKeyDown($event) {
+    const tag = $event.target.tagName;
+    if(tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      if($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
+        this.redo();
+        $event.preventDefault();
+      } else if(($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
+        this.undo();
+        $event.preventDefault();
+      } else if(!$event.metaKey && !$event.ctrlKey && /^[mlvhcsqtaz]$/i.test($event.key)) {
+        if(this.canInsertAfter(this.focusedItem, $event.key)) {
+          this.insert($event.key, this.focusedItem, false);
+          $event.preventDefault();
+        }
+      }
+    }
   }
 
   ngAfterViewInit() {
-    this.refreshCanvasSize();
-    this.zoomAuto();
-    this.changeDetectorRef.detectChanges();
     setTimeout(() => {
-      this.refreshCanvasSize();
       this.zoomAuto();
     }, 0);
-    window.addEventListener('resize', () => {
-      this.refreshCanvasSize();
-    });
   }
 
   get rawPath(): string {
@@ -162,20 +157,6 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  refreshCanvasSize() {
-    const rect = this.canvas.nativeElement.parentNode.getBoundingClientRect();
-    this.canvasWidth = rect.width;
-    this.canvasHeight = rect.height;
-    this.strokeWidth = this.viewPortWidth / this.canvasWidth;
-
-    this.updateViewPort(
-      this.viewPortX,
-      this.viewPortY,
-      this.viewPortWidth,
-      null
-    );
-  }
-
   updateViewPort(x: number, y: number, w: number, h: number) {
     if (w === null) {
       w = this.canvasWidth * h / this.canvasHeight;
@@ -191,13 +172,6 @@ export class AppComponent implements AfterViewInit {
     this.viewPortY = parseFloat((1 * y).toPrecision(6));
     this.viewPortWidth = parseFloat((1 * w).toPrecision(4));
     this.viewPortHeight = parseFloat((1 * h).toPrecision(4));
-    if (5 * this.viewPortWidth <= this.canvasWidth) {
-      this.xGrid = Array(Math.ceil(this.viewPortWidth) + 1).fill(null).map((_, i) => Math.floor(this.viewPortX) + i);
-      this.yGrid = Array(Math.ceil(this.viewPortHeight) + 1).fill(null).map((_, i) => Math.floor(this.viewPortY) + i);
-    } else {
-      this.xGrid = [];
-      this.yGrid = [];
-    }
     this.strokeWidth = this.viewPortWidth / this.canvasWidth;
   }
 
@@ -248,7 +222,7 @@ export class AppComponent implements AfterViewInit {
       this.afertModelChange();
 
       this.focusedItem = newItem;
-      this.startDrag(newItem.targetLocation());
+      this.draggedPoint = newItem.targetLocation();
     }
   }
 
@@ -316,7 +290,7 @@ export class AppComponent implements AfterViewInit {
 
   afertModelChange() {
     this.reloadPoints();
-    this.rawPath = this.parsedPath.asString();
+    this.rawPath = this.parsedPath.asString(4, this.minifyOutput);
   }
 
   roundValues(decimals: number) {
@@ -408,110 +382,5 @@ export class AppComponent implements AfterViewInit {
 
   toggleLeftPanel() {
     this.isLeftPanelOpened = !this.isLeftPanelOpened;
-  }
-
-  eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
-    const rect = this.canvas.nativeElement.getBoundingClientRect();
-    const touch = event instanceof MouseEvent ? event : event.touches[idx];
-    const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
-    const y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
-    return {x, y};
-  }
-
-  pinchToZoom(previousEvent: MouseEvent | TouchEvent, event: MouseEvent | TouchEvent) {
-    if ( window.TouchEvent
-      && previousEvent instanceof TouchEvent
-      && event instanceof TouchEvent
-      && previousEvent.touches.length >= 2
-      && event.touches.length >= 2)
-    {
-      const pt = this.eventToLocation(event, 0);
-      const pt2 = this.eventToLocation(event, 1);
-      const oriPt = this.eventToLocation(previousEvent, 0);
-      const oriPt2 = this.eventToLocation(previousEvent, 1);
-      const ptm = {x: 0.5 * (pt.x + pt2.x) , y: 0.5 * (pt.y + pt2.y)};
-      const oriPtm = {x: 0.5 * (oriPt.x + oriPt2.x) , y: 0.5 * (oriPt.y + oriPt2.y)};
-      const delta = {x: oriPtm.x - ptm.x , y: oriPtm.y - ptm.y};
-      const k =
-        Math.sqrt((oriPt.x - oriPt2.x) * (oriPt.x - oriPt2.x) + (oriPt.y - oriPt2.y) * (oriPt.y - oriPt2.y)) /
-        Math.sqrt((pt.x - pt2.x) * (pt.x - pt2.x) + (pt.y - pt2.y) * (pt.y - pt2.y));
-      return {zoom: k, delta, center: ptm};
-    }
-    return null;
-  }
-
-  mousewheel(event: {event: WheelEvent, deltaY: number}) {
-    const k = Math.pow(1.005, event.deltaY);
-    const pt = this.eventToLocation(event.event);
-    const w = k * this.viewPortWidth;
-    const h = k * this.viewPortHeight;
-    const x = this.viewPortX + ((pt.x - this.viewPortX) - k * (pt.x - this.viewPortX));
-    const y = this.viewPortY + ((pt.y - this.viewPortY) - k * (pt.y - this.viewPortY));
-    this.updateViewPort(x, y, w, h);
-  }
-
-  startDrag(item: SvgPoint ) {
-    this.setHistoryDisabled(true);
-    if (item.itemReference.getType().toLowerCase() === 'z') {
-      return;
-    }
-    this.focusedItem = item.itemReference;
-    this.draggedPoint = item;
-  }
-
-  startDragCanvas(event: MouseEvent | TouchEvent) {
-    this.draggedEvt = event;
-    this.wasCanvasDragged = false;
-  }
-
-  stopDrag() {
-    if (this.draggedPoint && this.draggedEvt) {
-      this.drag(this.draggedEvt);
-    }
-    this.setHistoryDisabled(false);
-
-    if (!this.draggedPoint && !this.wasCanvasDragged) {
-      // unselect action
-      this.focusedItem = null;
-    }
-    this.draggedPoint = null;
-    this.draggedEvt = null;
-    this.draggedIsNew = false;
-  }
-
-  drag(event: MouseEvent | TouchEvent) {
-    if (this.draggedPoint || this.draggedEvt) {
-      event.stopPropagation();
-      const pt = this.eventToLocation(event);
-      if (this.draggedPoint) {
-        pt.x = parseFloat(pt.x.toFixed(this.decimals));
-        pt.y = parseFloat(pt.y.toFixed(this.decimals));
-        this.parsedPath.setLocation(this.draggedPoint, pt as Point);
-        if (this.draggedIsNew) {
-          const previousIdx = this.parsedPath.path.indexOf(this.draggedPoint.itemReference) - 1;
-          if (previousIdx >= 0) {
-            this.draggedPoint.itemReference.resetControlPoints(this.parsedPath.path[previousIdx]);
-          }
-        }
-        this.afertModelChange();
-      } else {
-        this.wasCanvasDragged = true;
-        const pinchToZoom = this.pinchToZoom(this.draggedEvt, event);
-        if (pinchToZoom !== null){
-          const w = pinchToZoom.zoom * this.viewPortWidth;
-          const h = pinchToZoom.zoom * this.viewPortHeight;
-          const x = this.viewPortX + pinchToZoom.delta.x + (pinchToZoom.center.x - this.viewPortX) * (1 - pinchToZoom.zoom);
-          const y = this.viewPortY + pinchToZoom.delta.y + (pinchToZoom.center.y - this.viewPortY) * (1 - pinchToZoom.zoom);
-          this.updateViewPort(x, y, w, h);
-        } else {
-          const oriPt = this.eventToLocation(this.draggedEvt);
-          this.updateViewPort(
-            this.viewPortX + (oriPt.x - pt.x), this.viewPortY + (oriPt.y - pt.y),
-            this.viewPortWidth, this.viewPortHeight
-          );
-        }
-        this.draggedEvt = event;
-      }
-    }
   }
 }

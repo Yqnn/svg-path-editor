@@ -1,5 +1,5 @@
 <div style="display:flex;flex-direction:row;height: 100%;" @leftColumnParent>
-    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="refreshCanvasSize()" style="width:300px">
+    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="canvas.refreshCanvasSize()" style="width:300px">
         <div class="left-column" cdk-scrollable>  
             <app-expandable panelTitle="Path" [opened]="true">
                 <div class="row">
@@ -81,11 +81,12 @@
                     </div>
                 </div>
                 <div class="row">
-                    <mat-checkbox [(ngModel)]="preview">Preview</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="preview" style="flex:1">Preview</mat-checkbox>
+                    <mat-checkbox [ngModel]="minifyOutput" (ngModelChange)="minifyOutput=$event;afertModelChange()" style="flex:1">Minify output</mat-checkbox>
                 </div>
                 <div class="row tick-options">
-                    <mat-checkbox [(ngModel)]="showTicks">Show Ticks</mat-checkbox>
-                    <div class="input-block">
+                    <mat-checkbox [(ngModel)]="showTicks" style="flex:1">Show Ticks</mat-checkbox>
+                    <div class="input-block" style="flex:1" [style.visibility]="showTicks?'visible':'hidden'">
                         <label>Interval</label>
                         <input class="app-input" [(ngModel)]="tickInterval" >
                     </div>
@@ -217,10 +218,14 @@
                 'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-viewPortX)/strokeWidth+'px',
                 'top': ((focusedItem ? focusedItem.targetLocation().y : 0)-viewPortY)/strokeWidth+'px'
             }"
-            [matMenuTriggerFor]="appCreate"
+            [ngClass]="{'opened':isContextualMenuOpened}"
+            [matMenuTriggerFor]="focusedItem ? appMenu : appCreate"
             [matMenuTriggerData]="{item:focusedItem, idx:-1}"
+            (menuOpened)="isContextualMenuOpened = true"
+            (menuClosed)="isContextualMenuOpened = false"
         >
-            <mat-icon>add</mat-icon>
+            <mat-icon svgIcon="more" *ngIf="focusedItem"></mat-icon>
+            <mat-icon *ngIf="!focusedItem">add</mat-icon>
         </button>
 
         <button mat-raised-button
@@ -251,131 +256,30 @@
             <mat-icon>redo</mat-icon>
         </button>
 
-        <svg [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight"
-            [ngClass]="{preview:preview}"
-            xmlns="http://www.w3.org/2000/svg"
-            (mousedown)="startDragCanvas($event);$event.stopPropagation()"
-            (mousemove)="drag($event)"
-            (mouseup)="stopDrag()"
-            (touchstart)="startDragCanvas($event);$event.preventDefault();$event.stopPropagation()"
-            (touchmove)="drag($event)"
-            (touchend)="stopDrag()"
-            (wheel)="wheel$.next($event);"
-            (click)="hoveredItem=null;"
-            #canvas
-        >
-
-            <ng-container *ngIf="strokeWidth" >
-                <line
-                    class="grid"
-                    [attr.x1]="viewPortX"
-                    [attr.y1]="0"
-                    [attr.x2]="viewPortX + viewPortWidth"
-                    [attr.y2]="0"
-                    [attr.stroke-width]="4*strokeWidth"
-                />
-                <line
-                    class="grid"
-                    [attr.x1]="0"
-                    [attr.y1]="viewPortY"
-                    [attr.x2]="0"
-                    [attr.y2]="viewPortY + viewPortHeight"
-                    [attr.stroke-width]="4*strokeWidth"
-                />
-                <line *ngFor="let x of xGrid; trackBy:trackByIndex"
-                    class="grid"
-                    [ngClass]="{'tick': showTicks && x % tickInterval === 0 }"
-                    [attr.x1]="x"
-                    [attr.y1]="viewPortY"
-                    [attr.x2]="x"
-                    [attr.y2]="viewPortY + viewPortHeight"
-                    [attr.stroke-width]="strokeWidth"
-                />
-
-                <ng-container *ngIf="!preview && showTicks">
-                    <ng-container *ngFor="let y of yGrid; trackBy:trackByIndex">
-                        <text class="tick" *ngIf="y % tickInterval ===  0" [attr.x]="-4*strokeWidth" [attr.y]="y - 4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}" >{{ y }}</text>
-                    </ng-container>
-
-                    <ng-container *ngFor="let x of xGrid; trackBy:trackByIndex">
-                        <text class="tick" *ngIf="x != 0 && x % tickInterval === 0" [attr.x]="x - 4*strokeWidth" [attr.y]="-4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}">{{ x }}</text>
-                    </ng-container>
-                </ng-container>
-
-                <line *ngFor="let y of yGrid; trackBy:trackByIndex"
-                    class="grid"
-                    [ngClass]="{'tick': showTicks && y % tickInterval === 0 }"
-                    [attr.x1]="viewPortX"
-                    [attr.y1]="y"
-                    [attr.x2]="viewPortX + viewPortWidth"
-                    [attr.y2]="y"
-                    [attr.stroke-width]="strokeWidth"
-                />
-                <path
-                    [attr.d]="parsedPath.asString()"
-                    [attr.stroke-width]="strokeWidth"
-                />
-
-
-                <ng-container *ngFor="let loc of controlPoints; trackBy:trackByIndex">
-                    <line *ngFor="let rel of loc.relations; trackBy:trackByIndex" 
-                        class="control"
-                        [attr.x1]="loc.x"
-                        [attr.y1]="loc.y"
-                        [attr.x2]="rel.x"
-                        [attr.y2]="rel.y"
-                        [attr.stroke-width]="strokeWidth"
-                    />
-                </ng-container>
-
-                <path *ngIf="hoveredItem && !draggedPoint && !preview"
-                    [attr.d]="hoveredItem.asStandaloneString()"
-                    [attr.stroke-width]="strokeWidth"
-                    class="hovered" />
-
-                <path *ngIf="focusedItem  && !preview"
-                    [attr.d]="focusedItem.asStandaloneString()"
-                    [attr.stroke-width]="strokeWidth"
-                    class="dragged"
-                />
-
-                <ng-container *ngFor="let loc of targetPoints; trackBy:trackByIndex">
-                    <circle *ngIf="loc.movable"
-                        class="target"
-                        [attr.cx]="loc.x"
-                        [attr.cy]="loc.y"
-                        [attr.r]="3*strokeWidth"
-                        (mousedown)="startDrag(loc);$event.stopPropagation()"
-                        (touchstart)="startDrag(loc);$event.preventDefault();$event.stopPropagation()"
-                        [attr.stroke-width]="12*strokeWidth"
-                        (mouseenter)="hoveredItem=loc.itemReference; $event.stopPropagation()"
-                        (mouseleave)="hoveredItem=null" 
-                        [ngClass]="{
-                            hovered:loc.itemReference===hoveredItem && !draggedPoint,
-                            dragged:loc.itemReference===focusedItem
-                        }"
-                    />
-                </ng-container>
-
-                <ng-container *ngFor="let loc of controlPoints; trackBy:trackByIndex">
-                    <circle *ngIf="loc.movable"
-                        class="control"
-                        [attr.cx]="loc.x"
-                        [attr.cy]="loc.y"
-                        [attr.r]="3*strokeWidth"
-                        (mousedown)="startDrag(loc);$event.stopPropagation()"
-                        (touchstart)="startDrag(loc);$event.preventDefault();$event.stopPropagation()"
-                        [attr.stroke-width]="12*strokeWidth"
-                        (mouseenter)="hoveredItem=loc.itemReference;  $event.stopPropagation()"
-                        (mouseleave)="hoveredItem=null" 
-                        [ngClass]="{
-                            hovered:loc.itemReference===hoveredItem && !draggedPoint,
-                            dragged:loc.itemReference===focusedItem
-                        }"
-                    />
-                </ng-container>
-            </ng-container>
-        </svg>
+        <svg xmlns="http://www.w3.org/2000/svg" app-canvas  #canvas [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight" [ngClass]="{preview:preview}"
+            [parsedPath]="parsedPath"
+            [targetPoints]="targetPoints"
+            [controlPoints]="controlPoints"
+            [(draggedPoint)]="draggedPoint"
+            [(focusedItem)]="focusedItem"
+            [(hoveredItem)]="hoveredItem"
+            [(wasCanvasDragged)]="wasCanvasDragged"
+            [draggedIsNew]="draggedIsNew"
+            [decimals]="decimals"
+            [viewPortX]="viewPortX"
+            [viewPortY]="viewPortY"
+            [viewPortWidth]="viewPortWidth"
+            [viewPortHeight]="viewPortHeight"
+            [strokeWidth]="strokeWidth"
+            [preview]="preview"
+            [showTicks]="showTicks"
+            [tickInterval]="tickInterval"
+            (afertModelChange)="afertModelChange()"
+            (dragging)="setHistoryDisabled($event); draggedIsNew=!$event ? false : draggedIsNew"
+            (canvasWidthChange)="canvasWidth = $event"
+            (canvasHeightChange)="canvasHeight = $event"
+            (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h)"
+        ></svg>
     </div>
 </div>
 
