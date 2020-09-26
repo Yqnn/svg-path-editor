@@ -209,7 +209,7 @@ export abstract class SvgItem {
         ].join(' ');
     }
 
-    public asString(decimals: number = 4): string {
+    public asString(decimals: number = 4, minify: boolean = false): string {
         const strValues = this.values.map(it => formatNumber(it, decimals));
         return [this.getType(), ...strValues].join(' ');
     }
@@ -428,6 +428,15 @@ class EllipticalArcTo extends SvgItem {
             this.absolutePoints = [new SvgPoint(this.values[5], this.values[6])];
         }
     }
+
+    public asString(decimals: number = 4, minify: boolean = false): string {
+        if(!minify) {
+            return super.asString(decimals, minify);
+        } else {
+            const v = this.values.map(it => formatNumber(it, decimals));
+            return `${this.getType()} ${v[0]} ${v[1]} ${v[2]} ${v[3]}${v[4]}${v[5]} ${v[6]}`;
+        }
+    }
 }
 
 
@@ -494,8 +503,15 @@ export class Svg {
         return null;
     }
 
-    asString(decimals: number = 4): string {
-        return this.path.map((it) => it.asString(decimals)).join(' ');
+    asString(decimals: number = 4, minify: boolean = false): string {
+        return this.path.map((it) => {
+            const str = it.asString(decimals, minify);
+            if(minify) {
+                return str.replace(/^([a-z]) /i,'$1').replace(' -', '-');
+            } else {
+                return str;
+            }
+        }).join(minify ? '' : ' ');
     }
 
     targetLocations(): SvgPoint[] {

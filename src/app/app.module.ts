@@ -17,11 +17,13 @@ import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ExpandableComponent } from './expandable/expandable.component';
+import { CanvasComponent } from './canvas/canvas.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ExpandableComponent
+    ExpandableComponent,
+    CanvasComponent
   ],
   imports: [
     BrowserModule,
