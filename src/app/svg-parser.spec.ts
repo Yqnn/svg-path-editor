@@ -7,10 +7,10 @@ it('moveTo', () => {
   expect(parse('m 10 20')).toEqual([['M', '10', '20']]);
 });
 
-/*test('exponents', () => {
-  expect(parse('m 1e3 2e-3')).toBe([['m', 1e3, 2e-3]]);
+it('exponents', () => {
+  expect(parse('m 1e3 2e-3')).toEqual([['M', '1e3', '2e-3']]);
 });
-*/
+
 it('no whitespace between negative sign', () => {
   expect(parse('M46-86')).toEqual([['M', '46', '-86']]);
 });
