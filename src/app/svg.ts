@@ -430,7 +430,7 @@ class EllipticalArcTo extends SvgItem {
     }
 
     public asString(decimals: number = 4, minify: boolean = false): string {
-        if(!minify) {
+        if (!minify) {
             return super.asString(decimals, minify);
         } else {
             const v = this.values.map(it => formatNumber(it, decimals));
@@ -506,8 +506,8 @@ export class Svg {
     asString(decimals: number = 4, minify: boolean = false): string {
         return this.path.map((it) => {
             const str = it.asString(decimals, minify);
-            if(minify) {
-                return str.replace(/^([a-z]) /i,'$1').replace(' -', '-');
+            if (minify) {
+                return str.replace(/^([a-z]) /i, '$1').replace(' -', '-');
             } else {
                 return str;
             }

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ExpandableComponent } from './expandable.component';
 
@@ -6,7 +6,7 @@ describe('ExpandableComponent', () => {
   let component: ExpandableComponent;
   let fixture: ComponentFixture<ExpandableComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ExpandableComponent ]
     })

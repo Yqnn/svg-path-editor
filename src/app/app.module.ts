@@ -18,12 +18,21 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ExpandableComponent } from './expandable/expandable.component';
 import { CanvasComponent } from './canvas/canvas.component';
+import { OpenComponent, OpenDialogComponent } from './open/open.component';
+import { SaveComponent, SaveDialogComponent } from './save/save.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
     AppComponent,
     ExpandableComponent,
-    CanvasComponent
+    CanvasComponent,
+    OpenComponent,
+    SaveComponent,
+    SaveDialogComponent,
+    OpenDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,6 +45,9 @@ import { CanvasComponent } from './canvas/canvas.component';
     MatCheckboxModule,
     MatMenuModule,
     MatTooltipModule,
+    MatDialogModule,
+    MatTableModule,
+    MatSortModule,
     BrowserAnimationsModule,
     ScrollingModule
   ],

@@ -3,6 +3,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { Svg, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from './svg';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { StorageService } from './storage.service';
 
 
 @Component({
@@ -27,7 +28,11 @@ export class AppComponent implements AfterViewInit {
   controlPoints: SvgControlPoint[] = [];
 
   // Raw path:
-  _rawPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1`;
+  _rawPath = this.storage.getPath()?.path
+    || `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 `
+      + `A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 `
+      + `C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1`;
+  pathName: string;
   invalidSyntax = false;
 
   // Undo/redo
@@ -54,8 +59,8 @@ export class AppComponent implements AfterViewInit {
   decimals = 0;
 
   // Canvas Data:
-  canvasWidth: number = 100;
-  canvasHeight: number = 100;
+  canvasWidth = 100;
+  canvasHeight = 100;
   strokeWidth: number;
 
   // Dragged & hovered elements
@@ -75,7 +80,8 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     matRegistry: MatIconRegistry,
-    sanitizer: DomSanitizer
+    sanitizer: DomSanitizer,
+    private storage: StorageService
   ) {
     matRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('./assets/delete.svg'));
     matRegistry.addSvgIcon('logo', sanitizer.bypassSecurityTrustResourceUrl('./assets/logo.svg'));
@@ -87,15 +93,15 @@ export class AppComponent implements AfterViewInit {
 
   @HostListener('document:keydown', ['$event']) onKeyDown($event) {
     const tag = $event.target.tagName;
-    if(tag !== 'INPUT' && tag !== 'TEXTAREA') {
-      if($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
+    if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
+      if ($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
         this.redo();
         $event.preventDefault();
-      } else if(($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
+      } else if (($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
         this.undo();
         $event.preventDefault();
-      } else if(!$event.metaKey && !$event.ctrlKey && /^[mlvhcsqtaz]$/i.test($event.key)) {
-        if(this.canInsertAfter(this.focusedItem, $event.key)) {
+      } else if (!$event.metaKey && !$event.ctrlKey && /^[mlvhcsqtaz]$/i.test($event.key)) {
+        if (this.canInsertAfter(this.focusedItem, $event.key)) {
           this.insert($event.key, this.focusedItem, false);
           $event.preventDefault();
         }
@@ -128,6 +134,7 @@ export class AppComponent implements AfterViewInit {
     if (!this.historyDisabled && this.rawPath !== this.history[this.historyCursor]) {
       this.historyCursor ++;
       this.history.splice(this.historyCursor, this.history.length - this.historyCursor, this.rawPath);
+      this.storage.addPath(null, this.rawPath);
     }
   }
 
@@ -358,6 +365,13 @@ export class AppComponent implements AfterViewInit {
       a: ['rx', 'ry', 'x-axis-rotation', 'large-arc-flag', 'sweep-flag', 'dx', 'dy']
     };
     return labels[item.getType()][idx];
+  }
+
+  openPath(newPath: string, name: string) {
+    this.pathName = name;
+    this.reloadPath(newPath, true);
+    this.history = [];
+    this.historyCursor = -1;
   }
 
   reloadPath(newPath: string, autozoom = false) {

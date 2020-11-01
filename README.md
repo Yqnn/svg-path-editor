@@ -17,11 +17,11 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Click on **...** then **Insert after** to insert a new command right after the selected one
 - Click on **...** then **Convert to** to convert the selected command to a new type
 
-##### Viewport:
+##### ViewBox:
 - Use mouse wheel to zoom in/out
-- Use drag & drop to move the viewport
-- Click on **AUTO** to automatically set the viewport depending on current path
-- Viewport can also be set manually with the **x**, **y**, **width** and **height** fields
+- Use drag & drop to move the viewBox
+- Click on **AUTO** to automatically set the viewBox depending on current path
+- ViewBox can also be set manually with the **x**, **y**, **width** and **height** fields
 
 ##### Path operations:
 - Scale the full path with the **Scale** button
