@@ -19,14 +19,18 @@
                 <div style="text-align: center;">
                     <button mat-mini-fab
                         color="primary"
-                        style="font-size: 1px; transform: none;"
+                        style="font-size: 1px; transform: none; margin:0 4px;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
                         matTooltip="Append new command"
-                        matTooltipPosition="right"
+                        matTooltipPosition="below"
+                        matTooltipClass="app-tooltip"
                     >
                         <mat-icon>add</mat-icon>
                     </button>
+                    
+                    <app-open (openPath)="openPath($event.path, $event.name)"></app-open>
+                    <app-save [path]="rawPath" [(name)]="pathName"></app-save>
                 </div>            
             </app-expandable>
 
@@ -67,7 +71,7 @@
                     <button
                         mat-flat-button
                         (click)="zoomAuto()"
-                        matTooltip="Automatically set view port"
+                        matTooltip="Automatically set viewBox"
                         matTooltipPosition="right"
                     >AUTO</button>
                 </div>
@@ -323,4 +327,4 @@
         <button mat-menu-item (click)="insert('A', item, convert)" [disabled]="convert?!canConvert(item,'A'):!canInsertAfter(item, 'A')"><strong>A</strong> Elliptical Arc</button>
         <button mat-menu-item (click)="insert('Z', item, convert)" [disabled]="convert?!canConvert(item,'Z'):!canInsertAfter(item, 'Z')"><strong>Z</strong> Close Path</button>
     </ng-template>
-  </mat-menu>
+</mat-menu>

@@ -3,12 +3,30 @@ import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Point, Svg, SvgControlPoint, SvgItem, SvgPoint } from '../svg';
 
+/* tslint:disable:component-selector */
 @Component({
   selector: '[app-canvas]',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.css']
 })
 export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
+  get canvasWidth(): number { return this._canvasWidth; }
+  set canvasWidth(canvasWidth: number) { this._canvasWidth = canvasWidth; this.canvasWidthChange.emit(this._canvasWidth); }
+  get canvasHeight(): number { return this._canvasHeight; }
+  set canvasHeight(canvasHeight: number) { this._canvasHeight = canvasHeight; this.canvasHeightChange.emit(this._canvasHeight); }
+  get draggedPoint(): SvgPoint { return this._draggedPoint; }
+  @Input() set draggedPoint(draggedPoint: SvgPoint) { this._draggedPoint = draggedPoint; this.draggedPointChange.emit(this.draggedPoint); }
+  get focusedItem(): SvgItem { return this._focusedItem; }
+  @Input() set focusedItem(focusedItem: SvgItem) { this._focusedItem = focusedItem; this.focusedItemChange.emit(this.focusedItem); }
+  get hoveredItem(): SvgItem { return this._hoveredItem; }
+  @Input() set hoveredItem(hoveredItem: SvgItem) { this._hoveredItem = hoveredItem; this.hoveredItemChange.emit(this.hoveredItem); }
+  get wasCanvasDragged(): boolean { return this._wasCanvasDragged; }
+  @Input() set wasCanvasDragged(wasCanvasDragged: boolean) {
+    this._wasCanvasDragged = wasCanvasDragged;
+    this.wasCanvasDraggedChange.emit(this._wasCanvasDragged);
+  }
+
+  constructor(public canvas: ElementRef) { }
   @Input() parsedPath: Svg;
   @Input() targetPoints: SvgPoint[] = [];
   @Input() controlPoints: SvgControlPoint[] = [];
@@ -26,54 +44,40 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Output() afertModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
-  @Output() viewPort = new EventEmitter<{x:number, y:number, w:number, h:number}>();
+  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number}>();
 
 
   _canvasWidth: number;
-  get canvasWidth(): number { return this._canvasWidth; }
-  set canvasWidth(canvasWidth: number) { this._canvasWidth = canvasWidth; this.canvasWidthChange.emit(this._canvasWidth);}
   @Output() canvasWidthChange = new EventEmitter<number>();
 
   _canvasHeight: number;
-  get canvasHeight(): number { return this._canvasHeight; }
-  set canvasHeight(canvasHeight: number) { this._canvasHeight = canvasHeight; this.canvasHeightChange.emit(this._canvasHeight);}
   @Output() canvasHeightChange = new EventEmitter<number>();
 
   _draggedPoint: SvgPoint;
-  get draggedPoint(): SvgPoint { return this._draggedPoint; }
-  @Input() set draggedPoint(draggedPoint: SvgPoint) { this._draggedPoint = draggedPoint; this.draggedPointChange.emit(this.draggedPoint);}
   @Output() draggedPointChange = new EventEmitter<SvgPoint>();
 
   _focusedItem: SvgItem;
-  get focusedItem(): SvgItem { return this._focusedItem; }
-  @Input() set focusedItem(focusedItem: SvgItem) { this._focusedItem = focusedItem; this.focusedItemChange.emit(this.focusedItem);}
   @Output() focusedItemChange = new EventEmitter<SvgItem>();
 
   _hoveredItem: SvgItem;
-  get hoveredItem(): SvgItem { return this._hoveredItem; }
-  @Input() set hoveredItem(hoveredItem: SvgItem) { this._hoveredItem = hoveredItem; this.hoveredItemChange.emit(this.hoveredItem);}
   @Output() hoveredItemChange = new EventEmitter<SvgItem>();
 
   _wasCanvasDragged = false;
-  get wasCanvasDragged(): boolean { return this._wasCanvasDragged; }
-  @Input() set wasCanvasDragged(wasCanvasDragged: boolean) { this._wasCanvasDragged = wasCanvasDragged; this.wasCanvasDraggedChange.emit(this._wasCanvasDragged);}
   @Output() wasCanvasDraggedChange = new EventEmitter<boolean>();
 
   draggedEvt: MouseEvent | TouchEvent;
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
-
-  trackByIndex = (idx, _) => idx;
   xGrid: number[];
   yGrid: number[];
 
-  constructor(public canvas: ElementRef) { }
+  trackByIndex = (idx, _) => idx;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if(changes.viewPortX || changes.viewPortY || changes.viewPortWidth || changes.viewPortHeight) {
+    if (changes.viewPortX || changes.viewPortY || changes.viewPortWidth || changes.viewPortHeight) {
       this.refreshGrid();
     }
-    if(changes.draggedPoint && changes.draggedPoint.currentValue) {
+    if (changes.draggedPoint && changes.draggedPoint.currentValue) {
       this.startDrag(changes.draggedPoint.currentValue);
     }
   }
@@ -102,7 +106,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     this.startDragCanvas($event);
     $event.stopPropagation();
   }
-  @HostListener('mousemove', ['$event']) onMouseMove ($event) {
+  @HostListener('mousemove', ['$event']) onMouseMove($event) {
     this.drag($event);
   }
   @HostListener('mouseup', ['$event'])  onMouseUp($event) {
@@ -123,7 +127,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     this.wheel$.next($event);
   }
   @HostListener('click', ['$event']) onClick($event) {
-    this.hoveredItem=null;
+    this.hoveredItem = null;
   }
 
 
@@ -193,7 +197,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   startDrag(item: SvgPoint) {
-    if(item !== this.draggedPoint) {
+    if (item !== this.draggedPoint) {
       this.dragWithoutClick = false;
     }
 
@@ -229,7 +233,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   drag(event: MouseEvent | TouchEvent) {
     if (this.draggedPoint || this.draggedEvt) {
 
-      if(!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
+      if (!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
         // Stop dragging is click is not maintained anymore.
         this.stopDrag();
         return;
@@ -260,8 +264,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
         } else {
           const oriPt = this.eventToLocation(this.draggedEvt);
           this.viewPort.emit({
-            x:this.viewPortX + (oriPt.x - pt.x), y:this.viewPortY + (oriPt.y - pt.y),
-            w:this.viewPortWidth, h:this.viewPortHeight
+            x: this.viewPortX + (oriPt.x - pt.x), y: this.viewPortY + (oriPt.y - pt.y),
+            w: this.viewPortWidth, h: this.viewPortHeight
           });
         }
         this.draggedEvt = event;
