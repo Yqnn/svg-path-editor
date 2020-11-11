@@ -280,8 +280,7 @@ export class AppComponent implements AfterViewInit {
     this.afertModelChange();
   }
 
-  setValue(item: SvgItem, idx: number, valStr: string) {
-    const val = parseFloat(valStr);
+  setValue(item: SvgItem, idx: number, val: number) {
     if (!isNaN(val)) {
       item.values[idx] = val;
       this.parsedPath.refreshAbsolutePositions();

@@ -252,6 +252,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
           }
         }
         this.afertModelChange.emit();
+        this.draggedEvt = null;
       } else {
         this.wasCanvasDragged = true;
         const pinchToZoom = this.pinchToZoom(this.draggedEvt, event);
