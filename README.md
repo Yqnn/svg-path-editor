@@ -8,7 +8,7 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Paste or edit the raw path in the **path** field
 - Click on **+** to add a new command to the path, select a type, then click on the destination
 - Move points with drag and drop
-- Click on a point, then on the **+** to insert a command right after the selected one
+- Click on a point, then on the **...** button to insert a command right after the selected one, to remove it, or to change its type
 
 ##### Commands panel:
 - Click on the command type to toggle between relative and absolute coordinates
@@ -38,13 +38,13 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 Run `npm install` to retrieve all the depencies of the project.
 
 ##### Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npx ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ##### Build
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `npx ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ##### Running unit tests
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npx ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ---
 
