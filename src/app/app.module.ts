@@ -23,6 +23,8 @@ import { SaveComponent, SaveDialogComponent } from './save/save.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
+import { FormatterDirective } from './formatter/formatter.directive';
+import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-navigable.directive';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,9 @@ import { MatSortModule } from '@angular/material/sort';
     OpenComponent,
     SaveComponent,
     SaveDialogComponent,
-    OpenDialogComponent
+    OpenDialogComponent,
+    FormatterDirective,
+    KeyboardNavigableDirective
   ],
   imports: [
     BrowserModule,

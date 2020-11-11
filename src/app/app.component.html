@@ -17,9 +17,24 @@
                     </div>
                 </div>
                 <div style="text-align: center;">
+                    
+                    <app-open (openPath)="openPath($event.path, $event.name)"></app-open>
+                    <app-save [path]="rawPath" [(name)]="pathName"></app-save>
+
+                    <button mat-mini-fab
+                        color="basic"
+                        style="font-size: 1px; transform: none; margin:0 4px;"
+                        matTooltip="Clear path"
+                        matTooltipPosition="below"
+                        matTooltipClass="app-tooltip"
+                        (click)="reloadPath('', false)"
+                    >
+                        <mat-icon>clear</mat-icon>
+                    </button>
+
                     <button mat-mini-fab
                         color="primary"
-                        style="font-size: 1px; transform: none; margin:0 4px;"
+                        style="font-size: 1px; transform: none; margin:0 4px 0 98px;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
                         matTooltip="Append new command"
@@ -28,9 +43,6 @@
                     >
                         <mat-icon>add</mat-icon>
                     </button>
-                    
-                    <app-open (openPath)="openPath($event.path, $event.name)"></app-open>
-                    <app-save [path]="rawPath" [(name)]="pathName"></app-save>
                 </div>            
             </app-expandable>
 
@@ -40,32 +52,38 @@
                         <label>X</label>
                         <input
                             class="app-input"
-                            [ngModel]="viewPortX"
-                            (ngModelChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)" 
+                            appFormatter
+                            [value]="viewPortX"
+                            (valueChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)" 
                         >
                     </div>
                     <div class="input-block">
                         <label>Y</label>
                         <input
                             class="app-input"
-                            [ngModel]="viewPortY"
-                            (ngModelChange)="updateViewPort(viewPortX, $event, viewPortWidth, viewPortHeight)"
+                            appFormatter
+                            [value]="viewPortY"
+                            (valueChange)="updateViewPort(viewPortX, $event, viewPortWidth, viewPortHeight)"
                         >
                     </div>
                     <div class="input-block">
                         <label>Width</label>
                         <input
                             class="app-input"
-                            [ngModel]="viewPortWidth"
-                            (ngModelChange)="updateViewPort(viewPortX, viewPortY, $event, null)" 
+                            appFormatter
+                            formatterType="positive-float"
+                            [value]="viewPortWidth"
+                            (valueChange)="updateViewPort(viewPortX, viewPortY, $event, null)" 
                         >
                     </div>
                     <div class="input-block">
                         <label>Height</label>
                         <input
                             class="app-input"
-                            [ngModel]="viewPortHeight"
-                            (ngModelChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
+                            appFormatter
+                            formatterType="positive-float"
+                            [value]="viewPortHeight"
+                            (valueChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
                         >
                     </div>
                     <button
@@ -81,7 +99,7 @@
                         matTooltipPosition="right"
                     >
                         <label>Decimals on mouse drag</label>
-                        <input [(ngModel)]="decimals" class="app-input">
+                        <input [(value)]="decimals" appFormatter formatterType="positive-integer" class="app-input">
                     </div>
                 </div>
                 <div class="row">
@@ -92,7 +110,7 @@
                     <mat-checkbox [(ngModel)]="showTicks" style="flex:1">Show Ticks</mat-checkbox>
                     <div class="input-block" style="flex:1" [style.visibility]="showTicks?'visible':'hidden'">
                         <label>Interval</label>
-                        <input class="app-input" [(ngModel)]="tickInterval" >
+                        <input class="app-input" [(value)]="tickInterval" appFormatter formatterType="positive-integer">
                     </div>
 
                 </div>
@@ -103,14 +121,11 @@
                 <div class="row">
                     <div class="input-block" style="flex:1">
                         <label>Scale X</label>
-                        <input
-                            [(ngModel)]="scaleX"
-                            class="app-input"
-                        >
+                        <input appFormatter [(value)]="scaleX" class="app-input" >
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Scale Y</label>
-                        <input [(ngModel)]="scaleY" class="app-input">
+                        <input appFormatter [(value)]="scaleY" class="app-input">
                     </div>
                     <button
                         mat-flat-button
@@ -124,11 +139,11 @@
                 <div class="row">
                     <div class="input-block" style="flex:1">
                         <label>Translate X</label>
-                        <input [(ngModel)]="translateX" class="app-input">
+                        <input appFormatter [(value)]="translateX" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Translate Y</label>
-                        <input [(ngModel)]="translateY" class="app-input">
+                        <input appFormatter [(value)]="translateY" class="app-input">
                     </div>
                     <button
                         mat-flat-button
@@ -142,7 +157,7 @@
                 <div class="row">
                     <div class="input-block" style="flex:2">
                         <label>Number of decimals</label>
-                        <input [(ngModel)]="roundValuesDecimals" class="app-input">
+                        <input appFormatter formatterType="positive-integer" [(value)]="roundValuesDecimals" class="app-input">
                     </div>
                     <button
                         mat-flat-button 
@@ -188,7 +203,7 @@
                     <ng-container *ngFor="let value of item.values; let i = index; trackBy:trackByIndex">
                         <mat-checkbox *ngIf="item.getType().toLowerCase()==='a' && (i==3 || i==4)"
                             [ngModel]="value"
-                            (ngModelChange)="setValue(item,i,$event?'1':'0');"
+                            (ngModelChange)="setValue(item,i,$event?1:0);"
                             (focus)="focusedItem=item"
                             class="small-checkbox"
                             matTooltipClass="app-tooltip"
@@ -196,9 +211,13 @@
                         ></mat-checkbox>
                         <input *ngIf="!(item.getType().toLowerCase()==='a' && (i==3 || i==4))"
                             type="text"
-                            [ngModel]="formatNumber(value)" 
-                            (ngModelChange)="setValue(item,i,$event);"
+                            appKeyboardNavigable
+                            keyboardNavigableIdPrefix="svg_command"
+                            appFormatter
+                            [value]="value" 
+                            (valueChange)="setValue(item,i,$event);"
                             class="svg-value app-input"
+                            id="svg_command_{{j}}_{{item.getType().toLowerCase()==='a' && i>4 ? i-1 : i}}"
                             (focus)="focusedItem=item"
                             matTooltipClass="app-tooltip"
                             [matTooltip]="getTooltip(item, i)"
