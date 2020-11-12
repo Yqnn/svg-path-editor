@@ -511,7 +511,10 @@ export class Svg {
         return this.path.map((it) => {
             const str = it.asString(decimals, minify);
             if (minify) {
-                return str.replace(/^([a-z]) /i, '$1').replace(/ -/g, '-');
+                return str
+                    .replace(/^([a-z]) /i, '$1')
+                    .replace(/ -/g, '-')
+                    .replace(/(\.[0-9]+) (?=\.)/g, '$1')
             } else {
                 return str;
             }
