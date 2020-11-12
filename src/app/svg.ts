@@ -1,9 +1,13 @@
 import { SvgParser } from './svg-parser';
 
-export function formatNumber(v: number, d: number): string {
-    return v.toFixed(d)
+export function formatNumber(v: number, d: number, minify = false): string {
+    let result = v.toFixed(d)
         .replace(/^(-?[0-9]*\.([0-9]*[1-9])?)0*$/, '$1')
         .replace(/\.$/, '');
+    if(minify) {
+        result = result.replace(/^(-?)0\./, '$1.');
+    }
+    return result;
 }
 
 export class Point {
@@ -210,7 +214,7 @@ export abstract class SvgItem {
     }
 
     public asString(decimals: number = 4, minify: boolean = false): string {
-        const strValues = this.values.map(it => formatNumber(it, decimals));
+        const strValues = this.values.map(it => formatNumber(it, decimals, minify));
         return [this.getType(), ...strValues].join(' ');
     }
 }
@@ -433,7 +437,7 @@ class EllipticalArcTo extends SvgItem {
         if (!minify) {
             return super.asString(decimals, minify);
         } else {
-            const v = this.values.map(it => formatNumber(it, decimals));
+            const v = this.values.map(it => formatNumber(it, decimals, minify));
             return `${this.getType()} ${v[0]} ${v[1]} ${v[2]} ${v[3]}${v[4]}${v[5]} ${v[6]}`;
         }
     }
@@ -507,7 +511,7 @@ export class Svg {
         return this.path.map((it) => {
             const str = it.asString(decimals, minify);
             if (minify) {
-                return str.replace(/^([a-z]) /i, '$1').replace(' -', '-');
+                return str.replace(/^([a-z]) /i, '$1').replace(/ -/g, '-');
             } else {
                 return str;
             }
