@@ -264,26 +264,58 @@
             <mat-icon>{{isLeftPanelOpened?'arrow_left':'arrow_right'}}</mat-icon>
         </button>
 
-        <button mat-mini-fab
-            color="basic"
-            style="font-size: 1px; transform: none;position: absolute; right:56px; top:8px;"
-            matTooltip="Undo"
-            matTooltipPosition="below"
-            (click)="undo()"
-            [disabled]="!canUndo()"
-        >
-            <mat-icon>undo</mat-icon>
-        </button>
-        <button mat-mini-fab
-            color="basic"
-            style="font-size: 1px; transform: none;position: absolute; right:8px; top:8px;"
-            matTooltip="Redo"
-            matTooltipPosition="below"
-            (click)="redo()"
-            [disabled]="!canRedo()"
-        >
-            <mat-icon>redo</mat-icon>
-        </button>
+        <div class="scene-actions">
+            <button mat-flat-button
+                color="basic"
+                matTooltip="Undo"
+                matTooltipPosition="below"
+                (click)="undo()"
+                [disabled]="!canUndo()"
+            >
+                <mat-icon class="md-20">undo</mat-icon>
+            </button>
+            <button mat-flat-button
+                matTooltip="Redo"
+                matTooltipPosition="below"
+                (click)="redo()"
+                [disabled]="!canRedo()"
+            >
+                <mat-icon class="md-20">redo</mat-icon>
+            </button>
+            <button
+                mat-flat-button
+                (click)="zoomAuto()"
+                matTooltip="Reset view"
+                matTooltipPosition="below"
+                style="margin-left: 6px"
+            >
+                <mat-icon class="md-20">home</mat-icon> 
+            </button>
+            <button
+                mat-flat-button
+                (click)="canvas.zoomViewPort(0.9, {x: 0, y: 0})"
+                matTooltip="Zoom In"
+                matTooltipPosition="below"
+            >
+                <mat-icon class="md-20">zoom_in</mat-icon> 
+            </button>
+            <button
+                mat-flat-button
+                (click)="canvas.zoomViewPort(1.1, {x: 0, y: 0})"
+                matTooltip="Zoom Out"
+                matTooltipPosition="below"
+            >
+                <mat-icon class="md-20">zoom_out</mat-icon> 
+            </button>
+            <button
+                mat-flat-button
+                (click)="snapToGrid = !snapToGrid"
+                matTooltip="Snap to Grid"
+                matTooltipPosition="below"
+            >
+                <mat-icon class="md-20"> {{ snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
+            </button>
+        </div>
 
         <svg xmlns="http://www.w3.org/2000/svg" app-canvas  #canvas [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight" [ngClass]="{preview:preview}"
             [parsedPath]="parsedPath"

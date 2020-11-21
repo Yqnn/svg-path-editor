@@ -154,8 +154,6 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-
-
   eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = event instanceof MouseEvent ? event : event.touches[idx];
@@ -187,12 +185,18 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   mousewheel(event: {event: WheelEvent, deltaY: number}) {
-    const k = Math.pow(1.005, event.deltaY);
+    const scale = Math.pow(1.005, event.deltaY);
     const pt = this.eventToLocation(event.event);
-    const w = k * this.viewPortWidth;
-    const h = k * this.viewPortHeight;
-    const x = this.viewPortX + ((pt.x - this.viewPortX) - k * (pt.x - this.viewPortX));
-    const y = this.viewPortY + ((pt.y - this.viewPortY) - k * (pt.y - this.viewPortY));
+
+    this.zoomViewPort(scale, pt)
+  }
+
+  zoomViewPort(scale: number,  pt: {x: number, y: number}) {
+    const w = scale * this.viewPortWidth;
+    const h = scale * this.viewPortHeight;
+    const x = this.viewPortX + ((pt.x - this.viewPortX) - scale * (pt.x - this.viewPortX));
+    const y = this.viewPortY + ((pt.y - this.viewPortY) - scale * (pt.y - this.viewPortY));
+
     this.viewPort.emit({x, y, w, h});
   }
 
