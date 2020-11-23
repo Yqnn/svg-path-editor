@@ -331,7 +331,7 @@
             </button>
         </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" app-canvas  #canvas [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight" [ngClass]="{preview:preview}"
+        <svg xmlns="http://www.w3.org/2000/svg" app-canvas  [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight" [ngClass]="{preview:preview}"
             [parsedPath]="parsedPath"
             [targetPoints]="targetPoints"
             [controlPoints]="controlPoints"
@@ -350,7 +350,7 @@
             [showTicks]="showTicks"
             [tickInterval]="tickInterval"
             (afertModelChange)="afertModelChange()"
-            (dragging)="setHistoryDisabled($event); draggedIsNew=!$event ? false : draggedIsNew"
+            (dragging)="setIsDragging($event)"
             (canvasWidthChange)="canvasWidth = $event"
             (canvasHeightChange)="canvasHeight = $event"
             (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h)"

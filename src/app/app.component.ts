@@ -1,9 +1,10 @@
-import { Component, AfterViewInit, HostBinding, HostListener } from '@angular/core';
+import { Component, AfterViewInit, HostBinding, HostListener, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Svg, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from './svg';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StorageService } from './storage.service';
+import { CanvasComponent } from './canvas/canvas.component';
 
 
 @Component({
@@ -60,6 +61,7 @@ export class AppComponent implements AfterViewInit {
   decimalPrecision = 3;
 
   // Canvas Data:
+  @ViewChild(CanvasComponent) canvas;
   canvasWidth = 100;
   canvasHeight = 100;
   strokeWidth: number;
@@ -70,6 +72,7 @@ export class AppComponent implements AfterViewInit {
   hoveredItem: SvgItem;
   wasCanvasDragged = false;
   draggedIsNew = false;
+  dragging = false;
 
   // UI State
   isLeftPanelOpened = true;
@@ -104,6 +107,14 @@ export class AppComponent implements AfterViewInit {
           this.insert($event.key, this.focusedItem, false);
           $event.preventDefault();
         }
+      } else if(!$event.metaKey && !$event.ctrlKey && $event.key === 'Escape') {
+        if(this.dragging) {
+          // If an element is being dragged, undo by reloading the current history entry
+          this.reloadPath(this.history[this.historyCursor]);
+        } else {
+          // stopDrag will unselect selected item if any
+          this.canvas.stopDrag();
+        }
       }
     }
   }
@@ -124,6 +135,14 @@ export class AppComponent implements AfterViewInit {
   set rawPath(value: string) {
       this._rawPath = value;
       this.pushHistory();
+  }
+
+  setIsDragging(dragging: boolean) {
+    this.dragging = dragging;
+    this.setHistoryDisabled(dragging);
+    if(!dragging) {
+      this.draggedIsNew = false;
+    }
   }
 
   setHistoryDisabled(value: boolean) {
@@ -377,6 +396,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   reloadPath(newPath: string, autozoom = false) {
+    this.hoveredItem = null;
     this.focusedItem = null;
     this.rawPath = newPath;
     this.invalidSyntax = false;
