@@ -34,7 +34,7 @@
 
                     <button mat-mini-fab
                         color="primary"
-                        style="font-size: 1px; transform: none; margin:0 4px 0 98px;"
+                        style="font-size: 1px; transform: none; margin:0 4px 0 96px;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
                         matTooltip="Append new command"
@@ -86,39 +86,41 @@
                             (valueChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
                         >
                     </div>
-                    <button
-                        mat-flat-button
-                        (click)="zoomAuto()"
-                        matTooltip="Automatically set viewBox"
-                        matTooltipPosition="right"
-                    >AUTO</button>
                 </div>
-                <div class="row snap-option" [ngClass]="{'active': snapToGrid }">
+                <div class="row">
                     <mat-checkbox [(ngModel)]="snapToGrid" style="flex:1">Snap to Grid</mat-checkbox>
                     <div class="input-block" style="flex:1"
                         matTooltip="Number of decimals to keep when a point is dragged"
                         matTooltipPosition="right"
+                        [matTooltipDisabled]="snapToGrid"
+                        [ngClass]="{'disabled': snapToGrid }"
                     >
                         <label>Point Precision</label>
                         <input
                             class="app-input"
                             appFormatter
-                            formatterType="integer"
-                            [(ngModel)]="decimalPrecision"
+                            formatterType="positive-integer"
+                            [(value)]="decimalPrecision"
                             [disabled]="snapToGrid">
+                    </div>
+                </div>
+                <div class="row">
+                    <mat-checkbox [(ngModel)]="showTicks" style="flex:1">Show Ticks</mat-checkbox>
+                    <div class="input-block" style="flex:1"
+                        [ngClass]="{'disabled': !showTicks }"
+                    >
+                        <label>Interval</label>
+                        <input
+                            class="app-input"
+                            appFormatter
+                            formatterType="positive-integer"
+                            [(value)]="tickInterval" 
+                            [disabled]="!showTicks">
                     </div>
                 </div>
                 <div class="row">
                     <mat-checkbox [(ngModel)]="preview" style="flex:1">Preview</mat-checkbox>
                     <mat-checkbox [ngModel]="minifyOutput" (ngModelChange)="minifyOutput=$event;afertModelChange()" style="flex:1">Minify output</mat-checkbox>
-                </div>
-                <div class="row tick-options">
-                    <mat-checkbox [(ngModel)]="showTicks" style="flex:1">Show Ticks</mat-checkbox>
-                    <div class="input-block" style="flex:1" [style.visibility]="showTicks?'visible':'hidden'">
-                        <label>Interval</label>
-                        <input class="app-input" [(value)]="tickInterval" appFormatter formatterType="positive-integer">
-                    </div>
-
                 </div>
 
             </app-expandable>
@@ -237,6 +239,7 @@
                     </button>
                 </div>
             </app-expandable>
+            <div class="spacer"></div>
         </div>
     </div>
     <div style="flex:1; align-self:stretch;position: relative;overflow:hidden" class="drawings">
@@ -265,55 +268,66 @@
         </button>
 
         <div class="scene-actions">
-            <button mat-flat-button
+            <button mat-mini-fab
                 color="basic"
                 matTooltip="Undo"
                 matTooltipPosition="below"
+                matTooltipClass="app-tooltip"
                 (click)="undo()"
                 [disabled]="!canUndo()"
             >
-                <mat-icon class="md-20">undo</mat-icon>
+                <mat-icon>undo</mat-icon>
             </button>
-            <button mat-flat-button
+            <button mat-mini-fab
+                color="basic"
                 matTooltip="Redo"
                 matTooltipPosition="below"
                 (click)="redo()"
                 [disabled]="!canRedo()"
             >
-                <mat-icon class="md-20">redo</mat-icon>
+                <mat-icon>redo</mat-icon>
             </button>
             <button
-                mat-flat-button
+                mat-mini-fab
+                color="basic"
+                (click)="canvas.zoomViewPort(9/10)"
+                matTooltip="Zoom In"
+                matTooltipPosition="below"
+                matTooltipClass="app-tooltip"
+                style="margin-left: 24px"
+            >
+                <mat-icon svgIcon="zoom_in"></mat-icon> 
+            </button>
+            <button
+                mat-mini-fab
+                color="basic"
                 (click)="zoomAuto()"
                 matTooltip="Reset view"
                 matTooltipPosition="below"
-                style="margin-left: 6px"
+                matTooltipClass="app-tooltip"
             >
-                <mat-icon class="md-20">home</mat-icon> 
+                <mat-icon svgIcon="zoom_fit"></mat-icon> 
             </button>
             <button
-                mat-flat-button
-                (click)="canvas.zoomViewPort(0.9, {x: 0, y: 0})"
-                matTooltip="Zoom In"
-                matTooltipPosition="below"
-            >
-                <mat-icon class="md-20">zoom_in</mat-icon> 
-            </button>
-            <button
-                mat-flat-button
-                (click)="canvas.zoomViewPort(1.1, {x: 0, y: 0})"
+                mat-mini-fab
+                color="basic"
+                (click)="canvas.zoomViewPort(10/9)"
                 matTooltip="Zoom Out"
                 matTooltipPosition="below"
+                matTooltipClass="app-tooltip"
             >
-                <mat-icon class="md-20">zoom_out</mat-icon> 
+                <mat-icon svgIcon="zoom_out"></mat-icon> 
             </button>
             <button
-                mat-flat-button
+                mat-mini-fab
+                color="basic"
                 (click)="snapToGrid = !snapToGrid"
                 matTooltip="Snap to Grid"
                 matTooltipPosition="below"
+                matTooltipClass="app-tooltip"
+                style="margin-left: 24px"
             >
-                <mat-icon class="md-20"> {{ snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
+                <mat-icon> {{ snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
             </button>
         </div>
 

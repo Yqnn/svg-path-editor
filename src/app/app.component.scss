@@ -31,12 +31,14 @@
         text-decoration: underline;
     }
 }
+.spacer {
+    height:32px;
+}
 
 
 /* UI */
 .left-column {
     width:300px;
-    padding-bottom:32px;
     overflow:auto;
     background-color:#252526;
     height: calc(100% - 28px);
@@ -80,16 +82,6 @@ div.dragged {
     background-color:#094771;
 }
 
-div.row.snap-option.active input,
-div.row.snap-option.active label {
-    color: #737373;
-}
-
-div.row.snap-option.active input {
-    background: #333;
-    border-color: transparent;
- }
-
 /* Drawings */
 .drawings {
     &:hover .add-button, .add-button.opened {
@@ -100,24 +92,14 @@ div.row.snap-option.active input {
         position: absolute;
         font-size: 1px;
     }
-    .material-icons.md-20 {
-        margin-top: -3px;
-        font-size: 20px;
-        justify-content: center;
-        align-items: center;
-        height: 20px;
-        width: 20px;
-      }
 
-      div.scene-actions {
-          position: absolute;
-          right: 15px;
-          top: 15px;
-      }
-
-      div.scene-actions button.mat-flat-button {
-        padding: 0 6px!important;
-        margin: 2px;
-      }
-
+    .scene-actions {
+        position: absolute;
+        right: 8px;
+        top: 8px;
+    }
+    .scene-actions>button {
+        font-size: 1px;
+        margin-left:8px;
+    }
 }
