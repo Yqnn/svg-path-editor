@@ -191,7 +191,10 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     this.zoomViewPort(scale, pt)
   }
 
-  zoomViewPort(scale: number,  pt: {x: number, y: number}) {
+  zoomViewPort(scale: number,  pt?: {x: number, y: number}) {
+    if(!pt) {
+      pt = {x: this.viewPortX + 0.5*this.viewPortWidth, y: this.viewPortY + 0.5*this.viewPortHeight};
+    }
     const w = scale * this.viewPortWidth;
     const h = scale * this.viewPortHeight;
     const x = this.viewPortX + ((pt.x - this.viewPortX) - scale * (pt.x - this.viewPortX));

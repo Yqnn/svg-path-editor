@@ -147,6 +147,12 @@ button.mat-icon-button {
         background-color:rgba(69,69,69,0.9);
         border-radius: 2px;
     }
+    &.disabled {
+        opacity: 0.5;
+    }
+    &.disabled>input {
+        border-color: transparent;
+    }
 }
 .input-block:focus-within>label {
     color: #2196f3;

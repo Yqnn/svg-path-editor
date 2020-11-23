@@ -84,11 +84,9 @@ export class AppComponent implements AfterViewInit {
     sanitizer: DomSanitizer,
     private storage: StorageService
   ) {
-    matRegistry.addSvgIcon('delete', sanitizer.bypassSecurityTrustResourceUrl('./assets/delete.svg'));
-    matRegistry.addSvgIcon('logo', sanitizer.bypassSecurityTrustResourceUrl('./assets/logo.svg'));
-    matRegistry.addSvgIcon('more', sanitizer.bypassSecurityTrustResourceUrl('./assets/more.svg'));
-    matRegistry.addSvgIcon('github', sanitizer.bypassSecurityTrustResourceUrl('./assets/github.svg'));
-
+    for(const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit']) {
+      matRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(`./assets/${icon}.svg`));
+    }
     this.reloadPath(this.rawPath, true);
   }
 
