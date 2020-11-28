@@ -50,10 +50,10 @@ export class OpenDialogComponent implements AfterViewInit {
     const p = new Svg(path);
     const locs = p.targetLocations();
     if (locs.length > 0) {
-      const minx = locs.reduce((acc, pt) => Math.min(acc, pt.x), 0);
-      const miny = locs.reduce((acc, pt) => Math.min(acc, pt.y), 0);
-      const maxx = locs.reduce((acc, pt) => Math.max(acc, pt.x), 0);
-      const maxy = locs.reduce((acc, pt) => Math.max(acc, pt.y), 0);
+      const minx = locs.reduce((acc, pt) => Math.min(acc, pt.x), Infinity);
+      const miny = locs.reduce((acc, pt) => Math.min(acc, pt.y), Infinity);
+      const maxx = locs.reduce((acc, pt) => Math.max(acc, pt.x), -Infinity);
+      const maxy = locs.reduce((acc, pt) => Math.max(acc, pt.y), -Infinity);
       return `${minx} ${miny} ${maxx - minx} ${maxy - miny}`;
     }
     return `0 0 0 0`;

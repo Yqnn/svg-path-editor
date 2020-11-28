@@ -48,35 +48,38 @@
 
             <app-expandable panelTitle="Configuration" [opened]="true">
                 <div class="row">
-                    <div class="input-block">
+                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
                         <label>X</label>
                         <input
                             class="app-input"
                             appFormatter
                             [value]="viewPortX"
-                            (valueChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)" 
+                            (valueChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)"
+                            [disabled]="viewPortLocked" 
                         >
                     </div>
-                    <div class="input-block">
+                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
                         <label>Y</label>
                         <input
                             class="app-input"
                             appFormatter
                             [value]="viewPortY"
                             (valueChange)="updateViewPort(viewPortX, $event, viewPortWidth, viewPortHeight)"
+                            [disabled]="viewPortLocked" 
                         >
                     </div>
-                    <div class="input-block">
+                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
                         <label>Width</label>
                         <input
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
                             [value]="viewPortWidth"
-                            (valueChange)="updateViewPort(viewPortX, viewPortY, $event, null)" 
+                            (valueChange)="updateViewPort(viewPortX, viewPortY, $event, null)"
+                            [disabled]="viewPortLocked" 
                         >
                     </div>
-                    <div class="input-block">
+                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
                         <label>Height</label>
                         <input
                             class="app-input"
@@ -84,8 +87,19 @@
                             formatterType="positive-float"
                             [value]="viewPortHeight"
                             (valueChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
+                            [disabled]="viewPortLocked" 
                         >
                     </div>
+
+                    <button
+                        mat-flat-button
+                        (click)="viewPortLocked = !viewPortLocked"
+                        [matTooltip]="viewPortLocked ? 'Lock viewBox' : 'Unlock viewBox'"
+                        matTooltipPosition="right"
+                    >
+                        <mat-icon *ngIf="!viewPortLocked">lock_open</mat-icon>
+                        <mat-icon *ngIf="viewPortLocked">lock</mat-icon>
+                    </button>
                 </div>
                 <div class="row">
                     <mat-checkbox [(ngModel)]="snapToGrid" style="flex:1">Snap to Grid</mat-checkbox>
@@ -267,12 +281,11 @@
             <mat-icon>{{isLeftPanelOpened?'arrow_left':'arrow_right'}}</mat-icon>
         </button>
 
-        <div class="scene-actions">
+        <div class="scene-top-actions">
             <button mat-mini-fab
                 color="basic"
                 matTooltip="Undo"
                 matTooltipPosition="below"
-                matTooltipClass="app-tooltip"
                 (click)="undo()"
                 [disabled]="!canUndo()"
             >
@@ -284,50 +297,50 @@
                 matTooltipPosition="below"
                 (click)="redo()"
                 [disabled]="!canRedo()"
+                style="margin-right: 24px"
             >
                 <mat-icon>redo</mat-icon>
+            </button>
+
+            <app-export [path]="rawPath" [name]="pathName"></app-export>
+        </div>
+        <div class="scene-bottom-actions">
+            <button
+                mat-mini-fab
+                color="basic"
+                (click)="snapToGrid = !snapToGrid"
+                matTooltip="Snap to Grid"
+                matTooltipPosition="left"
+            >
+                <mat-icon> {{ snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
             </button>
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="canvas.zoomViewPort(9/10)"
+                (click)="viewPortLocked=false;canvas.zoomViewPort(9/10)"
                 matTooltip="Zoom In"
-                matTooltipPosition="below"
-                matTooltipClass="app-tooltip"
-                style="margin-left: 24px"
+                matTooltipPosition="left"
+                style="margin-top: 24px"
             >
                 <mat-icon svgIcon="zoom_in"></mat-icon> 
             </button>
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="zoomAuto()"
-                matTooltip="Reset view"
-                matTooltipPosition="below"
-                matTooltipClass="app-tooltip"
+                (click)="viewPortLocked=false;zoomAuto()"
+                matTooltip="Zoom to Fit"
+                matTooltipPosition="left"
             >
                 <mat-icon svgIcon="zoom_fit"></mat-icon> 
             </button>
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="canvas.zoomViewPort(10/9)"
+                (click)="viewPortLocked=false;canvas.zoomViewPort(10/9)"
                 matTooltip="Zoom Out"
-                matTooltipPosition="below"
-                matTooltipClass="app-tooltip"
+                matTooltipPosition="left"
             >
                 <mat-icon svgIcon="zoom_out"></mat-icon> 
-            </button>
-            <button
-                mat-mini-fab
-                color="basic"
-                (click)="snapToGrid = !snapToGrid"
-                matTooltip="Snap to Grid"
-                matTooltipPosition="below"
-                matTooltipClass="app-tooltip"
-                style="margin-left: 24px"
-            >
-                <mat-icon> {{ snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
             </button>
         </div>
 
@@ -353,7 +366,7 @@
             (dragging)="setIsDragging($event)"
             (canvasWidthChange)="canvasWidth = $event"
             (canvasHeightChange)="canvasHeight = $event"
-            (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h)"
+            (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h, $event.force)"
         ></svg>
     </div>
 </div>

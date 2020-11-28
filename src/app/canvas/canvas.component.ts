@@ -44,7 +44,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Output() afertModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
-  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number}>();
+  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number, force?:boolean}>();
 
 
   _canvasWidth: number;
@@ -140,7 +140,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       x: this.viewPortX,
       y: this.viewPortY,
       w: this.viewPortWidth,
-      h: null
+      h: null,
+      force: true
     });
   }
 

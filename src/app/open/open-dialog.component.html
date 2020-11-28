@@ -58,6 +58,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onOpen(row.name)"></tr>
   </table>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onCancel()" color="basic">Cancel</button>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
 </div>
