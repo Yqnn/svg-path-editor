@@ -18,9 +18,9 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Click on **...** then **Convert to** to convert the selected command to a new type
 
 ##### ViewBox:
-- Use mouse wheel to zoom in/out
+- Use mouse wheel, or click **Zoom in** and **Zoom out** to zoom in/out
 - Use drag & drop to move the viewBox
-- Click on **AUTO** to automatically set the viewBox depending on current path
+- Click on **Zoom to Fit** to automatically set the viewBox depending on current path
 - ViewBox can also be set manually with the **x**, **y**, **width** and **height** fields
 
 ##### Path operations:
@@ -28,6 +28,13 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Translate the full path with the **Translate** button
 - Round all coordinates of the current path with the **Round** button
 - Convert all commands to relative or absolute coordinates with **Convert to relative** or **Convert to absolute** button
+
+##### Shortcuts:
+- Press **m**, **l**, **v**, **h**, **c**, **s**, **q**, **t**, **a** or **z** to insert a relative command after the selected one
+- Press **shift** + **m**, **l**, **v**, **h**, **c**, **s**, **q**, **t**, **a** or **z** to insert an absolute command after the selected one
+- Press **echap** to delete the command being created, or the undo the current dragging operation
+- Press **ctrl** + **z** or **cmd** + **z** to undo
+- Press **ctrl** + **shift** + **z** or **cmd** + **shift** + **z** to redo
 
 ## Running Locally
 

@@ -25,6 +25,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { FormatterDirective } from './formatter/formatter.directive';
 import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-navigable.directive';
+import { ExportComponent,ExportDialogComponent } from './export/export.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,8 @@ import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-naviga
     OpenComponent,
     SaveComponent,
     SaveDialogComponent,
+    ExportComponent,
+    ExportDialogComponent,
     OpenDialogComponent,
     FormatterDirective,
     KeyboardNavigableDirective

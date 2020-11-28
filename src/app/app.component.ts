@@ -46,6 +46,7 @@ export class AppComponent implements AfterViewInit {
   viewPortY = 0;
   viewPortWidth = 30;
   viewPortHeight = 30;
+  viewPortLocked = false;
   preview = false;
   showTicks = false;
   minifyOutput = false;
@@ -186,7 +187,10 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  updateViewPort(x: number, y: number, w: number, h: number) {
+  updateViewPort(x: number, y: number, w: number, h: number, force = false) {
+    if(!force && this.viewPortLocked) {
+      return;
+    }
     if (w === null) {
       w = this.canvasWidth * h / this.canvasHeight;
     }
@@ -256,6 +260,9 @@ export class AppComponent implements AfterViewInit {
   }
 
   zoomAuto() {
+    if(this.viewPortLocked) {
+      return;
+    }
     let xmin = 0;
     let ymin = 0;
     let xmax = 10;
