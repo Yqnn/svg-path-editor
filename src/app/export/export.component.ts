@@ -48,16 +48,16 @@ export class ExportDialogComponent {
     this.dialogRef.close();
   }
   onExport(): void {
-    const svg = 
+    const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
-  <path d="${this.data.path}"${this.stroke ? ` stroke="${this.strokeColor}" stroke-width="${this.strokeWidth}"`:''} fill="${this.fill ? this.fillColor:'none'}"/>
+  <path d="${this.data.path}"${this.stroke ? ` stroke="${this.strokeColor}" stroke-width="${this.strokeWidth}"` : ''} fill="${this.fill ? this.fillColor : 'none'}"/>
 </svg>`;
     this.download(this.data.name || 'svg-path.svg', svg);
     this.dialogRef.close();
   }
 
-  patternScale(containterWidth:number, containerHeight: number): number {
-    return Math.max(this.width/containterWidth, this.height/containerHeight);
+  patternScale(containterWidth: number, containerHeight: number): number {
+    return Math.max(this.width / containterWidth, this.height / containerHeight);
   }
 
   refreshViewbox() {
@@ -68,11 +68,11 @@ export class ExportDialogComponent {
       this.y = locs.reduce((acc, pt) => Math.min(acc, pt.y), Infinity);
       this.width = locs.reduce((acc, pt) => Math.max(acc, pt.x), -Infinity) - this.x;
       this.height = locs.reduce((acc, pt) => Math.max(acc, pt.y), -Infinity) - this.y;
-      if(this.stroke) {
+      if (this.stroke) {
         this.x -= this.strokeWidth;
         this.y -= this.strokeWidth;
-        this.width += 2*this.strokeWidth;
-        this.height += 2*this.strokeWidth;
+        this.width += 2 * this.strokeWidth;
+        this.height += 2 * this.strokeWidth;
       }
     }
   }

@@ -88,7 +88,7 @@ export class AppComponent implements AfterViewInit {
     sanitizer: DomSanitizer,
     private storage: StorageService
   ) {
-    for(const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit']) {
+    for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit']) {
       matRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(`./assets/${icon}.svg`));
     }
     this.reloadPath(this.rawPath, true);
@@ -108,8 +108,8 @@ export class AppComponent implements AfterViewInit {
           this.insert($event.key, this.focusedItem, false);
           $event.preventDefault();
         }
-      } else if(!$event.metaKey && !$event.ctrlKey && $event.key === 'Escape') {
-        if(this.dragging) {
+      } else if (!$event.metaKey && !$event.ctrlKey && $event.key === 'Escape') {
+        if (this.dragging) {
           // If an element is being dragged, undo by reloading the current history entry
           this.reloadPath(this.history[this.historyCursor]);
         } else {
@@ -141,7 +141,7 @@ export class AppComponent implements AfterViewInit {
   setIsDragging(dragging: boolean) {
     this.dragging = dragging;
     this.setHistoryDisabled(dragging);
-    if(!dragging) {
+    if (!dragging) {
       this.draggedIsNew = false;
     }
   }
@@ -188,7 +188,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   updateViewPort(x: number, y: number, w: number, h: number, force = false) {
-    if(!force && this.viewPortLocked) {
+    if (!force && this.viewPortLocked) {
       return;
     }
     if (w === null) {
@@ -260,7 +260,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   zoomAuto() {
-    if(this.viewPortLocked) {
+    if (this.viewPortLocked) {
       return;
     }
     let xmin = 0;

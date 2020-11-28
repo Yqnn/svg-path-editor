@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 
-import { ExportComponent } from './save.component';
+import { ExportComponent } from './export.component';
 
 describe('ExportComponent', () => {
   let component: ExportComponent;

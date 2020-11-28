@@ -4,7 +4,7 @@ export function formatNumber(v: number, d: number, minify = false): string {
     let result = v.toFixed(d)
         .replace(/^(-?[0-9]*\.([0-9]*[1-9])?)0*$/, '$1')
         .replace(/\.$/, '');
-    if(minify) {
+    if (minify) {
         result = result.replace(/^(-?)0\./, '$1.');
     }
     return result;
@@ -514,7 +514,7 @@ export class Svg {
                 return str
                     .replace(/^([a-z]) /i, '$1')
                     .replace(/ -/g, '-')
-                    .replace(/(\.[0-9]+) (?=\.)/g, '$1')
+                    .replace(/(\.[0-9]+) (?=\.)/g, '$1');
             } else {
                 return str;
             }

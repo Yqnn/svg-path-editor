@@ -44,7 +44,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Output() afertModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
-  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number, force?:boolean}>();
+  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number, force?: boolean}>();
 
 
   _canvasWidth: number;
@@ -189,12 +189,12 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     const scale = Math.pow(1.005, event.deltaY);
     const pt = this.eventToLocation(event.event);
 
-    this.zoomViewPort(scale, pt)
+    this.zoomViewPort(scale, pt);
   }
 
   zoomViewPort(scale: number,  pt?: {x: number, y: number}) {
-    if(!pt) {
-      pt = {x: this.viewPortX + 0.5*this.viewPortWidth, y: this.viewPortY + 0.5*this.viewPortHeight};
+    if (!pt) {
+      pt = {x: this.viewPortX + 0.5 * this.viewPortWidth, y: this.viewPortY + 0.5 * this.viewPortHeight};
     }
     const w = scale * this.viewPortWidth;
     const h = scale * this.viewPortHeight;
