@@ -40,6 +40,11 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 
 ## Running Locally
 
+### Docker
+Run `docker build -t svg-path-editor . && run -p 4200:4200 svg-path-editor` or `docker-compose up`.
+
+### Manually
+
 ##### Requirements
 - [Node.js](https://nodejs.org/) v12.0 or higher
 
