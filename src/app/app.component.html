@@ -1,5 +1,10 @@
 <div style="display:flex;flex-direction:row;height: 100%;" @leftColumnParent>
-    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="canvas.refreshCanvasSize()" style="width:300px">
+    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="canvas.refreshCanvasSize()" class="left-column-wrapper">
+        <button mat-raised-button class="left-column-close"
+            (click)="toggleLeftPanel()"
+        >
+            <mat-icon>arrow_left</mat-icon>
+        </button>
         <div class="left-column" cdk-scrollable>  
             <app-expandable panelTitle="Path" [opened]="true">
                 <div class="row">
@@ -256,7 +261,13 @@
             <div class="spacer"></div>
         </div>
     </div>
-    <div style="flex:1; align-self:stretch;position: relative;overflow:hidden" class="drawings">
+
+    <div class="drawings">
+        <button mat-raised-button class="left-column-open" *ngIf="!isLeftPanelOpened"
+        (click)="toggleLeftPanel()"
+        >
+            <mat-icon>arrow_right</mat-icon>
+        </button>
         <button mat-mini-fab *ngIf="(!draggedPoint && focusedItem && !preview) || parsedPath.path.length===0"
             color="primary"
             class="add-button"
@@ -272,13 +283,6 @@
         >
             <mat-icon svgIcon="more" *ngIf="focusedItem"></mat-icon>
             <mat-icon *ngIf="!focusedItem">add</mat-icon>
-        </button>
-
-        <button mat-raised-button
-            style="position: absolute; left:0; top:8px; border-radius: 0; min-width:16px; padding:8px 2px"
-            (click)="toggleLeftPanel()"
-        >
-            <mat-icon>{{isLeftPanelOpened?'arrow_left':'arrow_right'}}</mat-icon>
         </button>
 
         <div class="scene-top-actions">
@@ -364,8 +368,9 @@
             [tickInterval]="tickInterval"
             (afertModelChange)="afertModelChange()"
             (dragging)="setIsDragging($event)"
-            (canvasWidthChange)="canvasWidth = $event"
+            (canvasWidthChange)="canvasWidth = $event || canvasWidth"
             (canvasHeightChange)="canvasHeight = $event"
+            (emptyCanvas)="isLeftPanelOpened = false"
             (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h, $event.force)"
         ></svg>
     </div>
