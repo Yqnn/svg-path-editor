@@ -39,7 +39,7 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 ## Running Locally
 
 ### Docker
-Run `docker build -t svg-path-editor . && run -p 4200:4200 svg-path-editor` or `docker-compose up`.
+Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-editor` or `docker-compose up`.
 
 ### Manually
 
