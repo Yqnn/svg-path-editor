@@ -104,8 +104,13 @@ export class AppComponent implements AfterViewInit {
         this.undo();
         $event.preventDefault();
       } else if (!$event.metaKey && !$event.ctrlKey && /^[mlvhcsqtaz]$/i.test($event.key)) {
-        if (this.canInsertAfter(this.focusedItem, $event.key)) {
-          this.insert($event.key, this.focusedItem, false);
+        const isLower = $event.key === $event.key.toLowerCase();
+        const key = $event.key.toUpperCase();
+        if (isLower && this.canInsertAfter(this.focusedItem, key)) {
+          this.insert(key, this.focusedItem, false);
+          $event.preventDefault();
+        } else if (!isLower && this.canConvert(this.focusedItem, key)) {
+          this.insert(key, this.focusedItem, true);
           $event.preventDefault();
         }
       } else if (!$event.metaKey && !$event.ctrlKey && $event.key === 'Escape') {
@@ -115,6 +120,12 @@ export class AppComponent implements AfterViewInit {
         } else {
           // stopDrag will unselect selected item if any
           this.canvas.stopDrag();
+        }
+        $event.preventDefault();
+      } else if (!$event.metaKey && !$event.ctrlKey && ($event.key === 'Delete' || $event.key === 'Backspace')) {
+        if (this.focusedItem && this.canDelete(this.focusedItem)) {
+          this.delete(this.focusedItem);
+          $event.preventDefault();
         }
       }
     }

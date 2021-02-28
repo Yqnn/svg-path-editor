@@ -30,11 +30,13 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Convert all commands to relative or absolute coordinates with **Convert to relative** or **Convert to absolute** button
 
 ##### Shortcuts:
-- Press **m**, **l**, **v**, **h**, **c**, **s**, **q**, **t**, **a** or **z** to insert a relative command after the selected one
-- Press **shift** + **m**, **l**, **v**, **h**, **c**, **s**, **q**, **t**, **a** or **z** to insert an absolute command after the selected one
+- Press **m**, **l**, **v**, **h**, **c**, **s**, **q**, **t**, **a** or **z** to insert a command after the selected one
+- Press **shift** + **m**, **l**, **v**, **h**, **c**, **s**, **q**, **t**, **a** or **z** to convert selected command to a new type
 - Press **echap** to delete the command being created, or the undo the current dragging operation
+- Press **delete** or **backspace** to delete the selected command
 - Press **ctrl** + **z** or **cmd** + **z** to undo
 - Press **ctrl** + **shift** + **z** or **cmd** + **shift** + **z** to redo
+- Press **ctrl** while dragging to ignore `snap to grid` constraint
 
 ## Running Locally
 

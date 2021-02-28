@@ -47,6 +47,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number, force?: boolean}>();
 
 
+  @Output() emptyCanvas = new EventEmitter<void>();
+
   _canvasWidth: number;
   @Output() canvasWidthChange = new EventEmitter<number>();
 
@@ -84,10 +86,10 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
   ngAfterViewInit() {
     setTimeout(() => {
-      this.refreshCanvasSize();
+      this.refreshCanvasSize(true);
     });
     window.addEventListener('resize', () => {
-      this.refreshCanvasSize();
+      this.refreshCanvasSize(true);
     });
   }
 
@@ -131,8 +133,11 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
 
-  refreshCanvasSize() {
+  refreshCanvasSize(emitEmptyCanvas = false) {
     const rect = this.canvas.nativeElement.parentNode.getBoundingClientRect();
+    if (rect.width === 0 && emitEmptyCanvas) {
+      this.emptyCanvas.emit();
+    }
     this.canvasWidth = rect.width;
     this.canvasHeight = rect.height;
 
@@ -250,8 +255,9 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       event.stopPropagation();
       const pt = this.eventToLocation(event);
       if (this.draggedPoint) {
-        pt.x = parseFloat(pt.x.toFixed(this.decimals));
-        pt.y = parseFloat(pt.y.toFixed(this.decimals));
+        const decimals = event.ctrlKey ? (this.decimals ? 0 : 3) : this.decimals;
+        pt.x = parseFloat(pt.x.toFixed(decimals));
+        pt.y = parseFloat(pt.y.toFixed(decimals));
         this.parsedPath.setLocation(this.draggedPoint, pt as Point);
         if (this.draggedIsNew) {
           const previousIdx = this.parsedPath.path.indexOf(this.draggedPoint.itemReference) - 1;

@@ -1,59 +1,69 @@
 <h1 mat-dialog-title>Export as SVG</h1>
 <div mat-dialog-content>
-  <div style="display:flex">
-    <div style="flex:1">
-      <div style="margin-bottom:8px">
+  <div class="export-content">
+    <div class="export-form">
+      <div class="style-form-title">
         Style
       </div>
-      <div style="display:flex">
-        <div style="margin-right: 32px;">
-          <div>
-            <mat-checkbox class="example-margin" [ngModel]="fill" (ngModelChange)="fill=$event;stroke=stroke||!$event">Fill</mat-checkbox>
-          </div>
-          <mat-form-field floatLabel="always" appearance="fill" style="width:121px; margin-right:8px">
-            <mat-label>Fill Color</mat-label>
-            <input matInput [(ngModel)]="fillColor" [disabled]="!fill">
-          </mat-form-field>
-        </div>
+      <div class="style-form-fill">
         <div>
-          <div>
-            <mat-checkbox class="example-margin" [ngModel]="stroke" (ngModelChange)="stroke=$event;fill=fill||!$event">Stroke</mat-checkbox>
+          <mat-checkbox class="example-margin" [ngModel]="fill" (ngModelChange)="fill=$event;stroke=stroke||!$event">Fill</mat-checkbox>
+        </div>
+        <mat-form-field floatLabel="always" appearance="fill">
+          <mat-label>Fill Color</mat-label>
+          <input matInput [(ngModel)]="fillColor" [disabled]="!fill">
+        </mat-form-field>
+      </div>
+      <div class="style-form-stroke">
+        <div>
+          <mat-checkbox class="example-margin" [ngModel]="stroke" (ngModelChange)="stroke=$event;fill=fill||!$event">Stroke</mat-checkbox>
+        </div>
+        <div class="style-form-stroke-fields">
+          <div class="style-form-stroke-field">
+            <mat-form-field floatLabel="always" appearance="fill">
+              <mat-label>Stroke Color</mat-label>
+              <input matInput [(ngModel)]="strokeColor" [disabled]="!stroke">
+            </mat-form-field>
           </div>
-          <mat-form-field floatLabel="always" appearance="fill" style="width:121px; margin-right:8px">
-            <mat-label>Stroke Color</mat-label>
-            <input matInput [(ngModel)]="strokeColor" [disabled]="!stroke">
-          </mat-form-field>
-          <mat-form-field floatLabel="always" appearance="fill" style="width:121px;">
-            <mat-label>Stroke width</mat-label>
-            <input matInput [(ngModel)]="strokeWidth" [disabled]="!stroke">
-          </mat-form-field>
+          <div class="style-form-stroke-field">
+            <mat-form-field floatLabel="always" appearance="fill">
+              <mat-label>Stroke width</mat-label>
+              <input matInput [(ngModel)]="strokeWidth" [disabled]="!stroke">
+            </mat-form-field>
+          </div>
         </div>
       </div>
-      
-      <div style="display: inline-block; position: relative;">
-        <div style="margin:8px 0">ViewBox</div>
-        <button mat-flat-button (click)="refreshViewbox()" color="basic" style="position: absolute;top:0;right:0;">Reset</button>
-        <mat-form-field floatLabel="always" appearance="fill" style="width:97px; margin-right:8px">
+      <div class="viewbox-form-title">
+        <div>ViewBox</div>
+        <button mat-flat-button (click)="refreshViewbox()" color="basic" class="reset-button">Reset</button>
+      </div>
+      <div class="viewbox-form-field">
+        <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>X</mat-label>
           <input matInput [(ngModel)]="x">
         </mat-form-field>
-        <mat-form-field floatLabel="always" appearance="fill" style="width:97px; margin-right:8px">
+      </div>
+      <div class="viewbox-form-field">
+        <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Y</mat-label>
           <input matInput [(ngModel)]="y">
         </mat-form-field>
-        <mat-form-field floatLabel="always" appearance="fill" style="width:97px; margin-right:8px">
+      </div>
+      <div class="viewbox-form-field">
+        <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Width</mat-label>
           <input matInput [(ngModel)]="width">
         </mat-form-field>
-        <mat-form-field floatLabel="always" appearance="fill" style="width:97px;">
+      </div>
+      <div class="viewbox-form-field">
+        <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Height</mat-label>
           <input matInput [(ngModel)]="height">
         </mat-form-field>
       </div>
     </div>
-    <div>
+    <div class="preview">
       <svg [attr.viewBox]="x+' '+y+' '+width+' '+height"
-      style="margin:0 0 0 24px;"
       width="300" height="300"
       xmlns="http://www.w3.org/2000/svg"
       >

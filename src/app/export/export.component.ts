@@ -11,6 +11,7 @@ class DialogData {
 @Component({
   selector: 'app-export-dialog',
   templateUrl: 'export-dialog.component.html',
+  styleUrls: ['./export-dialog.component.scss']
 })
 export class ExportDialogComponent {
   x = 0;
@@ -82,8 +83,7 @@ export class ExportDialogComponent {
 
 @Component({
   selector: 'app-export',
-  templateUrl: './export.component.html',
-  styleUrls: ['./export.component.css']
+  templateUrl: './export.component.html'
 })
 export class ExportComponent {
   @Input() path: string;
