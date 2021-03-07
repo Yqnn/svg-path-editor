@@ -5,8 +5,8 @@
         >
             <mat-icon>arrow_left</mat-icon>
         </button>
-        <div class="left-column" cdk-scrollable>  
-            <app-expandable panelTitle="Path" [opened]="true">
+        <div class="left-column" cdk-scrollable>
+            <app-expandable panelTitle="Path" [panelInfo]="rawPath.length" [opened]="true">
                 <div class="row">
                     <div class="input-block" style="flex-grow:1"> 
                         <label class="opaque">Path</label>
@@ -268,7 +268,7 @@
         >
             <mat-icon>arrow_right</mat-icon>
         </button>
-        <button mat-mini-fab *ngIf="(!draggedPoint && focusedItem && !preview) || parsedPath.path.length===0"
+        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(preview || isEditingImages)"
             color="primary"
             class="add-button"
             [ngStyle]="{
@@ -283,6 +283,23 @@
         >
             <mat-icon svgIcon="more" *ngIf="focusedItem"></mat-icon>
             <mat-icon *ngIf="!focusedItem">add</mat-icon>
+        </button>
+
+
+        <button mat-mini-fab *ngIf="(focusedImage && !preview && !dragging)"
+            color="primary"
+            class="add-button"
+            [ngStyle]="{
+                'left': (max(focusedImage.x1,focusedImage.x2) - viewPortX)/strokeWidth+'px',
+                'top': (max(focusedImage.y1,focusedImage.y2) - viewPortY)/strokeWidth+'px'
+            }"
+            [ngClass]="{'opened':isContextualMenuOpened}"
+            [matMenuTriggerFor]="appImage"
+            [matMenuTriggerData]="{image:focusedImage}"
+            (menuOpened)="isContextualMenuOpened = true"
+            (menuClosed)="isContextualMenuOpened = false"
+        >
+            <mat-icon svgIcon="more"></mat-icon>
         </button>
 
         <div class="scene-top-actions">
@@ -301,9 +318,26 @@
                 matTooltipPosition="below"
                 (click)="redo()"
                 [disabled]="!canRedo()"
-                style="margin-right: 24px"
+                style="margin-right: 16px"
             >
                 <mat-icon>redo</mat-icon>
+            </button>
+
+            <app-upload-image
+                [class.displayed]="isEditingImages"
+                class="add-image-button"
+                (addImage)="addImage($event)"
+                #uploader
+            ></app-upload-image>
+
+            <button mat-mini-fab
+                [color]="isEditingImages ? 'primary' : 'basic'"
+                [matTooltip]="isEditingImages ? undefined : 'Toggle image magemement mode'"
+                matTooltipPosition="below"
+                style="margin-right: 24px"
+                (click)="toggleImageEditing(uploader)"
+            >
+                <mat-icon>image</mat-icon>
             </button>
 
             <app-export [path]="rawPath" [name]="pathName"></app-export>
@@ -348,7 +382,13 @@
             </button>
         </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" app-canvas  [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight" [ngClass]="{preview:preview}"
+        <svg
+            xmlns="http://www.w3.org/2000/svg" 
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            app-canvas 
+            [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight"
+            [ngClass]="{preview:preview}"
+        
             [parsedPath]="parsedPath"
             [targetPoints]="targetPoints"
             [controlPoints]="controlPoints"
@@ -372,6 +412,9 @@
             (canvasHeightChange)="canvasHeight = $event"
             (emptyCanvas)="isLeftPanelOpened = false"
             (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h, $event.force)"
+            [editImages]="isEditingImages"
+            [images]="images"
+            [(focusedImage)]="focusedImage"
         ></svg>
     </div>
 </div>
@@ -415,5 +458,18 @@
         <button mat-menu-item (click)="insert('T', item, convert)" [disabled]="convert?!canConvert(item,'T'):!canInsertAfter(item, 'T')"><strong>T</strong> Shorthand Quadratic Bezier Curve to</button>
         <button mat-menu-item (click)="insert('A', item, convert)" [disabled]="convert?!canConvert(item,'A'):!canInsertAfter(item, 'A')"><strong>A</strong> Elliptical Arc</button>
         <button mat-menu-item (click)="insert('Z', item, convert)" [disabled]="convert?!canConvert(item,'Z'):!canInsertAfter(item, 'Z')"><strong>Z</strong> Close Path</button>
+    </ng-template>
+</mat-menu>
+
+
+<mat-menu #appImage="matMenu">
+    <ng-template matMenuContent let-image="image">
+        <button mat-menu-item (click)="image.preserveAspectRatio = !image.preserveAspectRatio">
+            <mat-icon>aspect_ratio</mat-icon>
+            <ng-container>Toggle Preserve Aspect Ratio</ng-container>
+        </button>
+        <button mat-menu-item (click)="deleteImage(image)">
+            <mat-icon>delete</mat-icon> Delete
+        </button>
     </ng-template>
 </mat-menu>

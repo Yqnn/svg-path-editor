@@ -1,10 +1,12 @@
-import { Component, AfterViewInit, HostBinding, HostListener, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, HostListener, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Svg, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from './svg';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StorageService } from './storage.service';
 import { CanvasComponent } from './canvas/canvas.component';
+import { Image } from './image';
+import { UploadImageComponent } from './upload-image/upload-image.component';
 
 
 @Component({
@@ -75,11 +77,17 @@ export class AppComponent implements AfterViewInit {
   draggedIsNew = false;
   dragging = false;
 
+  // Images
+  images: Image[] = [];
+  focusedImage: Image;
+
   // UI State
   isLeftPanelOpened = true;
   isContextualMenuOpened = false;
+  isEditingImages = false;
 
   // Utility functions:
+  max = Math.max;
   trackByIndex = (idx, _) => idx;
   formatNumber = (v) => formatNumber(v, 4);
 
@@ -127,10 +135,13 @@ export class AppComponent implements AfterViewInit {
           this.delete(this.focusedItem);
           $event.preventDefault();
         }
+        if (this.focusedImage) {
+          this.deleteImage(this.focusedImage);
+          $event.preventDefault();
+        }
       }
     }
   }
-
   get decimals() {
     return  this.snapToGrid ? 0 : this.decimalPrecision;
  }
@@ -173,7 +184,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   canUndo(): boolean {
-    return this.historyCursor > 0;
+    return this.historyCursor > 0 && !this.isEditingImages;
   }
 
   undo() {
@@ -186,7 +197,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   canRedo(): boolean {
-    return this.historyCursor < this.history.length - 1;
+    return this.historyCursor < this.history.length - 1 && !this.isEditingImages;
   }
 
   redo() {
@@ -436,5 +447,24 @@ export class AppComponent implements AfterViewInit {
 
   toggleLeftPanel() {
     this.isLeftPanelOpened = !this.isLeftPanelOpened;
+  }
+
+  deleteImage(image: Image) {
+    this.images.splice(this.images.indexOf(image), 1);
+    this.focusedImage = null;
+  }
+
+  addImage(newImage: Image) {
+    this.focusedImage = newImage;
+    this.images.push(newImage);
+  }
+
+  toggleImageEditing(upload: UploadImageComponent) {
+    this.isEditingImages = !this.isEditingImages;
+    this.focusedImage = null;
+    this.focusedItem = null;
+    if (this.isEditingImages && this.images.length === 0) {
+      upload.openDialog();
+    }
   }
 }

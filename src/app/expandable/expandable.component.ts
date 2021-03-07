@@ -16,6 +16,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class ExpandableComponent {
   @Input() opened: boolean;
   @Input() panelTitle: string;
+  @Input() panelInfo: string;
 
   constructor() { }
 

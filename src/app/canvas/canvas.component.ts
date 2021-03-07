@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
+import { Image } from '../image';
 import { Point, Svg, SvgControlPoint, SvgItem, SvgPoint } from '../svg';
 
 /* tslint:disable:component-selector */
@@ -25,6 +26,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     this._wasCanvasDragged = wasCanvasDragged;
     this.wasCanvasDraggedChange.emit(this._wasCanvasDragged);
   }
+  get focusedImage(): Image { return this._focusedImage; }
+  @Input() set focusedImage(focusedImage: Image) { this._focusedImage = focusedImage; this.focusedImageChange.emit(this.focusedImage); }
 
   constructor(public canvas: ElementRef) { }
   @Input() parsedPath: Svg;
@@ -41,6 +44,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() showTicks: boolean;
   @Input() tickInterval: number;
   @Input() draggedIsNew = false;
+  @Input() images: Image[] = [];
+  @Input() editImages = true;
 
   @Output() afertModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
@@ -67,12 +72,20 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   _wasCanvasDragged = false;
   @Output() wasCanvasDraggedChange = new EventEmitter<boolean>();
 
+  _focusedImage: Image;
+  @Output() focusedImageChange = new EventEmitter<Image>();
+
   draggedEvt: MouseEvent | TouchEvent;
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
+  draggedImage: Image;
+  draggedImageType: number;
   xGrid: number[];
   yGrid: number[];
 
+  // Utility functions
+  min = Math.min;
+  abs = Math.abs;
   trackByIndex = (idx, _) => idx;
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -228,6 +241,14 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     this.dragWithoutClick = false;
   }
 
+  startDragImage(event: MouseEvent | TouchEvent, im: Image, type: number): void {
+    this.dragging.emit(true);
+    this.draggedEvt = event;
+    this.draggedImage = im;
+    this.draggedImageType = type;
+    this.focusedImage = im;
+  }
+
   stopDrag() {
     if (this.draggedPoint && this.draggedEvt) {
       this.drag(this.draggedEvt);
@@ -238,13 +259,19 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       // unselect action
       this.focusedItem = null;
     }
+    if (!this.draggedImage && !this.wasCanvasDragged) {
+      this.focusedImage = null;
+    }
+
     this.draggedPoint = null;
     this.draggedEvt = null;
     this.dragWithoutClick = true;
+
+    this.draggedImage = null;
   }
 
   drag(event: MouseEvent | TouchEvent) {
-    if (this.draggedPoint || this.draggedEvt) {
+    if (this.draggedPoint || this.draggedEvt || this.draggedImage) {
 
       if (!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
         // Stop dragging is click is not maintained anymore.
@@ -254,7 +281,25 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
       event.stopPropagation();
       const pt = this.eventToLocation(event);
-      if (this.draggedPoint) {
+      if (this.draggedImage) {
+        const oriPt = this.eventToLocation(this.draggedEvt);
+        /* tslint:disable:no-bitwise */
+        if (this.draggedImageType & 0b0001) {
+          this.draggedImage.x1 += (pt.x - oriPt.x);
+        }
+        if (this.draggedImageType & 0b0010) {
+          this.draggedImage.y1 += (pt.y - oriPt.y);
+        }
+        if (this.draggedImageType & 0b0100) {
+          this.draggedImage.x2 += (pt.x - oriPt.x);
+        }
+        if (this.draggedImageType & 0b1000) {
+          this.draggedImage.y2 += (pt.y - oriPt.y);
+        }
+        /* tslint:enable:no-bitwise */
+        this.draggedEvt = event;
+
+      } else if (this.draggedPoint) {
         const decimals = event.ctrlKey ? (this.decimals ? 0 : 3) : this.decimals;
         pt.x = parseFloat(pt.x.toFixed(decimals));
         pt.y = parseFloat(pt.y.toFixed(decimals));

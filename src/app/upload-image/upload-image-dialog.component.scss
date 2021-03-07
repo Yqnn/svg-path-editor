@@ -1,0 +1,25 @@
+.upload-image-dialog-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-bottom:8px;
+
+    .upload-button-row {
+        width: 100%;
+        padding-bottom:16px;
+        display: flex;
+        align-items: center;
+        .preview {
+            max-height: 36px;
+            max-width: 60px;
+            margin-left:16px;
+        }
+        .filename {
+            margin-left:16px;
+            font-style: italic;
+        }
+    }
+    mat-form-field {
+        width: calc(50% - 4px);
+    }
+}

@@ -65,3 +65,40 @@ text.tick {
     cursor: default;
     user-select: none;
 }
+
+
+
+
+/* images */
+rect.image-control {
+    fill: rgba(0,0,0,0);
+    stroke: none;
+}
+line.image-control {
+    stroke:gray;
+}
+circle.image-control {
+    fill:gray;
+}
+.focused-image line.image-control {
+    stroke:rgb(0, 174, 255);
+}
+.focused-image circle.image-control {
+    fill:rgb(0, 174, 255);
+}
+
+.image-control.horizontal {
+    cursor: ns-resize;
+}
+.image-control.vertical {
+    cursor: ew-resize;
+}
+.image-control.down {
+    cursor: nwse-resize;
+}
+.image-control.up {
+    cursor: nesw-resize;
+}
+.image-control.move {
+    cursor: move;
+}

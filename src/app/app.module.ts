@@ -26,6 +26,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { FormatterDirective } from './formatter/formatter.directive';
 import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-navigable.directive';
 import { ExportComponent, ExportDialogComponent } from './export/export.component';
+import { UploadImageComponent, UploadImageDialogComponent } from './upload-image/upload-image.component';
 
 @NgModule({
   declarations: [
@@ -33,11 +34,13 @@ import { ExportComponent, ExportDialogComponent } from './export/export.componen
     ExpandableComponent,
     CanvasComponent,
     OpenComponent,
+    OpenDialogComponent,
     SaveComponent,
     SaveDialogComponent,
     ExportComponent,
     ExportDialogComponent,
-    OpenDialogComponent,
+    UploadImageComponent,
+    UploadImageDialogComponent,
     FormatterDirective,
     KeyboardNavigableDirective
   ],

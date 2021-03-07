@@ -125,6 +125,17 @@ div.dragged {
             font-size: 1px;
             margin-left:8px;
         }
+        >.add-image-button {
+            position: absolute;
+            margin-left:8px;
+            top:0;
+            opacity: 0;
+            transition: top 0.2s, opacity 0.2s;
+            &.displayed {
+                top:48px;
+                opacity: 1;
+            }
+        }
     }
 
     .scene-bottom-actions {
