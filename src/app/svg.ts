@@ -213,8 +213,10 @@ export abstract class SvgItem {
         ].join(' ');
     }
 
-    public asString(decimals: number = 4, minify: boolean = false): string {
-        const strValues = this.values.map(it => formatNumber(it, decimals, minify));
+    public asString(decimals: number = 4, minify: boolean = false, trailingItems: SvgItem[] = []): string {
+        const strValues = [this.values, ...trailingItems.map(it => it.values)]
+            .reduce((acc, val) => acc.concat(val), [])
+            .map(it => formatNumber(it, decimals, minify));
         return [this.getType(), ...strValues].join(' ');
     }
 }
@@ -508,8 +510,26 @@ export class Svg {
     }
 
     asString(decimals: number = 4, minify: boolean = false): string {
-        return this.path.map((it) => {
-            const str = it.asString(decimals, minify);
+        return this.path
+        .reduce((acc: {type: string, item: SvgItem, trailing: SvgItem[]}[], it: SvgItem) => {
+            // Group together the items that can be merged (M 0 0 L 1 1 => M 0 0 1 1)
+            const type = it.getType();
+            if(minify && acc.length > 0 && (type === 'l' || type === 'L')) {
+                const last = acc[acc.length - 1];
+                if(last.type === type) {
+                    last.trailing.push(it);
+                    return acc;
+                }
+            }
+            acc.push({
+                type: type === 'l' || type ==='m' ? 'l' : (type === 'L' || type ==='M' ? 'L' : undefined),
+                item: it,
+                trailing: []
+            });
+            return acc;
+        }, [])
+        .map(it => {
+            const str = it.item.asString(decimals, minify, it.trailing);
             if (minify) {
                 return str
                     .replace(/^([a-z]) /i, '$1')

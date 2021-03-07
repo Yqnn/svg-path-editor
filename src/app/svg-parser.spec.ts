@@ -4,11 +4,11 @@ const parse = SvgParser.parse;
 
 it('moveTo', () => {
   expect(() => parse('m 10')).toThrow();
-  expect(parse('m 10 20')).toEqual([['M', '10', '20']]);
+  expect(parse('m 10 20')).toEqual([['m', '10', '20']]);
 });
 
 it('exponents', () => {
-  expect(parse('m 1e3 2e-3')).toEqual([['M', '1e3', '2e-3']]);
+  expect(parse('m 1e3 2e-3')).toEqual([['m', '1e3', '2e-3']]);
 });
 
 it('no whitespace between negative sign', () => {
@@ -17,7 +17,7 @@ it('no whitespace between negative sign', () => {
 
 it('overloaded moveTo', () => {
   expect(parse('m 12.5,52 39,0 0,-40 -39,0 z')).toEqual([
-    ['M', '12.5', '52'],
+    ['m', '12.5', '52'],
     ['l', '39', '0'],
     ['l', '0', '-40'],
     ['l', '-39', '0'],

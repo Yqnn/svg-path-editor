@@ -71,9 +71,6 @@ export class SvgParser {
                 throw new Error('malformed path (first error at ' + cursor + ')');
             }
         }
-        if (tokens.length > 0 && tokens[0][0] === 'm') {
-            tokens[0][0] = 'M';
-        }
         return tokens;
     }
 }
