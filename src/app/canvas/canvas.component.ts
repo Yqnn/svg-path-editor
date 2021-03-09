@@ -104,10 +104,13 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     window.addEventListener('resize', () => {
       this.refreshCanvasSize(true);
     });
+
+    // Following line is a workaround for a bug in Safari preventing the Wheel events to be fired:
+    window.addEventListener('wheel', () => {});
   }
 
   ngOnInit(): void {
-    const throttler = throttleTime(50, undefined, {leading: false, trailing: true});
+    const throttler = throttleTime(20, undefined, {leading: false, trailing: true});
     this.wheel$
       .pipe( buffer(this.wheel$.pipe(throttler)) )
       .pipe( map(ev => ({
