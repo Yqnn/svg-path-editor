@@ -40,25 +40,25 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 
 ## Running Locally
 
-### Docker
-Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-editor` or `docker-compose up`.
-
-### Manually
+### With Node.js
 
 ##### Requirements
-- [Node.js](https://nodejs.org/) v12.0 or higher
+- [Node.js](https://nodejs.org/) v12.14, v14.15 or higher.
 
 ##### Dependencies
 Run `npm install` to retrieve all the depencies of the project.
 
 ##### Development server
-Run `npx ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ##### Build
-Run `npx ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `npm run build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
 ##### Running unit tests
-Run `npx ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+### With Docker
+Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-editor` or `docker-compose up`.
 
 ---
 

@@ -437,7 +437,7 @@ export class AppComponent implements AfterViewInit {
       }
     } catch (e) {
       this.invalidSyntax = true;
-      if(!this.parsedPath) {
+      if (!this.parsedPath) {
         this.parsedPath = new Svg('');
       }
     }

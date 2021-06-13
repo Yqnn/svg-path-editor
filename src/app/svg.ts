@@ -514,15 +514,15 @@ export class Svg {
         .reduce((acc: {type: string, item: SvgItem, trailing: SvgItem[]}[], it: SvgItem) => {
             // Group together the items that can be merged (M 0 0 L 1 1 => M 0 0 1 1)
             const type = it.getType();
-            if(minify && acc.length > 0 && (type === 'l' || type === 'L')) {
+            if (minify && acc.length > 0 && (type === 'l' || type === 'L')) {
                 const last = acc[acc.length - 1];
-                if(last.type === type) {
+                if (last.type === type) {
                     last.trailing.push(it);
                     return acc;
                 }
             }
             acc.push({
-                type: type === 'l' || type ==='m' ? 'l' : (type === 'L' || type ==='M' ? 'L' : undefined),
+                type: type === 'l' || type === 'm' ? 'l' : (type === 'L' || type === 'M' ? 'L' : undefined),
                 item: it,
                 trailing: []
             });
