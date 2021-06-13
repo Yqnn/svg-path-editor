@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Image } from '../image';
@@ -73,7 +73,7 @@ export class UploadImageDialogComponent {
   selector: 'app-upload-image',
   templateUrl: './upload-image.component.html'
 })
-export class UploadImageComponent implements OnInit {
+export class UploadImageComponent {
   @Output() addImage = new EventEmitter<Image>();
 
   constructor(
@@ -90,8 +90,5 @@ export class UploadImageComponent implements OnInit {
         this.addImage.emit(result);
       }
     });
-  }
-
-  ngOnInit(): void {
   }
 }

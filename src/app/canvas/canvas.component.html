@@ -31,7 +31,7 @@
         </ng-container>
 
         <ng-container *ngFor="let x of xGrid; trackBy:trackByIndex">
-            <svg:text class="tick" *ngIf="x != 0 && x % tickInterval === 0" [attr.x]="x - 4*strokeWidth" [attr.y]="-4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}">{{ x }}</text>
+            <svg:text class="tick" *ngIf="x !== 0 && x % tickInterval === 0" [attr.x]="x - 4*strokeWidth" [attr.y]="-4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}">{{ x }}</text>
         </ng-container>
     </ng-container>
 

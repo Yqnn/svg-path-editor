@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { StorageService } from '../storage.service';
 
@@ -30,7 +30,7 @@ export class SaveDialogComponent {
   templateUrl: './save.component.html',
   styleUrls: ['./save.component.css']
 })
-export class SaveComponent implements OnInit {
+export class SaveComponent {
   @Input() path: string;
   @Input() name: string;
   @Output() nameChange = new EventEmitter<string>();
@@ -64,8 +64,5 @@ export class SaveComponent implements OnInit {
         this.nameChange.emit(this.name);
       }
     });
-  }
-
-  ngOnInit(): void {
   }
 }

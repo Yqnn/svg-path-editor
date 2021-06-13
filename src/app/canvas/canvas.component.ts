@@ -4,7 +4,7 @@ import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Image } from '../image';
 import { Point, Svg, SvgControlPoint, SvgItem, SvgPoint } from '../svg';
 
-/* tslint:disable:component-selector */
+/* eslint-disable @angular-eslint/component-selector */
 @Component({
   selector: '[app-canvas]',
   templateUrl: './canvas.component.html',
@@ -286,7 +286,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       const pt = this.eventToLocation(event);
       if (this.draggedImage) {
         const oriPt = this.eventToLocation(this.draggedEvt);
-        /* tslint:disable:no-bitwise */
+        /* eslint-disable no-bitwise */
         if (this.draggedImageType & 0b0001) {
           this.draggedImage.x1 += (pt.x - oriPt.x);
         }
@@ -299,7 +299,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.draggedImageType & 0b1000) {
           this.draggedImage.y2 += (pt.y - oriPt.y);
         }
-        /* tslint:enable:no-bitwise */
+        /* eslint-enable no-bitwise */
         this.draggedEvt = event;
 
       } else if (this.draggedPoint) {

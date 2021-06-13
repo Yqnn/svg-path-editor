@@ -228,7 +228,7 @@
                         (click)="item.setRelative(!item.relative); afertModelChange();"
                     >{{item.getType()}}</div>
                     <ng-container *ngFor="let value of item.values; let i = index; trackBy:trackByIndex">
-                        <mat-checkbox *ngIf="item.getType().toLowerCase()==='a' && (i==3 || i==4)"
+                        <mat-checkbox *ngIf="item.getType().toLowerCase()==='a' && (i===3 || i===4)"
                             [ngModel]="value"
                             (ngModelChange)="setValue(item,i,$event?1:0);"
                             (focus)="focusedItem=item"
@@ -236,7 +236,7 @@
                             matTooltipClass="app-tooltip"
                             [matTooltip]="getTooltip(item, i)"
                         ></mat-checkbox>
-                        <input *ngIf="!(item.getType().toLowerCase()==='a' && (i==3 || i==4))"
+                        <input *ngIf="!(item.getType().toLowerCase()==='a' && (i===3 || i===4))"
                             type="text"
                             appKeyboardNavigable
                             keyboardNavigableIdPrefix="svg_command"
