@@ -6,9 +6,9 @@ import { formatNumber } from '../svg';
 })
 export class FormatterDirective implements OnChanges {
   @Input() formatterType: 'float'|'positive-float'|'integer'|'positive-integer' = 'float';
-  @Input() value: number;
+  @Input() value: number = 0;
   @Output() valueChange = new EventEmitter<number>();
-  internalValue: number;
+  internalValue: number = 0;
 
   constructor(private el: ElementRef<HTMLInputElement>) { }
 
@@ -23,15 +23,15 @@ export class FormatterDirective implements OnChanges {
   }
 
   @HostListener('blur', ['$event'])
-  onBlur(e) {
+  onBlur(e: FocusEvent) {
     if (this.internalValue !== parseFloat(this.viewValue)) {
       this.viewValue = formatNumber(this.internalValue, 4);
     }
   }
 
   @HostListener('input', ['$event'])
-  onInput(e) {
-    let value;
+  onInput(e: InputEvent) {
+    let value = '';
     if (this.formatterType === 'float') { value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^\-0-9.eE]/g, ''); }
     if (this.formatterType === 'integer') { value = this.viewValue.replace(/[^\-0-9]/g, ''); }
     if (this.formatterType === 'positive-float') { value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^0-9.eE]/g, ''); }

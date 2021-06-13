@@ -35,7 +35,7 @@ export class AppComponent implements AfterViewInit {
     || `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 `
       + `A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 `
       + `C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1`;
-  pathName: string;
+  pathName: string = '';
   invalidSyntax = false;
 
   // Undo/redo
@@ -64,22 +64,22 @@ export class AppComponent implements AfterViewInit {
   decimalPrecision = 3;
 
   // Canvas Data:
-  @ViewChild(CanvasComponent) canvas;
+  @ViewChild(CanvasComponent) canvas?: CanvasComponent;
   canvasWidth = 100;
   canvasHeight = 100;
-  strokeWidth: number;
+  strokeWidth: number = 1;
 
   // Dragged & hovered elements
-  draggedPoint: SvgPoint;
-  focusedItem: SvgItem;
-  hoveredItem: SvgItem;
+  draggedPoint: SvgPoint | null = null;
+  focusedItem: SvgItem | null = null;
+  hoveredItem: SvgItem | null = null;
   wasCanvasDragged = false;
   draggedIsNew = false;
   dragging = false;
 
   // Images
   images: Image[] = [];
-  focusedImage: Image;
+  focusedImage: Image | null = null;
 
   // UI State
   isLeftPanelOpened = true;
@@ -88,8 +88,8 @@ export class AppComponent implements AfterViewInit {
 
   // Utility functions:
   max = Math.max;
-  trackByIndex = (idx, _) => idx;
-  formatNumber = (v) => formatNumber(v, 4);
+  trackByIndex = (idx: number, _: any) => idx;
+  formatNumber = (v: number) => formatNumber(v, 4);
 
   constructor(
     matRegistry: MatIconRegistry,
@@ -99,10 +99,11 @@ export class AppComponent implements AfterViewInit {
     for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit']) {
       matRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(`./assets/${icon}.svg`));
     }
+    this.parsedPath = new Svg('');
     this.reloadPath(this.rawPath, true);
   }
 
-  @HostListener('document:keydown', ['$event']) onKeyDown($event) {
+  @HostListener('document:keydown', ['$event']) onKeyDown($event: any) {
     const tag = $event.target.tagName;
     if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
       if ($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
@@ -114,10 +115,10 @@ export class AppComponent implements AfterViewInit {
       } else if (!$event.metaKey && !$event.ctrlKey && /^[mlvhcsqtaz]$/i.test($event.key)) {
         const isLower = $event.key === $event.key.toLowerCase();
         const key = $event.key.toUpperCase();
-        if (isLower && this.canInsertAfter(this.focusedItem, key)) {
+        if (isLower && this.focusedItem && this.canInsertAfter(this.focusedItem, key)) {
           this.insert(key, this.focusedItem, false);
           $event.preventDefault();
-        } else if (!isLower && this.canConvert(this.focusedItem, key)) {
+        } else if (!isLower && this.focusedItem && this.canConvert(this.focusedItem, key)) {
           this.insert(key, this.focusedItem, true);
           $event.preventDefault();
         }
@@ -125,7 +126,7 @@ export class AppComponent implements AfterViewInit {
         if (this.dragging) {
           // If an element is being dragged, undo by reloading the current history entry
           this.reloadPath(this.history[this.historyCursor]);
-        } else {
+        } else if(this.canvas){
           // stopDrag will unselect selected item if any
           this.canvas.stopDrag();
         }
@@ -209,14 +210,14 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  updateViewPort(x: number, y: number, w: number, h: number, force = false) {
+  updateViewPort(x: number, y: number, w: number | null, h: number | null, force = false) {
     if (!force && this.viewPortLocked) {
       return;
     }
-    if (w === null) {
+    if (w === null && h !==null) {
       w = this.canvasWidth * h / this.canvasHeight;
     }
-    if (h === null) {
+    if (h === null && w !==null) {
       h = this.canvasHeight * w / this.canvasWidth;
     }
     if (!w || !h) {
@@ -240,7 +241,7 @@ export class AppComponent implements AfterViewInit {
       const pts = this.targetPoints;
       let point1: Point;
 
-      let newItem: SvgItem;
+      let newItem: SvgItem | null = null;
       if (after) {
         point1 = after.targetLocation();
       } else if (pts.length === 0) {
@@ -271,13 +272,17 @@ export class AppComponent implements AfterViewInit {
           case 'z':
             newItem = SvgItem.Make([type]);
         }
-        this.parsedPath.insert(newItem, after);
+        if(newItem) {
+          this.parsedPath.insert(newItem, after);
+        }
       }
       this.setHistoryDisabled(true);
       this.afertModelChange();
 
-      this.focusedItem = newItem;
-      this.draggedPoint = newItem.targetLocation();
+      if(newItem) {
+        this.focusedItem = newItem;
+        this.draggedPoint = newItem.targetLocation();
+      }
     }
   }
 
@@ -358,8 +363,8 @@ export class AppComponent implements AfterViewInit {
     const idx = this.parsedPath.path.indexOf(item);
     return idx > 0;
   }
-  canInsertAfter(item: SvgItem, type: string): boolean {
-    let previousType: string;
+  canInsertAfter(item: SvgItem | null, type: string): boolean {
+    let previousType: string | null = null;
     if (item !== null) {
       previousType = item.getType().toUpperCase();
     } else if (this.parsedPath.path.length > 0) {
@@ -393,8 +398,8 @@ export class AppComponent implements AfterViewInit {
     return false;
   }
 
-  getTooltip(item: SvgItem, idx: number) {
-    const labels = {
+  getTooltip(item: SvgItem, idx: number): string {
+    const labels: {[key: string]: string[]} = {
       M: ['x', 'y'],
       m: ['dx', 'dy'],
       L: ['x', 'y'],
@@ -417,14 +422,14 @@ export class AppComponent implements AfterViewInit {
     return labels[item.getType()][idx];
   }
 
-  openPath(newPath: string, name: string) {
+  openPath(newPath: string, name: string): void {
     this.pathName = name;
     this.reloadPath(newPath, true);
     this.history = [];
     this.historyCursor = -1;
   }
 
-  reloadPath(newPath: string, autozoom = false) {
+  reloadPath(newPath: string, autozoom = false): void {
     this.hoveredItem = null;
     this.focusedItem = null;
     this.rawPath = newPath;
@@ -443,26 +448,26 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  reloadPoints() {
+  reloadPoints(): void {
     this.targetPoints = this.parsedPath.targetLocations();
     this.controlPoints = this.parsedPath.controlLocations();
   }
 
-  toggleLeftPanel() {
+  toggleLeftPanel(): void {
     this.isLeftPanelOpened = !this.isLeftPanelOpened;
   }
 
-  deleteImage(image: Image) {
+  deleteImage(image: Image): void {
     this.images.splice(this.images.indexOf(image), 1);
     this.focusedImage = null;
   }
 
-  addImage(newImage: Image) {
+  addImage(newImage: Image): void {
     this.focusedImage = newImage;
     this.images.push(newImage);
   }
 
-  toggleImageEditing(upload: UploadImageComponent) {
+  toggleImageEditing(upload: UploadImageComponent): void {
     this.isEditingImages = !this.isEditingImages;
     this.focusedImage = null;
     this.focusedItem = null;

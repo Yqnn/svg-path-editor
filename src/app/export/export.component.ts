@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialo
 import { StorageService } from '../storage.service';
 import { Svg } from '../svg';
 
-class DialogData {
+interface DialogData {
   path: string;
   name: string;
 }
@@ -86,8 +86,8 @@ export class ExportDialogComponent {
   templateUrl: './export.component.html'
 })
 export class ExportComponent {
-  @Input() path: string;
-  @Input() name: string;
+  @Input() path: string = '';
+  @Input() name: string = '';
 
   constructor(
     public dialog: MatDialog

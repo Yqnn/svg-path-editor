@@ -36,7 +36,7 @@
           <mat-icon>delete</mat-icon>
         </button>
         <ng-container *ngIf="beingRemoved===element.name">
-          <button (click)="beingRemoved=null;$event.stopPropagation();" mat-mini-fab color="basic" style="margin-right: 8px;"
+          <button (click)="beingRemoved=undefined;$event.stopPropagation();" mat-mini-fab color="basic" style="margin-right: 8px;"
             matTooltip="Cancel"
             matTooltipPosition="below"
             matTooltipClass="app-tooltip"

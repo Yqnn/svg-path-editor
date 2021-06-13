@@ -9,8 +9,8 @@ import { Image } from '../image';
   styleUrls: ['./upload-image-dialog.component.scss']
 })
 export class UploadImageDialogComponent {
-  data: string = null;
-  displayableData: SafeResourceUrl = null;
+  data: string | null = null;
+  displayableData: SafeResourceUrl | null = null;
   name = '';
   x = '0';
   y = '0';
@@ -28,7 +28,9 @@ export class UploadImageDialogComponent {
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.data = e.target.result;
-        this.displayableData = this.domSanitizer.bypassSecurityTrustResourceUrl(this.data);
+        if(this.data) {
+          this.displayableData = this.domSanitizer.bypassSecurityTrustResourceUrl(this.data);
+        }
       };
       this.name = file.name;
       reader.readAsDataURL(file);
@@ -51,19 +53,23 @@ export class UploadImageDialogComponent {
   }
   onFileSelected(uploadInput: HTMLInputElement) {
     if (typeof (FileReader) !== 'undefined') {
-      this.importFile(uploadInput.files[0]);
+      if(uploadInput.files) {
+        this.importFile(uploadInput.files[0]);
+      }
     } else {
       alert('FileReader not supported');
     }
   }
   onDrop(event: DragEvent) {
-    const file = event.dataTransfer.files[0];
-    if (/^image\//.test(file.type)) {
-      this.importFile(file);
+    if(event.dataTransfer && event.dataTransfer.files) {
+      const file = event.dataTransfer.files[0];
+      if (/^image\//.test(file.type)) {
+        this.importFile(file);
+      }
     }
     event.preventDefault();
   }
-  onDragOver(event) {
+  onDragOver(event: DragEvent) {
       event.stopPropagation();
       event.preventDefault();
   }

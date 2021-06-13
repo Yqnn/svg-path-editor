@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 import { OpenComponent } from './open.component';
 
@@ -9,7 +10,7 @@ describe('OpenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatDialogModule ],
+      imports: [ MatDialogModule, MatIconModule ],
       declarations: [ OpenComponent ]
     })
     .compileComponents();

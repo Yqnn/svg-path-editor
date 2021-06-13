@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 import { UploadImageComponent } from './upload-image.component';
 
@@ -9,7 +10,7 @@ describe('UploadImageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatDialogModule ],
+      imports: [ MatDialogModule, MatIconModule ],
       declarations: [ UploadImageComponent ]
     })
     .compileComponents();

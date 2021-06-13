@@ -1,4 +1,4 @@
-export class Image {
+export interface Image {
     x1: number;
     y1: number;
     x2: number;

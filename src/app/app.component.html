@@ -1,12 +1,12 @@
 <div style="display:flex;flex-direction:row;height: 100%;" @leftColumnParent>
-    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="canvas.refreshCanvasSize()" class="left-column-wrapper">
+    <div *ngIf="isLeftPanelOpened" @leftColumn (@leftColumn.done)="canvas?.refreshCanvasSize()" class="left-column-wrapper">
         <button mat-raised-button class="left-column-close"
             (click)="toggleLeftPanel()"
         >
             <mat-icon>arrow_left</mat-icon>
         </button>
         <div class="left-column" cdk-scrollable>
-            <app-expandable panelTitle="Path" [panelInfo]="rawPath.length" [opened]="true">
+            <app-expandable panelTitle="Path" [panelInfo]="rawPath.length.toString()" [opened]="true">
                 <div class="row">
                     <div class="input-block" style="flex-grow:1"> 
                         <label class="opaque">Path</label>
@@ -332,7 +332,7 @@
 
             <button mat-mini-fab
                 [color]="isEditingImages ? 'primary' : 'basic'"
-                [matTooltip]="isEditingImages ? undefined : 'Toggle image magemement mode'"
+                [matTooltip]="isEditingImages ? '' : 'Toggle image magemement mode'"
                 matTooltipPosition="below"
                 style="margin-right: 24px"
                 (click)="toggleImageEditing(uploader)"
@@ -340,7 +340,7 @@
                 <mat-icon>image</mat-icon>
             </button>
 
-            <app-export [path]="rawPath" [name]="pathName"></app-export>
+            <app-export [path]="rawPath" [name]="pathName || '' "></app-export>
         </div>
         <div class="scene-bottom-actions">
             <button
@@ -355,7 +355,7 @@
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="viewPortLocked=false;canvas.zoomViewPort(9/10)"
+                (click)="viewPortLocked=false;canvas?.zoomViewPort(9/10)"
                 matTooltip="Zoom In"
                 matTooltipPosition="left"
                 style="margin-top: 24px"
@@ -374,7 +374,7 @@
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="viewPortLocked=false;canvas.zoomViewPort(10/9)"
+                (click)="viewPortLocked=false;canvas?.zoomViewPort(10/9)"
                 matTooltip="Zoom Out"
                 matTooltipPosition="left"
             >

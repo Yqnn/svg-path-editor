@@ -6,7 +6,7 @@ import { StorageService } from '../storage.service';
 import { Svg } from '../svg';
 
 export class DialogData {
-  name: string;
+  name?: string;
 }
 
 @Component({
@@ -24,16 +24,17 @@ export class OpenDialogComponent implements AfterViewInit {
 
   dataSource = new MatTableDataSource(this.storageService.storedPaths.filter(it => !!it.name));
   displayedColumns = ['preview', 'name', 'create', 'change', 'actions'];
-  beingRemoved: string;
-  @ViewChild(MatSort) sort: MatSort;
+  beingRemoved?: string;
+  @ViewChild(MatSort) sort: MatSort | null = null;
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
-        case 'change': return new Date(item.changeDate);
-        case 'create': return new Date(item.creationDate);
-        default: return item[property];
+        case 'change': return new Date(item.changeDate).getTime();
+        case 'create': return new Date(item.creationDate).getTime();
+        case 'name': return item.name || '';
+        default: return item.path;
       }
     };
   }
@@ -93,7 +94,13 @@ export class OpenComponent {
 
     dialogRef.afterClosed().subscribe((result: DialogData)  => {
       if (result) {
-        this.openPath.emit(this.storageService.getPath(result.name));
+        const storedPath = this.storageService.getPath(result.name);
+        if(storedPath && storedPath.name && storedPath.path) {
+          this.openPath.emit({
+            name: storedPath.name,
+            path: storedPath.path
+          });
+        }
       }
     });
   }

@@ -4,11 +4,11 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
   selector: '[appKeyboardNavigable]'
 })
 export class KeyboardNavigableDirective {
-  @Input() keyboardNavigableIdPrefix: string;
+  @Input() keyboardNavigableIdPrefix: string = '';
 
   constructor(private el: ElementRef<HTMLInputElement>) { }
 
-  setFocus(row: number, col: number, event: InputEvent): boolean {
+  setFocus(row: number, col: number, event: KeyboardEvent): boolean {
     const el = document.getElementById(`${this.keyboardNavigableIdPrefix}_${row}_${col}`) as HTMLInputElement;
     if (el) {
       el.focus();
@@ -19,8 +19,8 @@ export class KeyboardNavigableDirective {
     return false;
   }
 
-  moveFocusTo(type: 'left'|'right'|'up'|'down', event: InputEvent) {
-    const id = this.el.nativeElement.getAttribute('id');
+  moveFocusTo(type: 'left'|'right'|'up'|'down', event: KeyboardEvent) {
+    const id = this.el.nativeElement.getAttribute('id') || '';
     let row = parseInt(id.replace(/.*_([0-9]+)_[0-9]+$/, '$1'), 10);
     let col = parseInt(id.replace(/.*_[0-9]+_([0-9]+)$/, '$1'), 10);
 
@@ -75,7 +75,7 @@ export class KeyboardNavigableDirective {
   }
 
   @HostListener('keydown', ['$event'])
-  onKeydown(e) {
+  onKeydown(e: KeyboardEvent) {
     const selStart = this.el.nativeElement.selectionStart;
     const selEnd = this.el.nativeElement.selectionEnd;
     if (selStart === selEnd) {

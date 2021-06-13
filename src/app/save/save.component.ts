@@ -2,7 +2,7 @@ import { Component, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { StorageService } from '../storage.service';
 
-export class DialogData {
+export interface DialogData {
   name: string;
 }
 
@@ -31,8 +31,8 @@ export class SaveDialogComponent {
   styleUrls: ['./save.component.css']
 })
 export class SaveComponent {
-  @Input() path: string;
-  @Input() name: string;
+  @Input() path: string = '';
+  @Input() name: string = '';
   @Output() nameChange = new EventEmitter<string>();
 
   constructor(

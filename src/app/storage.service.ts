@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-class StoredPath {
-  name = '';
+export class StoredPath {
+  name: string | null = '';
   path = '';
   creationDate: Date = new Date();
   changeDate: Date = new Date();
@@ -20,7 +20,7 @@ export class StorageService {
     return this.getPath(name) !== undefined;
   }
 
-  getPath(name: string = null): StoredPath {
+  getPath(name: string | null = null): StoredPath | undefined {
     return this.storedPaths.find(it => it.name === name);
   }
 
@@ -29,7 +29,7 @@ export class StorageService {
     this.save();
   }
 
-  addPath(name: string, path: string) {
+  addPath(name: string | null, path: string) {
     let p = this.getPath(name);
     if (!p) {
       p = new StoredPath();
@@ -49,7 +49,7 @@ export class StorageService {
     this.storedPaths = [];
     const stored = localStorage.getItem('storedPaths');
     if (stored) {
-      const parsed = JSON.parse(stored);
+      const parsed = JSON.parse(stored) as any[];
       parsed.forEach(it => {
         it.creationDate = new Date(it.creationDate);
         it.changeDate = new Date(it.changeDate);

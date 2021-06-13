@@ -15,78 +15,78 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   set canvasWidth(canvasWidth: number) { this._canvasWidth = canvasWidth; this.canvasWidthChange.emit(this._canvasWidth); }
   get canvasHeight(): number { return this._canvasHeight; }
   set canvasHeight(canvasHeight: number) { this._canvasHeight = canvasHeight; this.canvasHeightChange.emit(this._canvasHeight); }
-  get draggedPoint(): SvgPoint { return this._draggedPoint; }
-  @Input() set draggedPoint(draggedPoint: SvgPoint) { this._draggedPoint = draggedPoint; this.draggedPointChange.emit(this.draggedPoint); }
-  get focusedItem(): SvgItem { return this._focusedItem; }
-  @Input() set focusedItem(focusedItem: SvgItem) { this._focusedItem = focusedItem; this.focusedItemChange.emit(this.focusedItem); }
-  get hoveredItem(): SvgItem { return this._hoveredItem; }
-  @Input() set hoveredItem(hoveredItem: SvgItem) { this._hoveredItem = hoveredItem; this.hoveredItemChange.emit(this.hoveredItem); }
+  get draggedPoint(): SvgPoint | null { return this._draggedPoint; }
+  @Input() set draggedPoint(draggedPoint: SvgPoint| null ) { this._draggedPoint = draggedPoint; this.draggedPointChange.emit(this.draggedPoint); }
+  get focusedItem(): SvgItem | null { return this._focusedItem; }
+  @Input() set focusedItem(focusedItem: SvgItem | null) { this._focusedItem = focusedItem; this.focusedItemChange.emit(this.focusedItem); }
+  get hoveredItem(): SvgItem | null { return this._hoveredItem; }
+  @Input() set hoveredItem(hoveredItem: SvgItem | null ) { this._hoveredItem = hoveredItem; this.hoveredItemChange.emit(this.hoveredItem); }
   get wasCanvasDragged(): boolean { return this._wasCanvasDragged; }
   @Input() set wasCanvasDragged(wasCanvasDragged: boolean) {
     this._wasCanvasDragged = wasCanvasDragged;
     this.wasCanvasDraggedChange.emit(this._wasCanvasDragged);
   }
-  get focusedImage(): Image { return this._focusedImage; }
-  @Input() set focusedImage(focusedImage: Image) { this._focusedImage = focusedImage; this.focusedImageChange.emit(this.focusedImage); }
+  get focusedImage(): Image | null { return this._focusedImage; }
+  @Input() set focusedImage(focusedImage: Image | null) { this._focusedImage = focusedImage; this.focusedImageChange.emit(this.focusedImage); }
 
   constructor(public canvas: ElementRef) { }
-  @Input() parsedPath: Svg;
+  @Input() parsedPath?: Svg;
   @Input() targetPoints: SvgPoint[] = [];
   @Input() controlPoints: SvgControlPoint[] = [];
 
-  @Input() decimals: number;
-  @Input() viewPortX: number;
-  @Input() viewPortY: number;
-  @Input() viewPortWidth: number;
-  @Input() viewPortHeight: number;
-  @Input() strokeWidth: number;
-  @Input() preview: boolean;
-  @Input() showTicks: boolean;
-  @Input() tickInterval: number;
+  @Input() decimals?: number;
+  @Input() viewPortX: number = 0;
+  @Input() viewPortY: number = 0;
+  @Input() viewPortWidth: number = 0;
+  @Input() viewPortHeight: number = 0;
+  @Input() strokeWidth: number = 1;
+  @Input() preview: boolean = false;
+  @Input() showTicks: boolean = false;
+  @Input() tickInterval: number = 1;
   @Input() draggedIsNew = false;
   @Input() images: Image[] = [];
   @Input() editImages = true;
 
   @Output() afertModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
-  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number, force?: boolean}>();
+  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number | null, force?: boolean}>();
 
 
   @Output() emptyCanvas = new EventEmitter<void>();
 
-  _canvasWidth: number;
+  _canvasWidth: number = 0;
   @Output() canvasWidthChange = new EventEmitter<number>();
 
-  _canvasHeight: number;
+  _canvasHeight: number = 0;
   @Output() canvasHeightChange = new EventEmitter<number>();
 
-  _draggedPoint: SvgPoint;
-  @Output() draggedPointChange = new EventEmitter<SvgPoint>();
+  _draggedPoint: SvgPoint | null = null;
+  @Output() draggedPointChange = new EventEmitter<SvgPoint | null>();
 
-  _focusedItem: SvgItem;
-  @Output() focusedItemChange = new EventEmitter<SvgItem>();
+  _focusedItem: SvgItem | null = null;
+  @Output() focusedItemChange = new EventEmitter<SvgItem | null>();
 
-  _hoveredItem: SvgItem;
-  @Output() hoveredItemChange = new EventEmitter<SvgItem>();
+  _hoveredItem: SvgItem | null = null;
+  @Output() hoveredItemChange = new EventEmitter<SvgItem | null>();
 
   _wasCanvasDragged = false;
   @Output() wasCanvasDraggedChange = new EventEmitter<boolean>();
 
-  _focusedImage: Image;
-  @Output() focusedImageChange = new EventEmitter<Image>();
+  _focusedImage: Image | null = null;
+  @Output() focusedImageChange = new EventEmitter<Image | null>();
 
-  draggedEvt: MouseEvent | TouchEvent;
+  draggedEvt: MouseEvent | TouchEvent | null = null;
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
-  draggedImage: Image;
-  draggedImageType: number;
-  xGrid: number[];
-  yGrid: number[];
+  draggedImage: Image | null = null;
+  draggedImageType: number = 0;
+  xGrid: number[] = [];
+  yGrid: number[] = [];
 
   // Utility functions
   min = Math.min;
   abs = Math.abs;
-  trackByIndex = (idx, _) => idx;
+  trackByIndex = (idx: number, _: any) => idx;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.viewPortX || changes.viewPortY || changes.viewPortWidth || changes.viewPortHeight) {
@@ -120,31 +120,31 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       .subscribe(this.mousewheel.bind(this));
   }
 
-  @HostListener('mousedown', ['$event']) onMouseDown($event) {
+  @HostListener('mousedown', ['$event']) onMouseDown($event: MouseEvent) {
     this.startDragCanvas($event);
     $event.stopPropagation();
   }
-  @HostListener('mousemove', ['$event']) onMouseMove($event) {
+  @HostListener('mousemove', ['$event']) onMouseMove($event: MouseEvent) {
     this.drag($event);
   }
-  @HostListener('mouseup', ['$event'])  onMouseUp($event) {
+  @HostListener('mouseup', ['$event'])  onMouseUp($event: MouseEvent) {
     this.stopDrag();
   }
-  @HostListener('touchstart', ['$event']) onTouchStart($event) {
+  @HostListener('touchstart', ['$event']) onTouchStart($event: TouchEvent) {
     this.startDragCanvas($event);
     $event.preventDefault();
     $event.stopPropagation();
   }
-  @HostListener('touchmove', ['$event']) onTouchMove($event) {
+  @HostListener('touchmove', ['$event']) onTouchMove($event: TouchEvent) {
     this.drag($event);
   }
-  @HostListener('touchend', ['$event']) onTouchEnd($event) {
+  @HostListener('touchend', ['$event']) onTouchEnd($event: TouchEvent) {
     this.stopDrag();
   }
-  @HostListener('wheel', ['$event']) onWheel($event) {
+  @HostListener('wheel', ['$event']) onWheel($event: WheelEvent) {
     this.wheel$.next($event);
   }
-  @HostListener('click', ['$event']) onClick($event) {
+  @HostListener('click', ['$event']) onClick($event: MouseEvent) {
     this.hoveredItem = null;
   }
 
@@ -284,7 +284,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
       event.stopPropagation();
       const pt = this.eventToLocation(event);
-      if (this.draggedImage) {
+      if (this.draggedImage && this.draggedEvt) {
         const oriPt = this.eventToLocation(this.draggedEvt);
         /* eslint-disable no-bitwise */
         if (this.draggedImageType & 0b0001) {
@@ -302,7 +302,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
         /* eslint-enable no-bitwise */
         this.draggedEvt = event;
 
-      } else if (this.draggedPoint) {
+      } else if (this.draggedPoint && this.parsedPath) {
         const decimals = event.ctrlKey ? (this.decimals ? 0 : 3) : this.decimals;
         pt.x = parseFloat(pt.x.toFixed(decimals));
         pt.y = parseFloat(pt.y.toFixed(decimals));
@@ -315,7 +315,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
         }
         this.afertModelChange.emit();
         this.draggedEvt = null;
-      } else {
+      } else if(this.draggedEvt) {
         this.wasCanvasDragged = true;
         const pinchToZoom = this.pinchToZoom(this.draggedEvt, event);
         if (pinchToZoom !== null){
