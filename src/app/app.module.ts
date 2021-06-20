@@ -28,6 +28,8 @@ import { FormatterDirective } from './formatter/formatter.directive';
 import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-navigable.directive';
 import { ExportComponent, ExportDialogComponent } from './export/export.component';
 import { UploadImageComponent, UploadImageDialogComponent } from './upload-image/upload-image.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -61,7 +63,13 @@ import { UploadImageComponent, UploadImageDialogComponent } from './upload-image
     MatSortModule,
     MatSliderModule,
     BrowserAnimationsModule,
-    ScrollingModule
+    ScrollingModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    })
   ],
   providers: [{
     provide: MAT_TOOLTIP_SCROLL_STRATEGY,
