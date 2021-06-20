@@ -464,7 +464,15 @@
 
 <mat-menu #appImage="matMenu">
     <ng-template matMenuContent let-image="image">
-        <button mat-menu-item (click)="image.preserveAspectRatio = !image.preserveAspectRatio">
+        <div mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
+            <mat-icon>opacity</mat-icon>
+            <ng-container>Opacity</ng-container>
+            <div style="display:inline-block; width:150px;">
+                <mat-slider min="0" max="1" step="0.01" (input)="image.opacity=$event.value" [value]="image.opacity" style="margin:0 8px; min-width:100px"></mat-slider>
+                {{image.opacity}}
+            </div>
+        </div>
+        <button mat-menu-item (click)="image.preserveAspectRatio = !image.preserveAspectRatio; $event.stopPropagation()">
             <mat-icon>aspect_ratio</mat-icon>
             <ng-container>Toggle Preserve Aspect Ratio</ng-container>
         </button>

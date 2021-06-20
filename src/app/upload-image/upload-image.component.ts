@@ -48,7 +48,8 @@ export class UploadImageDialogComponent {
       y1: parseFloat(this.y),
       x2: parseFloat(this.x) + parseFloat(this.width),
       y2: parseFloat(this.y) + parseFloat(this.height),
-      preserveAspectRatio: this.preserveAspectRatio
+      preserveAspectRatio: this.preserveAspectRatio,
+      opacity:1.0
     });
   }
   onFileSelected(uploadInput: HTMLInputElement) {

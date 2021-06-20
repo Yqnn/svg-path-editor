@@ -4,5 +4,6 @@ export interface Image {
     x2: number;
     y2: number;
     preserveAspectRatio: boolean;
+    opacity: number;
     data: string;
 }

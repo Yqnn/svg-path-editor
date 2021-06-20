@@ -424,9 +424,9 @@ export class AppComponent implements AfterViewInit {
 
   openPath(newPath: string, name: string): void {
     this.pathName = name;
-    this.reloadPath(newPath, true);
     this.history = [];
     this.historyCursor = -1;
+    this.reloadPath(newPath, true);
   }
 
   reloadPath(newPath: string, autozoom = false): void {

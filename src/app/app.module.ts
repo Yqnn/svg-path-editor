@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule, MAT_TOOLTIP_SCROLL_STRATEGY } from '@angular/material/tooltip';
+import { MatSliderModule } from '@angular/material/slider';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 
@@ -58,6 +59,7 @@ import { UploadImageComponent, UploadImageDialogComponent } from './upload-image
     MatDialogModule,
     MatTableModule,
     MatSortModule,
+    MatSliderModule,
     BrowserAnimationsModule,
     ScrollingModule
   ],

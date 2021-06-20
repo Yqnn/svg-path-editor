@@ -70,6 +70,9 @@ text.tick {
 
 
 /* images */
+image {
+    pointer-events: none;
+}
 rect.image-control {
     fill: rgba(0,0,0,0);
     stroke: none;
