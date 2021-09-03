@@ -46,3 +46,15 @@ export class ConfigService {
   @save() tickInterval = 5;
   @save() decimalPrecision = 3;
 }
+
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ExportConfigService {
+  @save() fill = true;
+  @save() fillColor = '#000000';
+  @save() stroke = false;
+  @save() strokeColor =  '#FF0000';
+  @save() strokeWidth = 0.1;
+}
