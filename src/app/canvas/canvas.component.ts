@@ -41,6 +41,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() viewPortHeight: number = 0;
   @Input() strokeWidth: number = 1;
   @Input() preview: boolean = false;
+  @Input() filled: boolean = false;
   @Input() showTicks: boolean = false;
   @Input() tickInterval: number = 1;
   @Input() draggedIsNew = false;
@@ -277,7 +278,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     if (this.draggedPoint || this.draggedEvt || this.draggedImage) {
 
       if (!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
-        // Stop dragging is click is not maintained anymore.
+        // Stop dragging if click is not maintained anymore.
         this.stopDrag();
         return;
       }

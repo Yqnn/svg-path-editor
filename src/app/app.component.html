@@ -138,6 +138,7 @@
                     </div>
                 </div>
                 <div class="row">
+                    <mat-checkbox [(ngModel)]="filled" style="flex:1">Fill</mat-checkbox>
                     <mat-checkbox [(ngModel)]="preview" style="flex:1">Preview</mat-checkbox>
                     <mat-checkbox [ngModel]="minifyOutput" (ngModelChange)="minifyOutput=$event;afertModelChange()" style="flex:1">Minify output</mat-checkbox>
                 </div>
@@ -404,6 +405,7 @@
             [viewPortHeight]="viewPortHeight"
             [strokeWidth]="strokeWidth"
             [preview]="preview"
+            [filled]="filled"
             [showTicks]="showTicks"
             [tickInterval]="tickInterval"
             (afertModelChange)="afertModelChange()"
