@@ -49,6 +49,7 @@ export class AppComponent implements AfterViewInit {
   viewPortWidth = 30;
   viewPortHeight = 30;
   viewPortLocked = false;
+  filled = true;
   preview = false;
   showTicks = false;
   minifyOutput = false;

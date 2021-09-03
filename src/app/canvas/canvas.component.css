@@ -2,8 +2,11 @@
     background-color:#1e1e1e;
 }
 path {
-    fill:rgba(255,255,255,0.25);
     stroke:white;
+    fill:none;
+}
+path.filled {
+    fill:rgba(255,255,255,0.25);
 }
 path.hovered {
     stroke: red;
@@ -47,6 +50,9 @@ circle.dragged {
     background-color:white;
 }
 :host.preview path {
+    stroke:black;
+}
+:host.preview path.filled {
     fill:black;
     stroke:none;
 }
