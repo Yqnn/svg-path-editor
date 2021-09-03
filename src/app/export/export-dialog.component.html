@@ -7,28 +7,28 @@
       </div>
       <div class="style-form-fill">
         <div>
-          <mat-checkbox class="example-margin" [ngModel]="fill" (ngModelChange)="fill=$event;stroke=stroke||!$event">Fill</mat-checkbox>
+          <mat-checkbox class="example-margin" [ngModel]="cfg.fill" (ngModelChange)="cfg.fill=$event;cfg.stroke=cfg.stroke||!$event">Fill</mat-checkbox>
         </div>
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Fill Color</mat-label>
-          <input matInput [(ngModel)]="fillColor" [disabled]="!fill">
+          <input matInput [(ngModel)]="cfg.fillColor" [disabled]="!cfg.fill">
         </mat-form-field>
       </div>
       <div class="style-form-stroke">
         <div>
-          <mat-checkbox class="example-margin" [ngModel]="stroke" (ngModelChange)="stroke=$event;fill=fill||!$event">Stroke</mat-checkbox>
+          <mat-checkbox class="example-margin" [ngModel]="cfg.stroke" (ngModelChange)="cfg.stroke=$event;cfg.fill=cfg.fill||!$event">Stroke</mat-checkbox>
         </div>
         <div class="style-form-stroke-fields">
           <div class="style-form-stroke-field">
             <mat-form-field floatLabel="always" appearance="fill">
               <mat-label>Stroke Color</mat-label>
-              <input matInput [(ngModel)]="strokeColor" [disabled]="!stroke">
+              <input matInput [(ngModel)]="cfg.strokeColor" [disabled]="!cfg.stroke">
             </mat-form-field>
           </div>
           <div class="style-form-stroke-field">
             <mat-form-field floatLabel="always" appearance="fill">
               <mat-label>Stroke width</mat-label>
-              <input matInput [(ngModel)]="strokeWidth" [disabled]="!stroke">
+              <input matInput [(ngModel)]="cfg.strokeWidth" [disabled]="!cfg.stroke">
             </mat-form-field>
           </div>
         </div>
@@ -76,7 +76,7 @@
           <rect [attr.x]="x" [attr.y]="y" [attr.width]="width" [attr.height]="height"></rect>
         </clipPath>
         <rect [attr.x]="x" [attr.y]="y" [attr.width]="width" [attr.height]="height" fill="url(#preview-pattern)" ></rect>
-        <path [attr.d]="data.path" [attr.fill]="fill?fillColor:'none'" [attr.stroke-width]="strokeWidth" [attr.stroke]="stroke?strokeColor:'none'" clip-path="url(#preview-clippath)"></path>
+        <path [attr.d]="data.path" [attr.fill]="cfg.fill?cfg.fillColor:'none'" [attr.stroke-width]="cfg.strokeWidth" [attr.stroke]="cfg.stroke?cfg.strokeColor:'none'" clip-path="url(#preview-clippath)"></path>
       </svg>
     </div>
   </div>

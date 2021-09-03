@@ -1,5 +1,6 @@
 import { Component, Inject, Input } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ExportConfigService } from '../config.service';
 import { StorageService } from '../storage.service';
 import { Svg } from '../svg';
 
@@ -19,16 +20,11 @@ export class ExportDialogComponent {
   width = 0;
   height = 0;
 
-  fill = true;
-  fillColor = '#000000';
-  stroke = false;
-  strokeColor =  '#FF0000';
-  strokeWidth = 0.1;
-
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
     public storageService: StorageService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    public cfg: ExportConfigService
   ) {
     this.refreshViewbox();
   }
@@ -51,7 +47,7 @@ export class ExportDialogComponent {
   onExport(): void {
     const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
-  <path d="${this.data.path}"${this.stroke ? ` stroke="${this.strokeColor}" stroke-width="${this.strokeWidth}"` : ''} fill="${this.fill ? this.fillColor : 'none'}"/>
+  <path d="${this.data.path}"${this.cfg.stroke ? ` stroke="${this.cfg.strokeColor}" stroke-width="${this.cfg.strokeWidth}"` : ''} fill="${this.cfg.fill ? this.cfg.fillColor : 'none'}"/>
 </svg>`;
     this.download(this.data.name || 'svg-path.svg', svg);
     this.dialogRef.close();
@@ -69,11 +65,11 @@ export class ExportDialogComponent {
       this.y = locs.reduce((acc, pt) => Math.min(acc, pt.y), Infinity);
       this.width = locs.reduce((acc, pt) => Math.max(acc, pt.x), -Infinity) - this.x;
       this.height = locs.reduce((acc, pt) => Math.max(acc, pt.y), -Infinity) - this.y;
-      if (this.stroke) {
-        this.x -= this.strokeWidth;
-        this.y -= this.strokeWidth;
-        this.width += 2 * this.strokeWidth;
-        this.height += 2 * this.strokeWidth;
+      if (this.cfg.stroke) {
+        this.x -= this.cfg.strokeWidth;
+        this.y -= this.cfg.strokeWidth;
+        this.width += 2 * this.cfg.strokeWidth;
+        this.height += 2 * this.cfg.strokeWidth;
       }
     }
   }
