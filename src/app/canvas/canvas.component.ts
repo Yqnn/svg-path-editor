@@ -48,7 +48,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() images: Image[] = [];
   @Input() editImages = true;
 
-  @Output() afertModelChange = new EventEmitter<void>();
+  @Output() afterModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
   @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number | null, force?: boolean}>();
 
@@ -314,7 +314,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
             this.draggedPoint.itemReference.resetControlPoints(this.parsedPath.path[previousIdx]);
           }
         }
-        this.afertModelChange.emit();
+        this.afterModelChange.emit();
         this.draggedEvt = null;
       } else if(this.draggedEvt) {
         this.wasCanvasDragged = true;

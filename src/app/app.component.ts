@@ -7,6 +7,7 @@ import { StorageService } from './storage.service';
 import { CanvasComponent } from './canvas/canvas.component';
 import { Image } from './image';
 import { UploadImageComponent } from './upload-image/upload-image.component';
+import { ConfigService } from './config.service';
 
 
 @Component({
@@ -43,26 +44,12 @@ export class AppComponent implements AfterViewInit {
   historyCursor = -1;
   historyDisabled = false;
 
-  // Configuration panel inputs:
-  viewPortX = 0;
-  viewPortY = 0;
-  viewPortWidth = 30;
-  viewPortHeight = 30;
-  viewPortLocked = false;
-  filled = true;
-  preview = false;
-  showTicks = false;
-  minifyOutput = false;
-  snapToGrid = true;
-  tickInterval = 5;
-  roundValuesDecimals = 1;
-
   //  Path operations panel inputs:
   scaleX = 1;
   scaleY = 1;
   translateX = 0;
   translateY = 0;
-  decimalPrecision = 3;
+  roundValuesDecimals = 1;
 
   // Canvas Data:
   @ViewChild(CanvasComponent) canvas?: CanvasComponent;
@@ -95,6 +82,7 @@ export class AppComponent implements AfterViewInit {
   constructor(
     matRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
+    public cfg: ConfigService,
     private storage: StorageService
   ) {
     for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit']) {
@@ -145,7 +133,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
   get decimals() {
-    return  this.snapToGrid ? 0 : this.decimalPrecision;
+    return  this.cfg.snapToGrid ? 0 : this.cfg.decimalPrecision;
  }
 
   ngAfterViewInit() {
@@ -212,7 +200,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   updateViewPort(x: number, y: number, w: number | null, h: number | null, force = false) {
-    if (!force && this.viewPortLocked) {
+    if (!force && this.cfg.viewPortLocked) {
       return;
     }
     if (w === null && h !==null) {
@@ -225,18 +213,18 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    this.viewPortX = parseFloat((1 * x).toPrecision(6));
-    this.viewPortY = parseFloat((1 * y).toPrecision(6));
-    this.viewPortWidth = parseFloat((1 * w).toPrecision(4));
-    this.viewPortHeight = parseFloat((1 * h).toPrecision(4));
-    this.strokeWidth = this.viewPortWidth / this.canvasWidth;
+    this.cfg.viewPortX = parseFloat((1 * x).toPrecision(6));
+    this.cfg.viewPortY = parseFloat((1 * y).toPrecision(6));
+    this.cfg.viewPortWidth = parseFloat((1 * w).toPrecision(4));
+    this.cfg.viewPortHeight = parseFloat((1 * h).toPrecision(4));
+    this.strokeWidth = this.cfg.viewPortWidth / this.canvasWidth;
   }
 
   insert(type: string, after: SvgItem, convert: boolean) {
     if (convert) {
       this.focusedItem =
         this.parsedPath.changeType(after, after.relative ? type.toLowerCase() : type);
-      this.afertModelChange();
+      this.afterModelChange();
     } else {
       this.draggedIsNew = true;
       const pts = this.targetPoints;
@@ -278,7 +266,7 @@ export class AppComponent implements AfterViewInit {
         }
       }
       this.setHistoryDisabled(true);
-      this.afertModelChange();
+      this.afterModelChange();
 
       if(newItem) {
         this.focusedItem = newItem;
@@ -288,7 +276,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   zoomAuto() {
-    if (this.viewPortLocked) {
+    if (this.cfg.viewPortLocked) {
       return;
     }
     let xmin = 0;
@@ -322,38 +310,38 @@ export class AppComponent implements AfterViewInit {
     this.parsedPath.scale(1 * x, 1 * y);
     this.scaleX = 1;
     this.scaleY = 1;
-    this.afertModelChange();
+    this.afterModelChange();
   }
 
   translate(x: number, y: number) {
     this.parsedPath.translate(1 * x, 1 * y);
     this.translateX = 0;
     this.translateY = 0;
-    this.afertModelChange();
+    this.afterModelChange();
   }
 
   setRelative(rel: boolean) {
     this.parsedPath.setRelative(rel);
-    this.afertModelChange();
+    this.afterModelChange();
   }
 
   setValue(item: SvgItem, idx: number, val: number) {
     if (!isNaN(val)) {
       item.values[idx] = val;
       this.parsedPath.refreshAbsolutePositions();
-      this.afertModelChange();
+      this.afterModelChange();
     }
   }
 
   delete(item: SvgItem) {
     this.focusedItem = null;
     this.parsedPath.delete(item);
-    this.afertModelChange();
+    this.afterModelChange();
   }
 
-  afertModelChange() {
+  afterModelChange() {
     this.reloadPoints();
-    this.rawPath = this.parsedPath.asString(4, this.minifyOutput);
+    this.rawPath = this.parsedPath.asString(4, this.cfg.minifyOutput);
   }
 
   roundValues(decimals: number) {
