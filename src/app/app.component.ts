@@ -476,4 +476,15 @@ export class AppComponent implements AfterViewInit {
       upload.openDialog();
     }
   }
+
+  focusItem(it: SvgItem | null): void {
+    if(it !== this.focusedItem) {
+      this.focusedItem = it;
+      const idx = this.parsedPath.path.indexOf(this.focusedItem!);
+      document.getElementById(`svg_command_row_${idx}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    }
+  }
 }

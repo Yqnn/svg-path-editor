@@ -221,6 +221,7 @@
                     class="row"
                     style="padding-top:1px; padding-bottom:1px;"
                     (click)="focusedItem=item"
+                    id="svg_command_row_{{j}}"
                 >
                     <div
                         class="type-token"
@@ -394,7 +395,8 @@
             [targetPoints]="targetPoints"
             [controlPoints]="controlPoints"
             [(draggedPoint)]="draggedPoint"
-            [(focusedItem)]="focusedItem"
+            (focusedItemChange)="focusItem($event)"
+            [focusedItem]="focusedItem"
             [(hoveredItem)]="hoveredItem"
             [(wasCanvasDragged)]="wasCanvasDragged"
             [draggedIsNew]="draggedIsNew"
