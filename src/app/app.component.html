@@ -329,6 +329,7 @@
                 [class.displayed]="isEditingImages"
                 class="add-image-button"
                 (addImage)="addImage($event)"
+                (cancel)="cancelAddImage()"
                 #uploader
             ></app-upload-image>
 

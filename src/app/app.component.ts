@@ -468,6 +468,13 @@ export class AppComponent implements AfterViewInit {
     this.images.push(newImage);
   }
 
+  cancelAddImage(): void {
+    if(this.images.length === 0) {
+      this.isEditingImages = false;
+      this.focusedImage = null;
+    }
+  }
+
   toggleImageEditing(upload: UploadImageComponent): void {
     this.isEditingImages = !this.isEditingImages;
     this.focusedImage = null;

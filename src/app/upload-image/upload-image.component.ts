@@ -82,6 +82,7 @@ export class UploadImageDialogComponent {
 })
 export class UploadImageComponent {
   @Output() addImage = new EventEmitter<Image>();
+  @Output() cancel = new EventEmitter<void>();
 
   constructor(
     public dialog: MatDialog,
@@ -95,6 +96,8 @@ export class UploadImageComponent {
     dialogRef.afterClosed().subscribe((result: Image)  => {
       if (result) {
         this.addImage.emit(result);
+      } else {
+        this.cancel.emit();
       }
     });
   }
