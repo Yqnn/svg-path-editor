@@ -53,94 +53,94 @@
 
             <app-expandable panelTitle="Configuration" [opened]="true">
                 <div class="row">
-                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
+                    <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
                         <label>X</label>
                         <input
                             class="app-input"
                             appFormatter
-                            [value]="viewPortX"
-                            (valueChange)="updateViewPort($event, viewPortY, viewPortWidth, viewPortHeight)"
-                            [disabled]="viewPortLocked" 
+                            [value]="cfg.viewPortX"
+                            (valueChange)="updateViewPort($event, cfg.viewPortY, cfg.viewPortWidth, cfg.viewPortHeight)"
+                            [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
-                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
+                    <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
                         <label>Y</label>
                         <input
                             class="app-input"
                             appFormatter
-                            [value]="viewPortY"
-                            (valueChange)="updateViewPort(viewPortX, $event, viewPortWidth, viewPortHeight)"
-                            [disabled]="viewPortLocked" 
+                            [value]="cfg.viewPortY"
+                            (valueChange)="updateViewPort(cfg.viewPortX, $event, cfg.viewPortWidth, cfg.viewPortHeight)"
+                            [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
-                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
+                    <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
                         <label>Width</label>
                         <input
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
-                            [value]="viewPortWidth"
-                            (valueChange)="updateViewPort(viewPortX, viewPortY, $event, null)"
-                            [disabled]="viewPortLocked" 
+                            [value]="cfg.viewPortWidth"
+                            (valueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, $event, null)"
+                            [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
-                    <div class="input-block" [ngClass]="{'disabled': viewPortLocked }">
+                    <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
                         <label>Height</label>
                         <input
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
-                            [value]="viewPortHeight"
-                            (valueChange)="updateViewPort(viewPortX, viewPortY, null, $event)"
-                            [disabled]="viewPortLocked" 
+                            [value]="cfg.viewPortHeight"
+                            (valueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, null, $event)"
+                            [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
 
                     <button
                         mat-flat-button
-                        (click)="viewPortLocked = !viewPortLocked"
-                        [matTooltip]="viewPortLocked ? 'Lock viewBox' : 'Unlock viewBox'"
+                        (click)="cfg.viewPortLocked = !cfg.viewPortLocked"
+                        [matTooltip]="cfg.viewPortLocked ? 'Lock viewBox' : 'Unlock viewBox'"
                         matTooltipPosition="right"
                     >
-                        <mat-icon *ngIf="!viewPortLocked">lock_open</mat-icon>
-                        <mat-icon *ngIf="viewPortLocked">lock</mat-icon>
+                        <mat-icon *ngIf="!cfg.viewPortLocked">lock_open</mat-icon>
+                        <mat-icon *ngIf="cfg.viewPortLocked">lock</mat-icon>
                     </button>
                 </div>
                 <div class="row">
-                    <mat-checkbox [(ngModel)]="snapToGrid" style="flex:1">Snap to Grid</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="cfg.snapToGrid" style="flex:1">Snap to Grid</mat-checkbox>
                     <div class="input-block" style="flex:1"
                         matTooltip="Number of decimals to keep when a point is dragged"
                         matTooltipPosition="right"
-                        [matTooltipDisabled]="snapToGrid"
-                        [ngClass]="{'disabled': snapToGrid }"
+                        [matTooltipDisabled]="cfg.snapToGrid"
+                        [ngClass]="{'disabled': cfg.snapToGrid }"
                     >
                         <label>Point Precision</label>
                         <input
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(value)]="decimalPrecision"
-                            [disabled]="snapToGrid">
+                            [(value)]="cfg.decimalPrecision"
+                            [disabled]="cfg.snapToGrid">
                     </div>
                 </div>
                 <div class="row">
-                    <mat-checkbox [(ngModel)]="showTicks" style="flex:1">Show Ticks</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="cfg.showTicks" style="flex:1">Show Ticks</mat-checkbox>
                     <div class="input-block" style="flex:1"
-                        [ngClass]="{'disabled': !showTicks }"
+                        [ngClass]="{'disabled': !cfg.showTicks }"
                     >
                         <label>Interval</label>
                         <input
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(value)]="tickInterval" 
-                            [disabled]="!showTicks">
+                            [(value)]="cfg.tickInterval" 
+                            [disabled]="!cfg.showTicks">
                     </div>
                 </div>
                 <div class="row">
-                    <mat-checkbox [(ngModel)]="filled" style="flex:1">Fill</mat-checkbox>
-                    <mat-checkbox [(ngModel)]="preview" style="flex:1">Preview</mat-checkbox>
-                    <mat-checkbox [ngModel]="minifyOutput" (ngModelChange)="minifyOutput=$event;afertModelChange()" style="flex:1">Minify output</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="cfg.filled" style="flex:1">Fill</mat-checkbox>
+                    <mat-checkbox [(ngModel)]="cfg.preview" style="flex:1">Preview</mat-checkbox>
+                    <mat-checkbox [ngModel]="cfg.minifyOutput" (ngModelChange)="cfg.minifyOutput=$event;afterModelChange()" style="flex:1">Minify output</mat-checkbox>
                 </div>
 
             </app-expandable>
@@ -227,7 +227,7 @@
                         class="type-token"
                         [ngClass]="{'type-token-relative':item.relative}"
                         style="user-select: none;-webkit-user-select: none;"
-                        (click)="item.setRelative(!item.relative); afertModelChange();"
+                        (click)="item.setRelative(!item.relative); afterModelChange();"
                     >{{item.getType()}}</div>
                     <ng-container *ngFor="let value of item.values; let i = index; trackBy:trackByIndex">
                         <mat-checkbox *ngIf="item.getType().toLowerCase()==='a' && (i===3 || i===4)"
@@ -270,12 +270,12 @@
         >
             <mat-icon>arrow_right</mat-icon>
         </button>
-        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(preview || isEditingImages)"
+        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(cfg.preview || isEditingImages)"
             color="primary"
             class="add-button"
             [ngStyle]="{
-                'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-viewPortX)/strokeWidth+'px',
-                'top': ((focusedItem ? focusedItem.targetLocation().y : 0)-viewPortY)/strokeWidth+'px'
+                'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-cfg.viewPortX)/strokeWidth+'px',
+                'top': ((focusedItem ? focusedItem.targetLocation().y : 0)-cfg.viewPortY)/strokeWidth+'px'
             }"
             [ngClass]="{'opened':isContextualMenuOpened}"
             [matMenuTriggerFor]="focusedItem ? appMenu : appCreate"
@@ -288,12 +288,12 @@
         </button>
 
 
-        <button mat-mini-fab *ngIf="(focusedImage && !preview && !dragging)"
+        <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
             color="primary"
             class="add-button"
             [ngStyle]="{
-                'left': (max(focusedImage.x1,focusedImage.x2) - viewPortX)/strokeWidth+'px',
-                'top': (max(focusedImage.y1,focusedImage.y2) - viewPortY)/strokeWidth+'px'
+                'left': (max(focusedImage.x1,focusedImage.x2) - cfg.viewPortX)/strokeWidth+'px',
+                'top': (max(focusedImage.y1,focusedImage.y2) - cfg.viewPortY)/strokeWidth+'px'
             }"
             [ngClass]="{'opened':isContextualMenuOpened}"
             [matMenuTriggerFor]="appImage"
@@ -349,16 +349,16 @@
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="snapToGrid = !snapToGrid"
+                (click)="cfg.snapToGrid = !cfg.snapToGrid"
                 matTooltip="Snap to Grid"
                 matTooltipPosition="left"
             >
-                <mat-icon> {{ snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
+                <mat-icon> {{ cfg.snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
             </button>
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="viewPortLocked=false;canvas?.zoomViewPort(9/10)"
+                (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(9/10)"
                 matTooltip="Zoom In"
                 matTooltipPosition="left"
                 style="margin-top: 24px"
@@ -368,7 +368,7 @@
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="viewPortLocked=false;zoomAuto()"
+                (click)="cfg.viewPortLocked=false;zoomAuto()"
                 matTooltip="Zoom to Fit"
                 matTooltipPosition="left"
             >
@@ -377,7 +377,7 @@
             <button
                 mat-mini-fab
                 color="basic"
-                (click)="viewPortLocked=false;canvas?.zoomViewPort(10/9)"
+                (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(10/9)"
                 matTooltip="Zoom Out"
                 matTooltipPosition="left"
             >
@@ -389,8 +389,8 @@
             xmlns="http://www.w3.org/2000/svg" 
             xmlns:xlink="http://www.w3.org/1999/xlink"
             app-canvas 
-            [attr.viewBox]="viewPortX+' '+viewPortY+' '+viewPortWidth+' '+viewPortHeight"
-            [ngClass]="{preview:preview}"
+            [attr.viewBox]="cfg.viewPortX+' '+cfg.viewPortY+' '+cfg.viewPortWidth+' '+cfg.viewPortHeight"
+            [ngClass]="{preview:cfg.preview}"
         
             [parsedPath]="parsedPath"
             [targetPoints]="targetPoints"
@@ -402,16 +402,16 @@
             [(wasCanvasDragged)]="wasCanvasDragged"
             [draggedIsNew]="draggedIsNew"
             [decimals]="decimals"
-            [viewPortX]="viewPortX"
-            [viewPortY]="viewPortY"
-            [viewPortWidth]="viewPortWidth"
-            [viewPortHeight]="viewPortHeight"
+            [viewPortX]="cfg.viewPortX"
+            [viewPortY]="cfg.viewPortY"
+            [viewPortWidth]="cfg.viewPortWidth"
+            [viewPortHeight]="cfg.viewPortHeight"
             [strokeWidth]="strokeWidth"
-            [preview]="preview"
-            [filled]="filled"
-            [showTicks]="showTicks"
-            [tickInterval]="tickInterval"
-            (afertModelChange)="afertModelChange()"
+            [preview]="cfg.preview"
+            [filled]="cfg.filled"
+            [showTicks]="cfg.showTicks"
+            [tickInterval]="cfg.tickInterval"
+            (afterModelChange)="afterModelChange()"
             (dragging)="setIsDragging($event)"
             (canvasWidthChange)="canvasWidth = $event || canvasWidth"
             (canvasHeightChange)="canvasHeight = $event"
@@ -439,7 +439,7 @@
             <mat-icon>swap_horiz</mat-icon>
             Convert To
         </button>
-        <button mat-menu-item (click)="item.setRelative(!item.relative); afertModelChange();">
+        <button mat-menu-item (click)="item.setRelative(!item.relative); afterModelChange();">
             <mat-icon>swap_horiz</mat-icon>
             <ng-container *ngIf="item.relative">Set Absolute</ng-container>
             <ng-container *ngIf="!item.relative">Set Relative</ng-container>
