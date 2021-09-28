@@ -32,10 +32,7 @@ export class AppComponent implements AfterViewInit {
   controlPoints: SvgControlPoint[] = [];
 
   // Raw path:
-  _rawPath = this.storage.getPath()?.path
-    || `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 `
-      + `A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 `
-      + `C 1 5 2 6 3 6 C 2 7 3 7 4 8 M 10 1 L 10 3 L 12 3 L 10.2 2.8 L 10 1`;
+  _rawPath = this.storage.getPath()?.path || '';
   pathName: string = '';
   invalidSyntax = false;
 
@@ -213,8 +210,14 @@ export class AppComponent implements AfterViewInit {
       return;
     }
 
-    this.cfg.viewPortX = parseFloat((1 * x).toPrecision(6));
-    this.cfg.viewPortY = parseFloat((1 * y).toPrecision(6));
+    let newViewPortX = parseFloat((1 * x).toPrecision(6));
+    let newViewPortY = parseFloat((1 * y).toPrecision(6));
+    newViewPortX = newViewPortX < -5 ? -5 : newViewPortX;
+    newViewPortY = newViewPortY < -5 ? -5 : newViewPortY;
+    newViewPortX = newViewPortX > 200 ? 200 : newViewPortX;
+    newViewPortY = newViewPortY > 200 ? 200 : newViewPortY;
+    this.cfg.viewPortX = newViewPortX;
+    this.cfg.viewPortY = newViewPortY;
     this.cfg.viewPortWidth = parseFloat((1 * w).toPrecision(4));
     this.cfg.viewPortHeight = parseFloat((1 * h).toPrecision(4));
     this.strokeWidth = this.cfg.viewPortWidth / this.canvasWidth;

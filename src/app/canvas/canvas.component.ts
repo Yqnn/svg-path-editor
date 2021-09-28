@@ -218,8 +218,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     if (!pt) {
       pt = {x: this.viewPortX + 0.5 * this.viewPortWidth, y: this.viewPortY + 0.5 * this.viewPortHeight};
     }
-    const w = scale * this.viewPortWidth;
-    const h = scale * this.viewPortHeight;
+    const w = scale * this.viewPortWidth > 200 ? 200 : scale * this.viewPortWidth;
+    const h = scale * this.viewPortHeight > 200 ? 200 : scale * this.viewPortHeight;
     const x = this.viewPortX + ((pt.x - this.viewPortX) - scale * (pt.x - this.viewPortX));
     const y = this.viewPortY + ((pt.y - this.viewPortY) - scale * (pt.y - this.viewPortY));
 
