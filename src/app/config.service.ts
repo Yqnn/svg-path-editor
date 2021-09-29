@@ -52,9 +52,9 @@ export class ConfigService {
   providedIn: 'root'
 })
 export class ExportConfigService {
-  @save() fill = true;
+  @save() fill = false;
   @save() fillColor = '#000000';
-  @save() stroke = false;
-  @save() strokeColor =  '#FF0000';
-  @save() strokeWidth = 0.1;
+  @save() stroke = true;
+  @save() strokeColor =  '#E2E2E2';
+  @save() strokeWidth = 8;
 }

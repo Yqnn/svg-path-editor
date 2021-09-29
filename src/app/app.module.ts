@@ -26,7 +26,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { FormatterDirective } from './formatter/formatter.directive';
 import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-navigable.directive';
-import { ExportComponent, ExportDialogComponent } from './export/export.component';
+import { ExportComponent } from './export/export.component';
 import { UploadImageComponent, UploadImageDialogComponent } from './upload-image/upload-image.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
@@ -41,7 +41,6 @@ import { environment } from '../environments/environment';
     SaveComponent,
     SaveDialogComponent,
     ExportComponent,
-    ExportDialogComponent,
     UploadImageComponent,
     UploadImageDialogComponent,
     FormatterDirective,

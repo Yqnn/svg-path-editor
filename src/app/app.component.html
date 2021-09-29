@@ -455,8 +455,8 @@
     <ng-template matMenuContent let-item="item"  let-idx="idx" let-convert="convert">
         <button mat-menu-item (click)="insert('M', item, convert)" [disabled]="convert?!canConvert(item,'M'):!canInsertAfter(item, 'M')"><strong>M</strong> Move to</button>
         <button mat-menu-item (click)="insert('L', item, convert)" [disabled]="convert?!canConvert(item,'L'):!canInsertAfter(item, 'L')"><strong>L</strong> Line to</button>
-        <button mat-menu-item (click)="insert('V', item, convert)" [disabled]="convert?!canConvert(item,'V'):!canInsertAfter(item, 'V')"><strong>V</strong> Vertical Line to</button>
-        <button mat-menu-item (click)="insert('H', item, convert)" [disabled]="convert?!canConvert(item,'H'):!canInsertAfter(item, 'H')"><strong>H</strong> Horizontal Line to</button>
+        <!-- <button mat-menu-item (click)="insert('V', item, convert)" [disabled]="convert?!canConvert(item,'V'):!canInsertAfter(item, 'V')"><strong>V</strong> Vertical Line to</button>
+        <button mat-menu-item (click)="insert('H', item, convert)" [disabled]="convert?!canConvert(item,'H'):!canInsertAfter(item, 'H')"><strong>H</strong> Horizontal Line to</button> -->
         <button mat-menu-item (click)="insert('C', item, convert)" [disabled]="convert?!canConvert(item,'C'):!canInsertAfter(item, 'C')"><strong>C</strong> Curve to</button>
         <!-- <button mat-menu-item (click)="insert('S', item, convert)" [disabled]="convert?!canConvert(item,'S'):!canInsertAfter(item, 'S')"><strong>S</strong> Shorthand Curve to</button>
         <button mat-menu-item (click)="insert('Q', item, convert)" [disabled]="convert?!canConvert(item,'Q'):!canInsertAfter(item, 'Q')"><strong>Q</strong> Quadratic Bezier Curve to</button>
