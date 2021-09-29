@@ -76,6 +76,9 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   _focusedImage: Image | null = null;
   @Output() focusedImageChange = new EventEmitter<Image | null>();
 
+  // Emitted when user tries to draw outside fo the 100x100 viewport area
+  @Output() outOfBounds = new EventEmitter<boolean>();
+
   draggedEvt: MouseEvent | TouchEvent | null = null;
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
@@ -177,11 +180,31 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
+  eventToLocation(event: MouseEvent | TouchEvent, idx = 0, disableOutOfBoundsRestriction = false): {x: number, y: number} {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = event instanceof MouseEvent ? event : event.touches[idx];
-    const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
-    const y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
+    let x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
+    let y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
+
+    if (!disableOutOfBoundsRestriction) {
+      return this.checkIfDrawingOutOfBounds(x, y);
+    }
+
+    return {x, y};
+  }
+
+  // Check if the user is drawing something out of bounds to forbid it and show a "not allowed" cursor
+  checkIfDrawingOutOfBounds(x: number, y: number) {
+    if (x > 100 || y > 100 || x < 0 || y < 0) {
+      this.outOfBounds.emit(true);
+      x = x > 100 ? 100 : x;
+      x = x < 0 ? 0 : x;
+      y = y > 100 ? 100 : y;
+      y = y < 0 ? 0 : y;
+    } else {
+      this.outOfBounds.emit(false);
+    }
+
     return {x, y};
   }
 
@@ -209,7 +232,9 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
   mousewheel(event: {event: WheelEvent, deltaY: number}) {
     const scale = Math.pow(1.005, event.deltaY);
-    const pt = this.eventToLocation(event.event);
+
+    // The third parameter is for disabling out of bounds check when zooming. The viewport scroll/zoom is already restricted to 100x100 plus a small bias.
+    const pt = this.eventToLocation(event.event, 0, true);1
 
     this.zoomViewPort(scale, pt);
   }
@@ -218,8 +243,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     if (!pt) {
       pt = {x: this.viewPortX + 0.5 * this.viewPortWidth, y: this.viewPortY + 0.5 * this.viewPortHeight};
     }
-    const w = scale * this.viewPortWidth > 200 ? 200 : scale * this.viewPortWidth;
-    const h = scale * this.viewPortHeight > 200 ? 200 : scale * this.viewPortHeight;
+    const w = scale * this.viewPortWidth > 110 ? 110 : scale * this.viewPortWidth;
+    const h = scale * this.viewPortHeight > 110 ? 110 : scale * this.viewPortHeight;
     const x = this.viewPortX + ((pt.x - this.viewPortX) - scale * (pt.x - this.viewPortX));
     const y = this.viewPortY + ((pt.y - this.viewPortY) - scale * (pt.y - this.viewPortY));
 
@@ -272,6 +297,10 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     this.dragWithoutClick = true;
 
     this.draggedImage = null;
+
+    // When we stop dragging or moving an element we should clear the "out of
+    // bounds" state as well. Thus, the "not allowed" cursor will disappear.
+    this.outOfBounds.emit(false);
   }
 
   drag(event: MouseEvent | TouchEvent) {

@@ -64,6 +64,9 @@ circle.dragged {
 :host.preview line {
     display: none;
 }
+:host.out-of-bounds {
+  cursor: not-allowed;
+}
 text.tick {
     fill: #595959;
     text-anchor: end;

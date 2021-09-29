@@ -389,7 +389,7 @@
             xmlns:xlink="http://www.w3.org/1999/xlink"
             app-canvas
             [attr.viewBox]="cfg.viewPortX+' '+cfg.viewPortY+' '+cfg.viewPortWidth+' '+cfg.viewPortHeight"
-            [ngClass]="{preview:cfg.preview}"
+            [ngClass]="{preview:cfg.preview, 'out-of-bounds': isOutOfViewPortBounds}"
 
             [parsedPath]="parsedPath"
             [targetPoints]="targetPoints"
@@ -416,6 +416,7 @@
             (canvasHeightChange)="canvasHeight = $event"
             (emptyCanvas)="isLeftPanelOpened = false"
             (viewPort)="updateViewPort($event.x, $event.y, $event.w, $event.h, $event.force)"
+            (outOfBounds)="onOutOfViewPortBounds($event)"
             [editImages]="isEditingImages"
             [images]="images"
             [(focusedImage)]="focusedImage"

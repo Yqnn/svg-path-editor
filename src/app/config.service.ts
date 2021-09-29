@@ -35,8 +35,8 @@ function save() {
 export class ConfigService {
   @save() viewPortX = -5;
   @save() viewPortY = -5;
-  @save() viewPortWidth = 200;
-  @save() viewPortHeight = 200;
+  @save() viewPortWidth = 100;
+  @save() viewPortHeight = 100;
   @save() viewPortLocked = false;
   @save() filled = false;
   @save() preview = false;

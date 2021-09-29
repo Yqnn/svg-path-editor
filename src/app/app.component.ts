@@ -61,6 +61,7 @@ export class AppComponent implements AfterViewInit {
   wasCanvasDragged = false;
   draggedIsNew = false;
   dragging = false;
+  isOutOfViewPortBounds = false;
 
   // Images
   images: Image[] = [];
@@ -483,6 +484,12 @@ export class AppComponent implements AfterViewInit {
         behavior: 'smooth',
         block: 'nearest'
       });
+    }
+  }
+
+  onOutOfViewPortBounds(isOutOfBounds: boolean) {
+    if (this.isOutOfViewPortBounds !== isOutOfBounds) {
+      this.isOutOfViewPortBounds = isOutOfBounds;
     }
   }
 }
