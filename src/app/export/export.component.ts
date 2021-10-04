@@ -24,6 +24,7 @@ export class ExportComponent {
     public cfg: ExportConfigService
   ) {}
 
+  // Download the SVG
   download(fileName: string, data: string) {
     const blob = new Blob([data], { type: 'image/svg+xml' });
     const anchor = document.createElement('a');
@@ -67,6 +68,11 @@ export class ExportComponent {
     allPathCommands.forEach(pc => { // pc = path command
 
       // Make lines draw from top to bottom, left to right, even they were initially the other way around
+      // Terminology:
+      // pc[1] = line start point X coordinate,
+      // pc[2] = line start point Y coordinate,
+      // pc[4] = line end point X coordinate,
+      // pc[5] = line end point Y coordinate
       if (
         pc[0] === 'M' && pc[3] === 'L' &&
         (
@@ -82,6 +88,11 @@ export class ExportComponent {
       }
 
       // Make curves draw from top to bottom, left to right, even if they were initially the other way around
+      // Terminology:
+      // pc[1] = curve start point X coordinate,
+      // pc[2] = curve start point Y coordinate,
+      // pc[8] = curve end point X coordinate,
+      // pc[9] = curve end point Y coordinate
       if (
         pc[0] === 'M' && pc[3] == 'C' &&
         (
@@ -104,6 +115,7 @@ export class ExportComponent {
     });
   }
 
+  // Order segments from top to bottom, left to right
   orderSegments(allPathCommands: (string | number)[][]) {
     allPathCommands.sort((pc1, pc2) => {
       const prevCommandX = pc1[1];
@@ -144,8 +156,8 @@ export class ExportComponent {
         <g>
           ${pathCommands.map((pc, i) =>
             `<g>
-              <use fill="transparent" stroke="#E2E2E2" stroke-width="8" class="road" xlink:href="#path-road-${i + 1}" />
-              <use fill="transparent" stroke="#403E50" stroke-width="8" class="progress" id="progress-${i + 1}" xlink:href="#path-road-${i + 1}"/>
+              <use fill="transparent" stroke="#E2E2E2" stroke-width="8" class="road" xlink:href="#path-road-${pathCommands.length - i}" />
+              <use fill="transparent" stroke="#403E50" stroke-width="8" class="progress" id="progress-${pathCommands.length - i}" xlink:href="#path-road-${pathCommands.length - i}"/>
             </g>`
           )}
         </g>
