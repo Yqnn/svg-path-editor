@@ -449,12 +449,14 @@ class EllipticalArcTo extends SvgItem {
         }
     }
 
-    public asString(decimals: number = 4, minify: boolean = false): string {
+    public asString(decimals: number = 4, minify: boolean = false, trailingItems: SvgItem[] = []): string {
         if (!minify) {
-            return super.asString(decimals, minify);
+            return super.asString(decimals, minify, trailingItems);
         } else {
-            const v = this.values.map(it => formatNumber(it, decimals, minify));
-            return `${this.getType()} ${v[0]} ${v[1]} ${v[2]} ${v[3]}${v[4]}${v[5]} ${v[6]}`;
+            const strValues = [this.values, ...trailingItems.map(it => it.values)]
+                .map(it => it.map(it2 => formatNumber(it2, decimals, minify)))
+                .map(v => `${v[0]} ${v[1]} ${v[2]} ${v[3]}${v[4]}${v[5]} ${v[6]}`);
+            return [this.getType(), ...strValues].join(' ');
         }
     }
 }
@@ -528,7 +530,7 @@ export class Svg {
         .reduce((acc: {type?: string, item: SvgItem, trailing: SvgItem[]}[], it: SvgItem) => {
             // Group together the items that can be merged (M 0 0 L 1 1 => M 0 0 1 1)
             const type = it.getType();
-            if (minify && acc.length > 0 && (type === 'l' || type === 'L')) {
+            if (minify && acc.length > 0) {
                 const last = acc[acc.length - 1];
                 if (last.type === type) {
                     last.trailing.push(it);
@@ -536,7 +538,7 @@ export class Svg {
                 }
             }
             acc.push({
-                type: type === 'l' || type === 'm' ? 'l' : (type === 'L' || type === 'M' ? 'L' : undefined),
+                type: type === 'm' ? 'l' : (type === 'M' ? 'L' : type),
                 item: it,
                 trailing: []
             });
