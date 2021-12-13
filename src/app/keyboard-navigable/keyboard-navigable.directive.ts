@@ -1,15 +1,17 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {Directive, ElementRef, HostListener, Input} from '@angular/core';
 
 @Directive({
-  selector: '[appKeyboardNavigable]'
+  selector: '[appKeyboardNavigable]',
 })
 export class KeyboardNavigableDirective {
   @Input() keyboardNavigableIdPrefix: string = '';
 
-  constructor(private el: ElementRef<HTMLInputElement>) { }
+  constructor(private el: ElementRef<HTMLInputElement>) {}
 
   setFocus(row: number, col: number, event: KeyboardEvent): boolean {
-    const el = document.getElementById(`${this.keyboardNavigableIdPrefix}_${row}_${col}`) as HTMLInputElement;
+    const el = document.getElementById(
+      `${this.keyboardNavigableIdPrefix}_${row}_${col}`
+    ) as HTMLInputElement;
     if (el) {
       el.focus();
       el.select();
@@ -19,7 +21,7 @@ export class KeyboardNavigableDirective {
     return false;
   }
 
-  moveFocusTo(type: 'left'|'right'|'up'|'down', event: KeyboardEvent) {
+  moveFocusTo(type: 'left' | 'right' | 'up' | 'down', event: KeyboardEvent) {
     const id = this.el.nativeElement.getAttribute('id') || '';
     let row = parseInt(id.replace(/.*_([0-9]+)_[0-9]+$/, '$1'), 10);
     let col = parseInt(id.replace(/.*_[0-9]+_([0-9]+)$/, '$1'), 10);
@@ -42,7 +44,10 @@ export class KeyboardNavigableDirective {
         return;
       }
       if (type === 'right') {
-        if (this.setFocus(row, col + 1, event) || this.setFocus(row + 1, 0, event)) {
+        if (
+          this.setFocus(row, col + 1, event) ||
+          this.setFocus(row + 1, 0, event)
+        ) {
           return;
         }
       }
@@ -52,7 +57,7 @@ export class KeyboardNavigableDirective {
         }
         let col2 = 7;
         while (col2 >= 0) {
-          col2 --;
+          col2--;
           if (this.setFocus(row - 1, col2, event)) {
             return;
           }
@@ -60,16 +65,16 @@ export class KeyboardNavigableDirective {
       }
       let col3 = col;
       while ((type === 'down' || type === 'up') && col3 > 0) {
-        col3 --;
+        col3--;
         if (this.setFocus(row, col3, event)) {
           return;
         }
       }
-      count ++;
+      count++;
       if (type === 'up' || type === 'left') {
-        row --;
+        row--;
       } else {
-        row ++;
+        row++;
       }
     }
   }

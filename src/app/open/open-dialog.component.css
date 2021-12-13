@@ -1,16 +1,18 @@
 table {
-    margin: 0 -24px;
-    width: calc( 100% + 48px);
+  margin: 0 -24px;
+  width: calc(100% + 48px);
 }
 
 .mat-sort-header {
-    user-select: none;
+  user-select: none;
 }
 
 .mat-row {
-    cursor: pointer;
+  cursor: pointer;
 }
 
-th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-    padding-left: 8px;
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+  padding-left: 8px;
 }

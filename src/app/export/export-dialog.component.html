@@ -2,88 +2,149 @@
 <div mat-dialog-content>
   <div class="export-content">
     <div class="export-form">
-      <div class="style-form-title">
-        Style
-      </div>
+      <div class="style-form-title">Style</div>
       <div class="style-form-fill">
         <div>
-          <mat-checkbox class="example-margin" [ngModel]="cfg.fill" (ngModelChange)="cfg.fill=$event;cfg.stroke=cfg.stroke||!$event">Fill</mat-checkbox>
+          <mat-checkbox
+            class="example-margin"
+            [ngModel]="cfg.fill"
+            (ngModelChange)="
+              cfg.fill = $event; cfg.stroke = cfg.stroke || !$event
+            "
+          >
+            Fill
+          </mat-checkbox>
         </div>
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Fill Color</mat-label>
-          <input matInput [(ngModel)]="cfg.fillColor" [disabled]="!cfg.fill">
+          <input matInput [(ngModel)]="cfg.fillColor" [disabled]="!cfg.fill" />
         </mat-form-field>
       </div>
       <div class="style-form-stroke">
         <div>
-          <mat-checkbox class="example-margin" [ngModel]="cfg.stroke" (ngModelChange)="cfg.stroke=$event;cfg.fill=cfg.fill||!$event">Stroke</mat-checkbox>
+          <mat-checkbox
+            class="example-margin"
+            [ngModel]="cfg.stroke"
+            (ngModelChange)="
+              cfg.stroke = $event; cfg.fill = cfg.fill || !$event
+            "
+          >
+            Stroke
+          </mat-checkbox>
         </div>
         <div class="style-form-stroke-fields">
           <div class="style-form-stroke-field">
             <mat-form-field floatLabel="always" appearance="fill">
               <mat-label>Stroke Color</mat-label>
-              <input matInput [(ngModel)]="cfg.strokeColor" [disabled]="!cfg.stroke">
+              <input
+                matInput
+                [(ngModel)]="cfg.strokeColor"
+                [disabled]="!cfg.stroke"
+              />
             </mat-form-field>
           </div>
           <div class="style-form-stroke-field">
             <mat-form-field floatLabel="always" appearance="fill">
               <mat-label>Stroke width</mat-label>
-              <input matInput [(ngModel)]="cfg.strokeWidth" [disabled]="!cfg.stroke">
+              <input
+                matInput
+                [(ngModel)]="cfg.strokeWidth"
+                [disabled]="!cfg.stroke"
+              />
             </mat-form-field>
           </div>
         </div>
       </div>
       <div class="viewbox-form-title">
         <div>ViewBox</div>
-        <button mat-flat-button (click)="refreshViewbox()" color="basic" class="reset-button">Reset</button>
+        <button
+          mat-flat-button
+          (click)="refreshViewbox()"
+          color="basic"
+          class="reset-button"
+        >
+          Reset
+        </button>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>X</mat-label>
-          <input matInput [(ngModel)]="x">
+          <input matInput [(ngModel)]="x" />
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Y</mat-label>
-          <input matInput [(ngModel)]="y">
+          <input matInput [(ngModel)]="y" />
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Width</mat-label>
-          <input matInput [(ngModel)]="width">
+          <input matInput [(ngModel)]="width" />
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Height</mat-label>
-          <input matInput [(ngModel)]="height">
+          <input matInput [(ngModel)]="height" />
         </mat-form-field>
       </div>
     </div>
     <div class="preview">
-      <svg [attr.viewBox]="x+' '+y+' '+width+' '+height"
-      width="300" height="300"
-      xmlns="http://www.w3.org/2000/svg"
+      <svg
+        [attr.viewBox]="x + ' ' + y + ' ' + width + ' ' + height"
+        width="300"
+        height="300"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <pattern id="preview-pattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse" [attr.patternTransform]="'scale('+patternScale(400, 400)+')'">
+        <pattern
+          id="preview-pattern"
+          x="0"
+          y="0"
+          width="16"
+          height="16"
+          patternUnits="userSpaceOnUse"
+          [attr.patternTransform]="'scale(' + patternScale(400, 400) + ')'"
+        >
           <rect x="0" y="0" width="16" height="16" fill="white"></rect>
           <rect x="0" y="0" width="8" height="8" fill="#cccccc"></rect>
           <rect x="8" y="8" width="8" height="8" fill="#cccccc"></rect>
         </pattern>
         <clipPath id="preview-clippath">
-          <rect [attr.x]="x" [attr.y]="y" [attr.width]="width" [attr.height]="height"></rect>
+          <rect
+            [attr.x]="x"
+            [attr.y]="y"
+            [attr.width]="width"
+            [attr.height]="height"
+          ></rect>
         </clipPath>
-        <rect [attr.x]="x" [attr.y]="y" [attr.width]="width" [attr.height]="height" fill="url(#preview-pattern)" ></rect>
-        <path [attr.d]="data.path" [attr.fill]="cfg.fill?cfg.fillColor:'none'" [attr.stroke-width]="cfg.strokeWidth" [attr.stroke]="cfg.stroke?cfg.strokeColor:'none'" clip-path="url(#preview-clippath)"></path>
+        <rect
+          [attr.x]="x"
+          [attr.y]="y"
+          [attr.width]="width"
+          [attr.height]="height"
+          fill="url(#preview-pattern)"
+        ></rect>
+        <path
+          [attr.d]="data.path"
+          [attr.fill]="cfg.fill ? cfg.fillColor : 'none'"
+          [attr.stroke-width]="cfg.strokeWidth"
+          [attr.stroke]="cfg.stroke ? cfg.strokeColor : 'none'"
+          clip-path="url(#preview-clippath)"
+        ></path>
       </svg>
     </div>
   </div>
 </div>
 <div mat-dialog-actions align="end">
   <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
-  <button mat-raised-button (click)="onExport()" color="primary" [disabled]="false">
+  <button
+    mat-raised-button
+    (click)="onExport()"
+    color="primary"
+    [disabled]="false"
+  >
     Download
   </button>
 </div>

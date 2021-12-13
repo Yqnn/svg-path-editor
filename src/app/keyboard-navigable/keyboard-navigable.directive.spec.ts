@@ -1,7 +1,5 @@
-import { ElementRef } from '@angular/core';
-import { KeyboardNavigableDirective } from './keyboard-navigable.directive';
-
-
+import {ElementRef} from '@angular/core';
+import {KeyboardNavigableDirective} from './keyboard-navigable.directive';
 
 describe('KeyboardNavigableDirective', () => {
   it('should create an instance', () => {

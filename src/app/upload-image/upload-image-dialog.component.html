@@ -1,34 +1,59 @@
 <h1 mat-dialog-title>Import image</h1>
-<div mat-dialog-content class="upload-image-dialog-content"
-  (drop)="onDrop($event)" (dragover)="onDragOver($event)"
+<div
+  mat-dialog-content
+  class="upload-image-dialog-content"
+  (drop)="onDrop($event)"
+  (dragover)="onDragOver($event)"
 >
   <div class="upload-button-row">
-    <button type="button" mat-raised-button (click)="fileInput.click()" (drop)="onDrop($event)">Choose File</button>
+    <button
+      type="button"
+      mat-raised-button
+      (click)="fileInput.click()"
+      (drop)="onDrop($event)"
+    >
+      Choose File
+    </button>
     <img *ngIf="data" class="preview" [src]="displayableData" />
-    <span class="filename">{{name}}</span>
+    <span class="filename">{{ name }}</span>
   </div>
   <mat-form-field floatLabel="always" appearance="fill">
     <mat-label>x</mat-label>
-    <input matInput [(ngModel)]="x">
+    <input matInput [(ngModel)]="x" />
   </mat-form-field>
   <mat-form-field floatLabel="always" appearance="fill">
     <mat-label>y</mat-label>
-    <input matInput [(ngModel)]="y">
+    <input matInput [(ngModel)]="y" />
   </mat-form-field>
   <mat-form-field floatLabel="always" appearance="fill">
     <mat-label>width</mat-label>
-    <input matInput [(ngModel)]="width">
+    <input matInput [(ngModel)]="width" />
   </mat-form-field>
   <mat-form-field floatLabel="always" appearance="fill">
     <mat-label>height</mat-label>
-    <input matInput [(ngModel)]="height">
+    <input matInput [(ngModel)]="height" />
   </mat-form-field>
   <div>
-      <mat-checkbox class="example-margin" [(ngModel)]="preserveAspectRatio">Preserve Aspect Ratio</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="preserveAspectRatio">
+      Preserve Aspect Ratio
+    </mat-checkbox>
   </div>
-  <input hidden (change)="onFileSelected(fileInput)" accept="image/*" #fileInput type="file">
+  <input
+    hidden
+    (change)="onFileSelected(fileInput)"
+    accept="image/*"
+    #fileInput
+    type="file"
+  />
 </div>
 <div mat-dialog-actions align="end">
   <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
-  <button mat-raised-button (click)="onUploadImage()" color="primary" [disabled]="!data">Import</button>
+  <button
+    mat-raised-button
+    (click)="onUploadImage()"
+    color="primary"
+    [disabled]="!data"
+  >
+    Import
+  </button>
 </div>

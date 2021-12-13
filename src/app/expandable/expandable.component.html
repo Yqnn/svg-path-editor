@@ -1,10 +1,10 @@
-<div class="title" (click)="toggle()" style="margin-top:0;">
-    <span>{{panelTitle}}</span>
-    <div class="panel-info" *ngIf="panelInfo">{{panelInfo}}</div>
-    <mat-icon>{{opened ? 'expand_more':'expand_less'}}</mat-icon>
+<div class="title" (click)="toggle()" style="margin-top: 0">
+  <span>{{ panelTitle }}</span>
+  <div class="panel-info" *ngIf="panelInfo">{{ panelInfo }}</div>
+  <mat-icon>{{ opened ? 'expand_more' : 'expand_less' }}</mat-icon>
 </div>
-<div *ngIf="opened" @openClose class="panel" >
-    <div #contentWrapper style="padding-top:2px">
-        <ng-content></ng-content>
-    </div>
+<div *ngIf="opened" @openClose class="panel">
+  <div #contentWrapper style="padding-top: 2px">
+    <ng-content></ng-content>
+  </div>
 </div>

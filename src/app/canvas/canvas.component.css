@@ -1,113 +1,110 @@
 :host {
-    background-color:#1e1e1e;
+  background-color: #1e1e1e;
 }
 path {
-    stroke:white;
-    fill:none;
+  stroke: white;
+  fill: none;
 }
 path.filled {
-    fill:rgba(255,255,255,0.25);
+  fill: rgba(255, 255, 255, 0.25);
 }
 path.hovered {
-    stroke: red;
-    fill: none;
+  stroke: red;
+  fill: none;
 }
 path.dragged {
-    stroke: rgb(0, 174, 255);
-    fill: none;
+  stroke: rgb(0, 174, 255);
+  fill: none;
 }
 line.grid {
-    stroke:#353536;
+  stroke: #353536;
 }
 
 line.grid.tick {
-    stroke: #454545;
+  stroke: #454545;
 }
 
 line.control {
-    stroke:gray;
+  stroke: gray;
 }
 line.hovered {
-    stroke:red;
+  stroke: red;
 }
 circle {
-    cursor: pointer;
-    stroke: transparent;
+  cursor: pointer;
+  stroke: transparent;
 }
 circle.control {
-    fill:gray;
+  fill: gray;
 }
 circle.target {
-    fill:white;
+  fill: white;
 }
 circle.hovered {
-    fill:red;
+  fill: red;
 }
 circle.dragged {
-    fill:rgb(0, 174, 255);
+  fill: rgb(0, 174, 255);
 }
 :host.preview {
-    background-color:white;
+  background-color: white;
 }
 :host.preview path {
-    stroke:black;
+  stroke: black;
 }
 :host.preview path.filled {
-    fill:black;
-    stroke:none;
+  fill: black;
+  stroke: none;
 }
 :host.preview path.hovered {
-    stroke: red;
-    fill: none;
+  stroke: red;
+  fill: none;
 }
 :host.preview circle,
 :host.preview line {
-    display: none;
+  display: none;
 }
 text.tick {
-    fill: #595959;
-    text-anchor: end;
-    /* Prevent accidental selection of axis markers on drag */
-    cursor: default;
-    user-select: none;
+  fill: #595959;
+  text-anchor: end;
+  /* Prevent accidental selection of axis markers on drag */
+  cursor: default;
+  user-select: none;
 }
-
-
-
 
 /* images */
 image {
-    pointer-events: none;
+  pointer-events: none;
 }
 rect.image-control {
-    fill: rgba(0,0,0,0);
-    stroke: none;
+  fill: rgba(0, 0, 0, 0);
+  stroke: none;
 }
 line.image-control {
-    stroke:gray;
+  stroke: gray;
 }
 circle.image-control {
-    fill:gray;
+  fill: gray;
 }
 .focused-image line.image-control {
-    stroke:rgb(0, 174, 255);
+  stroke: rgb(0, 174, 255);
 }
 .focused-image circle.image-control {
-    fill:rgb(0, 174, 255);
+  fill: rgb(0, 174, 255);
 }
 
 .image-control.horizontal {
-    cursor: ns-resize;
+  cursor: ns-resize;
 }
 .image-control.vertical {
-    cursor: ew-resize;
+  cursor: ew-resize;
 }
 .image-control.down {
-    cursor: nwse-resize;
+  cursor: nwse-resize;
 }
 .image-control.up {
-    cursor: nesw-resize;
+  cursor: nesw-resize;
 }
 .image-control.move {
-    cursor: move;
+  cursor: move;
 }

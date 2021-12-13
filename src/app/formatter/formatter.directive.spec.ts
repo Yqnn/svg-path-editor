@@ -1,5 +1,5 @@
-import { ElementRef } from '@angular/core';
-import { FormatterDirective } from './formatter.directive';
+import {ElementRef} from '@angular/core';
+import {FormatterDirective} from './formatter.directive';
 
 describe('FormatterDirective', () => {
   it('should create an instance', () => {

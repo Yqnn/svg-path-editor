@@ -1,170 +1,170 @@
 :host {
-    display: block;
-    height: 100%;
+  display: block;
+  height: 100%;
 }
-
 
 * {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 .footer {
-    text-decoration: none;
-    position: fixed;
-    left:0;
-    height:28px;
-    width: 300px;
-    bottom:0px;
-    background-color: #111111;
-    color:#AAAAAA;
-    font-size: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    fill:#AAAAAA;
-    .mat-icon {
-        width:20px;
-        height: 20px;
-        margin:4px 8px 4px 0;
-    }
-    &:hover {
-        color:white;
-        fill:white;
-        text-decoration: underline;
-    }
+  text-decoration: none;
+  position: fixed;
+  left: 0;
+  height: 28px;
+  width: 300px;
+  bottom: 0px;
+  background-color: #111111;
+  color: #aaaaaa;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  fill: #aaaaaa;
+  .mat-icon {
+    width: 20px;
+    height: 20px;
+    margin: 4px 8px 4px 0;
+  }
+  &:hover {
+    color: white;
+    fill: white;
+    text-decoration: underline;
+  }
 }
 .spacer {
-    height:32px;
+  height: 32px;
 }
-
 
 /* UI */
 .left-column-wrapper {
-    width:300px;
-    position: relative;
+  width: 300px;
+  position: relative;
 }
 .left-column {
-    width:300px;
-    overflow:auto;
-    background-color:#252526;
-    height: calc(100% - 28px);
+  width: 300px;
+  overflow: auto;
+  background-color: #252526;
+  height: calc(100% - 28px);
 }
-.left-column-close, .left-column-open {
-    position: absolute;
-    top:8px;
-    border-radius: 0;
-    min-width:16px;
-    padding:8px 2px;
-    z-index:10;
+.left-column-close,
+.left-column-open {
+  position: absolute;
+  top: 8px;
+  border-radius: 0;
+  min-width: 16px;
+  padding: 8px 2px;
+  z-index: 10;
 }
 .left-column-close {
-    right:-28px;
+  right: -28px;
 }
 .left-column-open {
-    left:0;
+  left: 0;
 }
 
 input.svg-value {
-    width:38px;
-    text-align: center;
-    font-size: 10px;
-    margin-left:1px;
-    margin-right:1px;
-    padding-left:1px;
-    padding-right:1px;
+  width: 38px;
+  text-align: center;
+  font-size: 10px;
+  margin-left: 1px;
+  margin-right: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
 }
 
 .type-token {
-    margin:0 1px;
-    font-size: 12px;
-    line-height: 20px;
-    height: 20px;
-    width: 20px;
-    text-align: center;
-    background-color:rgba(255, 128, 0, 0.5);
-    color:#c8c8c8;
-    border-style: solid;
-    border-width: 0 0 1px 0;
-    border-radius: 2px 2px 0 0;
-    border-color: #c8c8c8;
-    cursor: pointer;
+  margin: 0 1px;
+  font-size: 12px;
+  line-height: 20px;
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  background-color: rgba(255, 128, 0, 0.5);
+  color: #c8c8c8;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  border-radius: 2px 2px 0 0;
+  border-color: #c8c8c8;
+  cursor: pointer;
 }
 .type-token-relative {
-    background-color:rgba(128, 0, 255, 0.5);
+  background-color: rgba(128, 0, 255, 0.5);
 }
-.row>.type-token {
-    flex-shrink: 0;
+.row > .type-token {
+  flex-shrink: 0;
 }
 div.hovered {
-    background-color: #37373d;
+  background-color: #37373d;
 }
 div.dragged {
-    background-color:#094771;
+  background-color: #094771;
 }
 
 /* Drawings */
 .drawings {
-    flex:1;
-    align-self:stretch;
-    position: relative;
-    overflow:hidden;
+  flex: 1;
+  align-self: stretch;
+  position: relative;
+  overflow: hidden;
 
-    &:hover .add-button, .add-button.opened {
-        display: block;
-    }
-    .add-button {
-        display: none;
-        position: absolute;
-        font-size: 1px;
-    }
+  &:hover .add-button,
+  .add-button.opened {
+    display: block;
+  }
+  .add-button {
+    display: none;
+    position: absolute;
+    font-size: 1px;
+  }
 
-    .scene-top-actions {
-        position: absolute;
-        right: 12px;
-        top: 12px;
-        >button {
-            font-size: 1px;
-            margin-left:8px;
-        }
-        >.add-image-button {
-            position: absolute;
-            margin-left:8px;
-            top:0;
-            opacity: 0;
-            transition: top 0.2s, opacity 0.2s;
-            &.displayed {
-                top:48px;
-                opacity: 1;
-            }
-        }
+  .scene-top-actions {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    > button {
+      font-size: 1px;
+      margin-left: 8px;
     }
+    > .add-image-button {
+      position: absolute;
+      margin-left: 8px;
+      top: 0;
+      opacity: 0;
+      transition: top 0.2s, opacity 0.2s;
+      &.displayed {
+        top: 48px;
+        opacity: 1;
+      }
+    }
+  }
 
-    .scene-bottom-actions {
-        position: absolute;
-        right: 12px;
-        bottom: 12px;
-        width:40px;
-        >button {
-            font-size: 1px;
-            margin-top:8px;
-        }
+  .scene-bottom-actions {
+    position: absolute;
+    right: 12px;
+    bottom: 12px;
+    width: 40px;
+    > button {
+      font-size: 1px;
+      margin-top: 8px;
     }
+  }
 }
 
 @media screen and (max-width: 500px) {
-    .left-column {
-        width:100%;
-    }
-    .left-column-wrapper {
-        width:100% !important;
-        max-width:none !important;
-    }
-    .left-column-close {
-        right:0;
-        top: unset;
-        bottom: 4px;
-        padding:2px 6px;
-    }
-    .footer {
-        width: 100%;
-    }
+  .left-column {
+    width: 100%;
+  }
+  .left-column-wrapper {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  .left-column-close {
+    right: 0;
+    top: unset;
+    bottom: 4px;
+    padding: 2px 6px;
+  }
+  .footer {
+    width: 100%;
+  }
 }

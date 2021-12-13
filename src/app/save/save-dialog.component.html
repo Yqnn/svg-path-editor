@@ -1,20 +1,31 @@
 <h1 mat-dialog-title>Save path</h1>
 <div mat-dialog-content>
-  <mat-form-field floatLabel="always" appearance="fill" style="width: 100%;">
+  <mat-form-field floatLabel="always" appearance="fill" style="width: 100%">
     <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="data.name" cdkFocusInitial>
+    <input matInput [(ngModel)]="data.name" cdkFocusInitial />
   </mat-form-field>
   <p *ngIf="storageService.hasPath(data.name)">
-    A path with this name already exists, press <i>Replace</i> to replace it.
+    A path with this name already exists, press
+    <i>Replace</i>
+    to replace it.
   </p>
   <p *ngIf="!storageService.hasPath(data.name)">
-    Press <i>Save</i> to save current path in your browser.
+    Press
+    <i>Save</i>
+    to save current path in your browser.
   </p>
 </div>
 <div mat-dialog-actions align="end">
   <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
-  <button mat-raised-button (click)="onSave()" color="primary" [disabled]="!data.name">
+  <button
+    mat-raised-button
+    (click)="onSave()"
+    color="primary"
+    [disabled]="!data.name"
+  >
     <ng-container *ngIf="!storageService.hasPath(data.name)">Save</ng-container>
-    <ng-container *ngIf="storageService.hasPath(data.name)">Replace</ng-container>
+    <ng-container *ngIf="storageService.hasPath(data.name)">
+      Replace
+    </ng-container>
   </button>
 </div>

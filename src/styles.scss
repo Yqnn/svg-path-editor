@@ -1,168 +1,167 @@
 /* You can add global styles to this file, and also import other style files */
 html {
-    font-family: Roboto, Arial, "Helvetica Neue", sans-serif;
-    scrollbar-color: #565656 #393939;
-    scrollbar-width: thin;
-    color:white;
-    background-color: #1e1e1e;
+  font-family: Roboto, Arial, 'Helvetica Neue', sans-serif;
+  scrollbar-color: #565656 #393939;
+  scrollbar-width: thin;
+  color: white;
+  background-color: #1e1e1e;
 }
-html, body {
-    margin:0;
-    padding:0;
-    height: 100%;
-    overflow: hidden;
-    /* Following lines could prevent elastic scrolling in mobile Safari,
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  /* Following lines could prevent elastic scrolling in mobile Safari,
      * but deteriorates performances a lot:  * /
     width:100%;
     position: fixed;
     */
 }
-  
+
 ::-webkit-scrollbar {
-    width: 6px;
+  width: 6px;
 }
 ::-webkit-scrollbar-track {
-    background-color: #393939;
+  background-color: #393939;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #565656;
-    border-radius: 3px;
-    border: 0px solid #393939;
+  background-color: #565656;
+  border-radius: 3px;
+  border: 0px solid #393939;
 }
 ::-webkit-scrollbar-button {
-    width: 0;
-    height: 0;
-    display: none;
+  width: 0;
+  height: 0;
+  display: none;
 }
 ::-webkit-scrollbar-corner {
-    background-color:transparent;
+  background-color: transparent;
 }
-
-
 
 input.app-input,
 textarea.app-input {
-    color:white;
-    background-color: rgba(255,255,255,0.145);
-    border-style: solid;
-    border-width: 0 0 1px 0;
-    border-color: #c8c8c8;
-    border-radius: 2px 2px 0 0;
-    transition: border-width 100ms, padding-bottom 100ms;
+  color: white;
+  background-color: rgba(255, 255, 255, 0.145);
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  border-color: #c8c8c8;
+  border-radius: 2px 2px 0 0;
+  transition: border-width 100ms, padding-bottom 100ms;
 }
 textarea.app-input,
 input.app-input {
-    margin: 0;
-    padding: 0 4px 1px 4px;
+  margin: 0;
+  padding: 0 4px 1px 4px;
 }
 input.app-input {
-    height: 20px;
+  height: 20px;
 }
 input.app-input:focus,
 textarea.app-input:focus,
 input.app-input:hover,
 textarea.app-input:hover {
-    border-width: 0 0 2px 0;
-    padding-bottom: 0;
+  border-width: 0 0 2px 0;
+  padding-bottom: 0;
 }
 input.app-input:hover,
 textarea.app-input:hover {
-    border-color: white;
+  border-color: white;
 }
 input.app-input:focus,
 textarea.app-input:focus {
-    outline: none;
-    border-color: #2196f3;
+  outline: none;
+  border-color: #2196f3;
 }
 
 button.mat-flat-button {
-    padding:0 8px !important;
-    height:32px;
-    line-height: 32px;
-    min-width: auto !important;
+  padding: 0 8px !important;
+  height: 32px;
+  line-height: 32px;
+  min-width: auto !important;
 }
 
 .row {
-    display: flex;
-    align-items: center;
-    padding-left:2px;
-    padding-right:2px;
-    >* {
-        margin-top: 1px;
-        margin-bottom: 1px;
-    }
-    >button.mat-flat-button {
-        margin:2px !important;
-    }
-    .small-checkbox label.mat-checkbox-layout {
-        display:flex !important;
-    }
-    >.mat-checkbox {
-        margin-left:2px;
-        margin-right:2px;
-    }
+  display: flex;
+  align-items: center;
+  padding-left: 2px;
+  padding-right: 2px;
+  > * {
+    margin-top: 1px;
+    margin-bottom: 1px;
+  }
+  > button.mat-flat-button {
+    margin: 2px !important;
+  }
+  .small-checkbox label.mat-checkbox-layout {
+    display: flex !important;
+  }
+  > .mat-checkbox {
+    margin-left: 2px;
+    margin-right: 2px;
+  }
 }
 
 .mat-checkbox-label {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 button.mat-icon-button {
-    width:20px;
-    height:20px;
-    line-height: 20px !important;
-    font-size: 1px !important;
-    mat-icon {
-        width: 12px;
-        height: 12px;
-        line-height: 12px !important;
-    }
+  width: 20px;
+  height: 20px;
+  line-height: 20px !important;
+  font-size: 1px !important;
+  mat-icon {
+    width: 12px;
+    height: 12px;
+    line-height: 12px !important;
+  }
 }
 
 .input-block {
-    margin:2px;
-    position: relative;
+  margin: 2px;
+  position: relative;
 
-    >label {
-        position: absolute;
-        color:#c8c8c8;
-        font-size:8px;
-        padding:4px 4px 4px 4px;
-        top:0;
-        left:0;
-        right:15px;
-    }
-    >input, >textarea {
-        height:32px;
-        width:100%;
-    }
-    >input {
-        padding-top:12px;
-    }
-    >textarea {
-        padding-top:17px;
-        resize: vertical; 
-    }
-    >label.opaque {
-        background-color:rgba(69,69,69,0.9);
-        border-radius: 2px;
-    }
-    &.disabled {
-        opacity: 0.5;
-    }
-    &.disabled>input {
-        border-color: transparent;
-    }
+  > label {
+    position: absolute;
+    color: #c8c8c8;
+    font-size: 8px;
+    padding: 4px 4px 4px 4px;
+    top: 0;
+    left: 0;
+    right: 15px;
+  }
+  > input,
+  > textarea {
+    height: 32px;
+    width: 100%;
+  }
+  > input {
+    padding-top: 12px;
+  }
+  > textarea {
+    padding-top: 17px;
+    resize: vertical;
+  }
+  > label.opaque {
+    background-color: rgba(69, 69, 69, 0.9);
+    border-radius: 2px;
+  }
+  &.disabled {
+    opacity: 0.5;
+  }
+  &.disabled > input {
+    border-color: transparent;
+  }
 }
-.input-block:focus-within>label {
-    color: #2196f3;
+.input-block:focus-within > label {
+  color: #2196f3;
 }
-
 
 .app-tooltip {
-    margin:1px !important;
+  margin: 1px !important;
 }
 
 .dialog .mat-dialog-container {
-    background-color: #252526;
+  background-color: #252526;
 }
