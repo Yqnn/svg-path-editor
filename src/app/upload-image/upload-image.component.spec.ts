@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatIconModule } from '@angular/material/icon';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatIconModule} from '@angular/material/icon';
 
-import { UploadImageComponent } from './upload-image.component';
+import {UploadImageComponent} from './upload-image.component';
 
 describe('UploadImageComponent', () => {
   let component: UploadImageComponent;
@@ -10,10 +10,9 @@ describe('UploadImageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatDialogModule, MatIconModule ],
-      declarations: [ UploadImageComponent ]
-    })
-    .compileComponents();
+      imports: [MatDialogModule, MatIconModule],
+      declarations: [UploadImageComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

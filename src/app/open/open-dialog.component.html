@@ -2,23 +2,43 @@
 <div mat-dialog-content>
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let element">{{ element.name }}</td>
     </ng-container>
     <ng-container matColumnDef="create">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width:170px"> Creation Date </th>
-      <td mat-cell *matCellDef="let element"> {{formatDate(element.creationDate)}} </td>
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="width: 170px"
+      >
+        Creation Date
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ formatDate(element.creationDate) }}
+      </td>
     </ng-container>
     <ng-container matColumnDef="change">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:170px"> Change Date </th>
-      <td mat-cell *matCellDef="let element"> {{formatDate(element.changeDate)}} </td>
+      <th
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+        style="width: 170px"
+      >
+        Change Date
+      </th>
+      <td mat-cell *matCellDef="let element">
+        {{ formatDate(element.changeDate) }}
+      </td>
     </ng-container>
     <ng-container matColumnDef="preview">
-      <th mat-header-cell *matHeaderCellDef style="width:74px"></th>
+      <th mat-header-cell *matHeaderCellDef style="width: 74px"></th>
       <td mat-cell *matCellDef="let element">
-        <svg [attr.viewBox]="viewbox(element.path)"
-          style="margin:6px 16px 4px 8px"
-          width="50" height="50"
+        <svg
+          [attr.viewBox]="viewbox(element.path)"
+          style="margin: 6px 16px 4px 8px"
+          width="50"
+          height="50"
           xmlns="http://www.w3.org/2000/svg"
         >
           <path [attr.d]="element.path" fill="white"></path>
@@ -26,24 +46,35 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef style="width:90px"></th>
-      <td mat-cell *matCellDef="let element" style="text-align: center;">
-        <button *ngIf="!beingRemoved" (click)="beingRemoved=element.name;$event.stopPropagation();" mat-mini-fab color="basic" 
+      <th mat-header-cell *matHeaderCellDef style="width: 90px"></th>
+      <td mat-cell *matCellDef="let element" style="text-align: center">
+        <button
+          *ngIf="!beingRemoved"
+          (click)="beingRemoved = element.name; $event.stopPropagation()"
+          mat-mini-fab
+          color="basic"
           matTooltip="Delete"
           matTooltipPosition="below"
           matTooltipClass="app-tooltip"
         >
           <mat-icon>delete</mat-icon>
         </button>
-        <ng-container *ngIf="beingRemoved===element.name">
-          <button (click)="beingRemoved=undefined;$event.stopPropagation();" mat-mini-fab color="basic" style="margin-right: 8px;"
+        <ng-container *ngIf="beingRemoved === element.name">
+          <button
+            (click)="beingRemoved = undefined; $event.stopPropagation()"
+            mat-mini-fab
+            color="basic"
+            style="margin-right: 8px"
             matTooltip="Cancel"
             matTooltipPosition="below"
             matTooltipClass="app-tooltip"
           >
             <mat-icon>clear</mat-icon>
           </button>
-          <button (click)="onRemove(element.name);$event.stopPropagation();" mat-mini-fab color="warn"
+          <button
+            (click)="onRemove(element.name); $event.stopPropagation()"
+            mat-mini-fab
+            color="warn"
             matTooltip="Confirm Deletion"
             matTooltipPosition="below"
             matTooltipClass="app-tooltip"
@@ -53,9 +84,13 @@
         </ng-container>
       </td>
     </ng-container>
-  
-    <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onOpen(row.name)"></tr>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="onOpen(row.name)"
+    ></tr>
   </table>
 </div>
 <div mat-dialog-actions align="end">

@@ -1,18 +1,18 @@
 mat-form-field {
-  width:100%;
+  width: 100%;
 }
 .export-content {
-  display:flex;
+  display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
   .export-form {
-    flex:1;
-    display:flex;
+    flex: 1;
+    display: flex;
     flex-wrap: wrap;
-    justify-content:space-between;
+    justify-content: space-between;
     .style-form-title {
       width: 100%;
-      margin-bottom:8px;
+      margin-bottom: 8px;
     }
     .style-form-fill {
       width: calc(33% - 4px);
@@ -22,7 +22,7 @@ mat-form-field {
       .style-form-stroke-fields {
         display: flex;
         flex-wrap: wrap;
-        justify-content:space-between;
+        justify-content: space-between;
         .style-form-stroke-field {
           width: calc(50% - 4px);
         }
@@ -30,25 +30,24 @@ mat-form-field {
     }
     .viewbox-form-title {
       width: 100%;
-      margin:8px 0;
-      display:flex;
+      margin: 8px 0;
+      display: flex;
       align-items: center;
       div {
-        flex:1;
+        flex: 1;
       }
     }
     .viewbox-form-field {
-      width:calc( 25% - 6px);
+      width: calc(25% - 6px);
     }
   }
   .preview {
-    width:324px;
+    width: 324px;
     svg {
-      margin:0 0 0 24px;
+      margin: 0 0 0 24px;
     }
   }
 }
-
 
 @media screen and (max-width: 850px) {
   .style-form-fill {
@@ -58,13 +57,13 @@ mat-form-field {
     width: 100% !important;
   }
   .viewbox-form-field {
-    width:calc( 50% - 4px) !important;
+    width: calc(50% - 4px) !important;
   }
 }
 
 @media screen and (max-width: 700px) {
   .preview {
-    width:100% !important;
+    width: 100% !important;
     svg {
       width: 100% !important;
       margin: 0 !important;

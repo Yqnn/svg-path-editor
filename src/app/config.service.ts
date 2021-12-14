@@ -1,9 +1,7 @@
-import { Injectable } from '@angular/core';
-
-
+import {Injectable} from '@angular/core';
 
 function save() {
-  return function(target: Object, propertyKey: string) { 
+  return function (target: Object, propertyKey: string) {
     const localStorageKey = `SaveDecorator.${target.constructor.name}.${propertyKey}`;
     const storedValue = localStorage.getItem(localStorageKey);
     let value: any = JSON.parse(storedValue ?? 'null');
@@ -11,9 +9,9 @@ function save() {
     let isInitialized = false;
 
     const setter = (newVal: any) => {
-      if(!wasStored || isInitialized) {
+      if (!wasStored || isInitialized) {
         value = newVal;
-        if(isInitialized) {
+        if (isInitialized) {
           localStorage.setItem(localStorageKey, JSON.stringify(value));
         }
       }
@@ -22,15 +20,13 @@ function save() {
 
     Object.defineProperty(target, propertyKey, {
       get: () => value,
-      set: setter
-    }); 
-  }
+      set: setter,
+    });
+  };
 }
 
-
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService {
   @save() viewPortX = 0;
@@ -47,14 +43,13 @@ export class ConfigService {
   @save() decimalPrecision = 3;
 }
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExportConfigService {
   @save() fill = true;
   @save() fillColor = '#000000';
   @save() stroke = false;
-  @save() strokeColor =  '#FF0000';
+  @save() strokeColor = '#FF0000';
   @save() strokeWidth = 0.1;
 }

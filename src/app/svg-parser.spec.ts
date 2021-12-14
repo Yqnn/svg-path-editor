@@ -1,4 +1,4 @@
-import { SvgParser } from './svg-parser';
+import {SvgParser} from './svg-parser';
 
 const parse = SvgParser.parse;
 
@@ -21,7 +21,7 @@ it('overloaded moveTo', () => {
     ['l', '39', '0'],
     ['l', '0', '-40'],
     ['l', '-39', '0'],
-    ['z']
+    ['z'],
   ]);
 });
 
@@ -30,17 +30,19 @@ it('curveTo', () => {
   const b = parse('c 50,0 50,100 100,100 c 50,0 50,-100 100,-100');
   expect(a).toEqual([
     ['c', '50', '0', '50', '100', '100', '100'],
-    ['c', '50', '0', '50', '-100', '100', '-100']
+    ['c', '50', '0', '50', '-100', '100', '-100'],
   ]);
   expect(a).toEqual(b);
 });
 
 it('lineTo', () => {
-  expect(() => { parse('l 10 10 0'); }).toThrowError(/malformed/);
+  expect(() => {
+    parse('l 10 10 0');
+  }).toThrowError(/malformed/);
   expect(parse('l 10,10')).toEqual([['l', '10', '10']]);
   expect(parse('l10 10 10 10')).toEqual([
     ['l', '10', '10'],
-    ['l', '10', '10']
+    ['l', '10', '10'],
   ]);
 });
 
@@ -54,17 +56,17 @@ it('verticalTo', () => {
 
 it('arcTo', () => {
   expect(parse('A 30 50 0 0 1 162.55 162.45')).toEqual([
-    ['A', '30', '50', '0', '0', '1', '162.55', '162.45']
+    ['A', '30', '50', '0', '0', '1', '162.55', '162.45'],
   ]);
   expect(parse('A 60 60 0 01100 100')).toEqual([
-    ['A', '60', '60', '0', '0', '1', '100', '100']
+    ['A', '60', '60', '0', '0', '1', '100', '100'],
   ]);
 });
 
 it('quadratic curveTo', () => {
   expect(parse('M10 80 Q 95 10 180 80')).toEqual([
     ['M', '10', '80'],
-    ['Q', '95', '10', '180', '80']
+    ['Q', '95', '10', '180', '80'],
   ]);
 });
 

@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 export class StoredPath {
-  name: string | null = '';
+  name: string | null = '';
   path = '';
   creationDate: Date = new Date();
   changeDate: Date = new Date();
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StorageService {
   storedPaths: StoredPath[] = [];
@@ -20,12 +20,12 @@ export class StorageService {
     return this.getPath(name) !== undefined;
   }
 
-  getPath(name: string | null = null): StoredPath | undefined {
-    return this.storedPaths.find(it => it.name === name);
+  getPath(name: string | null = null): StoredPath | undefined {
+    return this.storedPaths.find((it) => it.name === name);
   }
 
   removePath(name: string) {
-    this.storedPaths = this.storedPaths.filter(it => it.name !== name);
+    this.storedPaths = this.storedPaths.filter((it) => it.name !== name);
     this.save();
   }
 
@@ -42,7 +42,7 @@ export class StorageService {
   }
 
   isEmpty(): boolean {
-    return this.storedPaths.filter(it => !!it.name).length === 0;
+    return this.storedPaths.filter((it) => !!it.name).length === 0;
   }
 
   load() {
@@ -50,7 +50,7 @@ export class StorageService {
     const stored = localStorage.getItem('storedPaths');
     if (stored) {
       const parsed = JSON.parse(stored) as any[];
-      parsed.forEach(it => {
+      parsed.forEach((it) => {
         it.creationDate = new Date(it.creationDate);
         it.changeDate = new Date(it.changeDate);
       });
