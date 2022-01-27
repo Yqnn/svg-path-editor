@@ -114,7 +114,6 @@ div.dragged {
     .add-button {
         display: none;
         position: absolute;
-        font-size: 1px;
     }
 
     .scene-top-actions {
@@ -122,7 +121,6 @@ div.dragged {
         right: 12px;
         top: 12px;
         >button {
-            font-size: 1px;
             margin-left:8px;
         }
         >.add-image-button {
@@ -144,7 +142,6 @@ div.dragged {
         bottom: 12px;
         width:40px;
         >button {
-            font-size: 1px;
             margin-top:8px;
         }
     }
