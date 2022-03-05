@@ -111,12 +111,13 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   ngOnInit(): void {
+    const cap = (val:number, max:number) => val > max ? max : val < -max ? -max : val;
     const throttler = throttleTime(20, undefined, {leading: false, trailing: true});
     this.wheel$
       .pipe( buffer(this.wheel$.pipe(throttler)) )
       .pipe( map(ev => ({
           event: ev[0],
-          deltaY: ev.reduce((acc, cur) => acc + cur.deltaY, 0)
+          deltaY: ev.reduce((acc, cur) => acc + cap(cur.deltaY, 50), 0)
       })))
       .subscribe(this.mousewheel.bind(this));
   }
