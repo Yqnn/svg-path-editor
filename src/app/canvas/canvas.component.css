@@ -1,5 +1,6 @@
 :host {
     background-color:#1e1e1e;
+    user-select: none;
 }
 path {
     stroke:white;
