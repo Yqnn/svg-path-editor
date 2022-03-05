@@ -8,28 +8,35 @@
     box-sizing: border-box;
 }
 .footer {
-    text-decoration: none;
     position: fixed;
     left:0;
     height:28px;
     width: 300px;
     bottom:0px;
     background-color: #111111;
-    color:#AAAAAA;
     font-size: 14px;
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
-    fill:#AAAAAA;
-    .mat-icon {
-        width:20px;
-        height: 20px;
-        margin:4px 8px 4px 0;
-    }
-    &:hover {
-        color:white;
-        fill:white;
-        text-decoration: underline;
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color:#AAAAAA;
+        fill:#AAAAAA;
+        &:hover {
+            color:white;
+            fill:white;
+            .sponsor {
+                transform: scale(1.1);
+            }
+        }
+        .mat-icon {
+            width:20px;
+            height: 20px;
+            margin:4px 8px 4px 0;
+        }
     }
 }
 .spacer {
