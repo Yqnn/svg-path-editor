@@ -85,7 +85,8 @@ export class AppComponent implements AfterViewInit {
     public cfg: ConfigService,
     private storage: StorageService
   ) {
-    for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit']) {
+    (window as any).browserComputePathBoundingBox = browserComputePathBoundingBox;
+    for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit', 'sponsor']) {
       matRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(`./assets/${icon}.svg`));
     }
     this.parsedPath = new Svg('');

@@ -425,9 +425,14 @@
 </div>
 
 
-<a *ngIf="isLeftPanelOpened"  class="footer" href="https://github.com/Yqnn/svg-path-editor" target="_blank">
-    <mat-icon svgIcon="github"></mat-icon> Bug reports &amp; feedback
-</a>
+<div *ngIf="isLeftPanelOpened"  class="footer">
+    <a href="https://github.com/Yqnn/svg-path-editor" target="_blank">
+        <mat-icon svgIcon="github"></mat-icon> GitHub
+    </a>
+    <a href="https://github.com/sponsors/Yqnn" target="_blank">
+        <mat-icon svgIcon="sponsor" class="sponsor"></mat-icon> Sponsor
+    </a>
+</div>
 
 <mat-menu #appMenu="matMenu"  xPosition="before">
     <ng-template matMenuContent let-item="item"  let-idx="idx">
