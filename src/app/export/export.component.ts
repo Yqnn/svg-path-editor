@@ -3,6 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialo
 import { ExportConfigService } from '../config.service';
 import { StorageService } from '../storage.service';
 import { Svg } from '../svg';
+import { browserComputePathBoundingBox } from '../svg-bbox';
 
 interface DialogData {
   path: string;
@@ -61,10 +62,12 @@ export class ExportDialogComponent {
     const p = new Svg(this.data.path);
     const locs = p.targetLocations();
     if (locs.length > 0) {
-      this.x = locs.reduce((acc, pt) => Math.min(acc, pt.x), Infinity);
-      this.y = locs.reduce((acc, pt) => Math.min(acc, pt.y), Infinity);
-      this.width = locs.reduce((acc, pt) => Math.max(acc, pt.x), -Infinity) - this.x;
-      this.height = locs.reduce((acc, pt) => Math.max(acc, pt.y), -Infinity) - this.y;
+      const bbox = browserComputePathBoundingBox(this.data.path);
+
+      this.x = bbox.x;
+      this.y = bbox.y;
+      this.width = bbox.width;
+      this.height = bbox.height;
       if (this.cfg.stroke) {
         this.x -= this.cfg.strokeWidth;
         this.y -= this.cfg.strokeWidth;

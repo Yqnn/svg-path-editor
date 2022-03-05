@@ -8,7 +8,7 @@ import { CanvasComponent } from './canvas/canvas.component';
 import { Image } from './image';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 import { ConfigService } from './config.service';
-
+import { browserComputePathBoundingBox } from './svg-bbox';
 
 @Component({
   selector: 'app-root',
@@ -280,16 +280,12 @@ export class AppComponent implements AfterViewInit {
     if (this.cfg.viewPortLocked) {
       return;
     }
-    let xmin = 0;
-    let ymin = 0;
-    let xmax = 10;
-    let ymax = 10;
-    if (this.targetPoints.length > 0) {
-      xmin = Math.min(...this.targetPoints.map( it => it.x ));
-      ymin = Math.min(...this.targetPoints.map( it => it.y ));
-      xmax = Math.max(...this.targetPoints.map( it => it.x ));
-      ymax = Math.max(...this.targetPoints.map( it => it.y ));
-    }
+    const bbox = browserComputePathBoundingBox(this.rawPath);
+    let xmin = bbox.x;
+    let ymin = bbox.y;
+    let xmax = bbox.width - bbox.x;
+    let ymax = bbox.height - bbox.y;
+
     const k = this.canvasHeight / this.canvasWidth;
     let w = xmax - xmin + 2;
     let h = ymax - ymin + 2;
