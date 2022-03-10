@@ -281,14 +281,10 @@ export class AppComponent implements AfterViewInit {
       return;
     }
     const bbox = browserComputePathBoundingBox(this.rawPath);
-    let xmin = bbox.x;
-    let ymin = bbox.y;
-    let xmax = bbox.width - bbox.x;
-    let ymax = bbox.height - bbox.y;
 
     const k = this.canvasHeight / this.canvasWidth;
-    let w = xmax - xmin + 2;
-    let h = ymax - ymin + 2;
+    let w = bbox.width + 2;
+    let h = bbox.height + 2;
     if (k < h / w) {
       w = h / k;
     } else {
@@ -296,8 +292,8 @@ export class AppComponent implements AfterViewInit {
     }
 
     this.updateViewPort(
-      xmin - 1,
-      ymin - 1,
+      bbox.x - 1,
+      bbox.y - 1,
       w,
       h
     );

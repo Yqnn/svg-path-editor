@@ -74,6 +74,10 @@ export class ExportDialogComponent {
         this.width += 2 * this.cfg.strokeWidth;
         this.height += 2 * this.cfg.strokeWidth;
       }
+      this.x = parseFloat(this.x.toPrecision(6));
+      this.y = parseFloat(this.y.toPrecision(6));
+      this.width = parseFloat(this.width.toPrecision(4));
+      this.height = parseFloat(this.height.toPrecision(4));
     }
   }
 }
