@@ -40,25 +40,25 @@
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>X</mat-label>
-          <input matInput [(ngModel)]="x">
+          <input matInput appFormatter [(ngModel)]="x">
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Y</mat-label>
-          <input matInput [(ngModel)]="y">
+          <input matInput appFormatter [(ngModel)]="y">
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Width</mat-label>
-          <input matInput [(ngModel)]="width">
+          <input matInput appFormatter formatterType="positive-float" [(ngModel)]="width">
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
         <mat-form-field floatLabel="always" appearance="fill">
           <mat-label>Height</mat-label>
-          <input matInput [(ngModel)]="height">
+          <input matInput appFormatter formatterType="positive-float" [(ngModel)]="height">
         </mat-form-field>
       </div>
     </div>
