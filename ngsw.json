@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1646936520946,
+  "timestamp": 1647638343038,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -33,6 +33,7 @@
         "/assets/github.svg",
         "/assets/icons/icon-128x128.png",
         "/assets/icons/icon-144x144.png",
+        "/assets/icons/icon-152x152-cropped.png",
         "/assets/icons/icon-152x152.png",
         "/assets/icons/icon-192x192.png",
         "/assets/icons/icon-384x384.png",
@@ -55,6 +56,7 @@
     "/assets/github.svg": "b9064e4029977502677583388080a2f44b0967dc",
     "/assets/icons/icon-128x128.png": "990bf9066e18e84df38496afcb581dd032d5dd79",
     "/assets/icons/icon-144x144.png": "1418f7e28c137f14f1e3f52405587500dc2e314e",
+    "/assets/icons/icon-152x152-cropped.png": "4252eb7bfb2e454264eef04afedbe46f22abd619",
     "/assets/icons/icon-152x152.png": "149f61864f3e263deedab9a54ae68737417b1b3c",
     "/assets/icons/icon-192x192.png": "a4357613a87087d60ddb19e3f1117cd7116fab7a",
     "/assets/icons/icon-384x384.png": "d98880dd39e8f550e4c12b3c6c6d347a4c79adfe",
@@ -68,7 +70,7 @@
     "/assets/zoom_in.svg": "44b1ba41be3944814125dc72c9a7e165ec2ebb7f",
     "/assets/zoom_out.svg": "5aee6296a303af1c57131c065e4deced112e6f89",
     "/favicon.ico": "5e89bcef8dcf5abfb8442b0a182fbe76dfbf61a9",
-    "/index.html": "a285be399f8fd11bc33f562bf1c6fab18fef1302",
+    "/index.html": "55adc50aa698392b717584b46bcfd9b31112c5b8",
     "/main.eb62ae6aec6f6095.js": "90b49342663ae2b8d7e5cb02ff4f1033f811a45b",
     "/manifest.webmanifest": "80b98f13afc36553e06626b0f03032fcaac82c58",
     "/polyfills.b44e8f7f4b8e9e4e.js": "79e335b28b0df59ef1b8e58398f68d08c1bfe46c",
