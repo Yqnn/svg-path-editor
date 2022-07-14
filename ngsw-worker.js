@@ -135,7 +135,7 @@
       return this.cache.delete(this.request(key), this.cacheQueryOptions);
     }
     keys() {
-      return this.cache.keys().then((requests) => requests.map((req) => req.url.substr(1)));
+      return this.cache.keys().then((requests) => requests.map((req) => req.url.slice(1)));
     }
     read(key) {
       return this.cache.match(this.request(key), this.cacheQueryOptions).then((res) => {
@@ -709,12 +709,14 @@ ${error.stack}`;
       }
     }
     async handleFetchWithPerformance(req, event, lru) {
+      var _a;
+      const okToCacheOpaque = (_a = this.config.cacheOpaqueResponses) != null ? _a : false;
       let res = null;
       const fromCache = await this.loadFromCache(req, lru);
       if (fromCache !== null) {
         res = fromCache.res;
         if (this.config.refreshAheadMs !== void 0 && fromCache.age >= this.config.refreshAheadMs) {
-          event.waitUntil(this.safeCacheResponse(req, this.safeFetch(req), lru));
+          event.waitUntil(this.safeCacheResponse(req, this.safeFetch(req), lru, okToCacheOpaque));
         }
       }
       if (res !== null) {
@@ -724,13 +726,15 @@ ${error.stack}`;
       res = await timeoutFetch;
       if (res === void 0) {
         res = this.adapter.newResponse(null, { status: 504, statusText: "Gateway Timeout" });
-        event.waitUntil(this.safeCacheResponse(req, networkFetch, lru));
+        event.waitUntil(this.safeCacheResponse(req, networkFetch, lru, okToCacheOpaque));
       } else {
-        await this.safeCacheResponse(req, res, lru);
+        await this.safeCacheResponse(req, res, lru, okToCacheOpaque);
       }
       return res;
     }
     async handleFetchWithFreshness(req, event, lru) {
+      var _a;
+      const okToCacheOpaque = (_a = this.config.cacheOpaqueResponses) != null ? _a : true;
       const [timeoutFetch, networkFetch] = this.networkFetchWithTimeout(req);
       let res;
       try {
@@ -739,11 +743,11 @@ ${error.stack}`;
         res = void 0;
       }
       if (res === void 0) {
-        event.waitUntil(this.safeCacheResponse(req, networkFetch, lru, true));
+        event.waitUntil(this.safeCacheResponse(req, networkFetch, lru, okToCacheOpaque));
         const fromCache = await this.loadFromCache(req, lru);
         res = fromCache !== null ? fromCache.res : null;
       } else {
-        await this.safeCacheResponse(req, res, lru, true);
+        await this.safeCacheResponse(req, res, lru, okToCacheOpaque);
       }
       if (res !== null) {
         return res;
@@ -950,7 +954,7 @@ ${error.stack}`;
         return false;
       }
       const urlPrefix = this.scope.registration.scope.replace(/\/$/, "");
-      const url = req.url.startsWith(urlPrefix) ? req.url.substr(urlPrefix.length) : req.url;
+      const url = req.url.startsWith(urlPrefix) ? req.url.slice(urlPrefix.length) : req.url;
       const urlWithoutQueryOrHash = url.replace(/[?#].*$/, "");
       return this.navigationUrls.include.some((regex) => regex.test(urlWithoutQueryOrHash)) && !this.navigationUrls.exclude.some((regex) => regex.test(urlWithoutQueryOrHash));
     }
@@ -1010,7 +1014,7 @@ ${error.stack}`;
   };
 
   // bazel-out/k8-fastbuild-ST-2e5f3376adb5/bin/packages/service-worker/worker/src/debug.mjs
-  var SW_VERSION = "13.2.3";
+  var SW_VERSION = "14.0.6";
   var DEBUG_LOG_BUFFER_SIZE = 100;
   var DebugHandler = class {
     constructor(driver, adapter2) {
@@ -1628,6 +1632,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
         }
         hash = hashManifest(manifest);
         if (this.versions.has(hash)) {
+          await this.notifyClientsAboutNoNewVersionDetected(manifest, hash);
           return false;
         }
         await this.notifyClientsAboutVersionDetected(manifest, hash);
@@ -1734,6 +1739,13 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
           version: this.mergeHashWithAppData(manifest, hash),
           error: errorToString(error)
         });
+      }));
+    }
+    async notifyClientsAboutNoNewVersionDetected(manifest, hash) {
+      await this.initialized;
+      const clients = await this.scope.clients.matchAll();
+      await Promise.all(clients.map(async (client) => {
+        client.postMessage({ type: "NO_NEW_VERSION_DETECTED", version: this.mergeHashWithAppData(manifest, hash) });
       }));
     }
     async notifyClientsAboutVersionDetected(manifest, hash) {
