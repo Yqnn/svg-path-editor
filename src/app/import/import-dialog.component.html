@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Import shared path</h1>
+<div mat-dialog-content>
+  <div style="display: flex;">
+    <app-path-preview [path]="data.path ?? ''"></app-path-preview>
+    <div style="padding:0 32px;">
+      <p>
+        Press <b>Import</b> to import this SVG path in the editor.
+      </p>
+      <p>
+        Please note it will erase any unsaved change.
+      </p>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onCancel()" color="basic">Discard</button>
+  <button mat-raised-button (click)="onConfirm()" color="primary" [disabled]="false">
+    Import
+  </button>
+</div>

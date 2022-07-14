@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Share path as URL</h1>
+<div mat-dialog-content>
+  <div style="display: flex;">
+    <app-path-preview [path]="data.path ?? ''"></app-path-preview>
+    <div style="padding:0 32px; flex:1">
+      <p>The current path can be shared using the following link:</p>
+      <mat-form-field floatLabel="always" appearance="fill" style="width: 100%;">
+        <mat-label>URL</mat-label>
+        <input matInput readonly [ngModel]="getUrl()" #input>
+        <button mat-icon-button matSuffix matTooltip="Copy to clipboard" (click)="copy()">
+          <mat-icon>content_pasted</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onCancel()" color="default">Close</button>
+</div>

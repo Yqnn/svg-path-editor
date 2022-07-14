@@ -254,8 +254,7 @@
                     </ng-container>
 
                     <div style="flex:1"></div>
-                    <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{item:item, idx:j}"
-                    >
+                    <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{item:item, idx:j}" class="more-button">
                         <mat-icon svgIcon="more"></mat-icon>
                     </button>
                 </div>
@@ -343,7 +342,8 @@
                 <mat-icon>image</mat-icon>
             </button>
 
-            <app-export [path]="rawPath" [name]="pathName || '' "></app-export>
+            <app-export [path]="rawPath" [name]="pathName || '' " style="margin-right: 8px"></app-export>
+            <app-share [path]="rawPath"></app-share>
         </div>
         <div class="scene-bottom-actions">
             <button
@@ -433,6 +433,8 @@
         <mat-icon svgIcon="sponsor" class="sponsor"></mat-icon> Sponsor
     </a>
 </div>
+
+<app-import (importPath)="openPath($event, '')"></app-import>
 
 <mat-menu #appMenu="matMenu"  xPosition="before">
     <ng-template matMenuContent let-item="item"  let-idx="idx">
