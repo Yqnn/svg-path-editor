@@ -54,10 +54,6 @@ export class ExportDialogComponent {
     this.dialogRef.close();
   }
 
-  patternScale(containterWidth: number, containerHeight: number): number {
-    return Math.max(this.width / containterWidth, this.height / containerHeight);
-  }
-
   refreshViewbox() {
     const p = new Svg(this.data.path);
     const locs = p.targetLocations();

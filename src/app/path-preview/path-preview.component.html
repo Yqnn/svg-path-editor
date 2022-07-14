@@ -1,0 +1,15 @@
+<svg [attr.viewBox]="x+' '+y+' '+width+' '+height"
+width="300" height="300"
+xmlns="http://www.w3.org/2000/svg"
+>
+  <pattern id="preview-pattern" x="0" y="0" width="16" height="16" patternUnits="userSpaceOnUse" [attr.patternTransform]="'scale('+patternScale(400, 400)+')'">
+    <rect x="0" y="0" width="16" height="16" fill="white"></rect>
+    <rect x="0" y="0" width="8" height="8" fill="#cccccc"></rect>
+    <rect x="8" y="8" width="8" height="8" fill="#cccccc"></rect>
+  </pattern>
+  <clipPath id="preview-clippath">
+    <rect [attr.x]="x" [attr.y]="y" [attr.width]="width" [attr.height]="height"></rect>
+  </clipPath>
+  <rect [attr.x]="x" [attr.y]="y" [attr.width]="width" [attr.height]="height" fill="url(#preview-pattern)" ></rect>
+  <path [attr.d]="path" [attr.fill]="fillColor||'none'" [attr.stroke-width]="strokeWidth" [attr.stroke]="strokeColor||'none'" clip-path="url(#preview-clippath)"></path>
+</svg>
