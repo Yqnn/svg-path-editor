@@ -5,7 +5,7 @@ set -e
 git clone "https://github.com/Yqnn/svg-path-editor.git" .svg-path-editor-master
 cd .svg-path-editor-master
 npm install
-npm run build -- --configuration production
+npm run build-prod
 git checkout gh-pages
 rm -rf *.ico *.html *.js *.css *.txt assets
 mv dist/svg-path-editor/* .
