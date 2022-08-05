@@ -44,7 +44,7 @@ export class ImportComponent implements OnInit {
 
   private readPath(): string {
     const fragment = decodeURIComponent(window.location.hash.slice(1));
-    const check = /^P=[mMlLvVhHcCsSqQtTaAzZ0-9\-e._]+$/;
+    const check = /^P=[mMlLvVhHcCsSqQtTaAzZ0-9\-e._,]+$/;
     if(check.test(fragment)) {
       const path = fragment.slice(2).replace(/_/g, ' ');
       try {
