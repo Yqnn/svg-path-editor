@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Image } from '../image';
@@ -35,15 +35,15 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() controlPoints: SvgControlPoint[] = [];
 
   @Input() decimals?: number;
-  @Input() viewPortX: number = 0;
-  @Input() viewPortY: number = 0;
-  @Input() viewPortWidth: number = 0;
-  @Input() viewPortHeight: number = 0;
-  @Input() strokeWidth: number = 1;
-  @Input() preview: boolean = false;
-  @Input() filled: boolean = false;
-  @Input() showTicks: boolean = false;
-  @Input() tickInterval: number = 1;
+  @Input() viewPortX = 0;
+  @Input() viewPortY = 0;
+  @Input() viewPortWidth = 0;
+  @Input() viewPortHeight = 0;
+  @Input() strokeWidth = 1;
+  @Input() preview = false;
+  @Input() filled = false;
+  @Input() showTicks = false;
+  @Input() tickInterval = 1;
   @Input() draggedIsNew = false;
   @Input() images: Image[] = [];
   @Input() editImages = true;
@@ -55,10 +55,10 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
 
   @Output() emptyCanvas = new EventEmitter<void>();
 
-  _canvasWidth: number = 0;
+  _canvasWidth = 0;
   @Output() canvasWidthChange = new EventEmitter<number>();
 
-  _canvasHeight: number = 0;
+  _canvasHeight = 0;
   @Output() canvasHeightChange = new EventEmitter<number>();
 
   _draggedPoint: SvgPoint | null = null;
@@ -80,21 +80,21 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
   draggedImage: Image | null = null;
-  draggedImageType: number = 0;
+  draggedImageType = 0;
   xGrid: number[] = [];
   yGrid: number[] = [];
 
   // Utility functions
   min = Math.min;
   abs = Math.abs;
-  trackByIndex = (idx: number, _: any) => idx;
+  trackByIndex = (idx: number, _: unknown) => idx;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes.viewPortX || changes.viewPortY || changes.viewPortWidth || changes.viewPortHeight) {
+    if (changes['viewPortX'] || changes['viewPortY'] || changes['viewPortWidth'] || changes['viewPortHeight']) {
       this.refreshGrid();
     }
-    if (changes.draggedPoint && changes.draggedPoint.currentValue) {
-      this.startDrag(changes.draggedPoint.currentValue);
+    if (changes['draggedPoint'] && changes['draggedPoint'].currentValue) {
+      this.startDrag(changes['draggedPoint'].currentValue);
     }
   }
 
@@ -107,7 +107,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     });
 
     // Following line is a workaround for a bug in Safari preventing the Wheel events to be fired:
-    window.addEventListener('wheel', () => {});
+    window.addEventListener('wheel', () => { /* */ });
   }
 
   ngOnInit(): void {
@@ -178,7 +178,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
+  eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = event instanceof MouseEvent ? event : event.touches[idx];
     const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
@@ -186,7 +186,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     return {x, y};
   }
 
-  pinchToZoom(previousEvent: MouseEvent | TouchEvent, event: MouseEvent | TouchEvent) {
+  pinchToZoom(previousEvent: MouseEvent | TouchEvent, event: MouseEvent | TouchEvent) {
     if ( window.TouchEvent
       && previousEvent instanceof TouchEvent
       && event instanceof TouchEvent
@@ -276,7 +276,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   drag(event: MouseEvent | TouchEvent) {
-    if (this.draggedPoint || this.draggedEvt || this.draggedImage) {
+    if (this.draggedPoint || this.draggedEvt || this.draggedImage) {
 
       if (!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
         // Stop dragging if click is not maintained anymore.

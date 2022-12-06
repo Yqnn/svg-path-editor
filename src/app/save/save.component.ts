@@ -31,8 +31,8 @@ export class SaveDialogComponent {
   styleUrls: ['./save.component.css']
 })
 export class SaveComponent {
-  @Input() path: string = '';
-  @Input() name: string = '';
+  @Input() path = '';
+  @Input() name = '';
   @Output() nameChange = new EventEmitter<string>();
 
   constructor(

@@ -292,7 +292,7 @@
         >
             <mat-icon>arrow_right</mat-icon>
         </button>
-        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(cfg.preview || isEditingImages)"
+        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(cfg.preview || isEditingImages)"
             color="primary"
             class="add-button"
             [ngStyle]="{
@@ -503,7 +503,9 @@
             <mat-icon>opacity</mat-icon>
             <ng-container>Opacity</ng-container>
             <div style="display:inline-block; width:150px;">
-                <mat-slider min="0" max="1" step="0.01" (input)="image.opacity=$event.value" [value]="image.opacity" style="margin:0 8px; min-width:100px"></mat-slider>
+                <mat-slider min="0" max="1" step="0.01" style="margin:0 8px; min-width:100px">
+                    <input matSliderThumb [(value)]="image.opacity">
+                </mat-slider>
                 {{image.opacity}}
             </div>
         </div>
