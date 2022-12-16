@@ -28,5 +28,7 @@ div.title {
 
 .panel {
     transition: max-height 200ms;
-    overflow:hidden;
+}
+.ng-animating {
+    overflow: hidden;
 }
