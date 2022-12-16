@@ -21,9 +21,9 @@
                         ></textarea>
                     </div>
                 </div>
-                <div style="text-align: center;">
+                <div style="display: flex; width: 100%;">
                     
-                    <app-open (openPath)="openPath($event.path, $event.name)"></app-open>
+                    <app-open (openPath)="openPath($event.path, $event.name)" style="margin-left: 6px;"></app-open>
                     <app-save [path]="rawPath" [(name)]="pathName"></app-save>
 
                     <button mat-mini-fab
@@ -39,7 +39,7 @@
 
                     <button mat-mini-fab
                         color="primary"
-                        style="transform: none; margin:0 4px 0 94px;"
+                        style="transform: none; margin:0 10px 0 auto;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
                         matTooltip="Append new command"
