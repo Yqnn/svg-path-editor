@@ -81,6 +81,9 @@ button.mat-flat-button {
     line-height: 32px;
     min-width: auto !important;
 }
+button.mat-mini-fab .mat-button-wrapper {
+    line-height: 20px;
+}
 
 .row {
     display: flex;
