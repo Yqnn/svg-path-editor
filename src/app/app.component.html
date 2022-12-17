@@ -21,7 +21,7 @@
                         ></textarea>
                     </div>
                 </div>
-                <div style="display: flex; width: 100%;">
+                <div class="path-buttons">
                     
                     <app-open (openPath)="openPath($event.path, $event.name)" style="margin-left: 6px;"></app-open>
                     <app-save [path]="rawPath" [(name)]="pathName"></app-save>

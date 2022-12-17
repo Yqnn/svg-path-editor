@@ -111,6 +111,14 @@ div.dragged {
     background-color:#094771;
 }
 
+.path-buttons {
+    display: flex;
+    margin-top: 4px;
+    width: 100%;
+}
+textarea {
+    vertical-align: top;
+}
 .path-operations-grid {
     display: grid;
     grid-template-columns: 6fr 6fr 7fr;
