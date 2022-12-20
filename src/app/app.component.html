@@ -21,9 +21,9 @@
                         ></textarea>
                     </div>
                 </div>
-                <div style="text-align: center;">
+                <div class="path-buttons">
                     
-                    <app-open (openPath)="openPath($event.path, $event.name)"></app-open>
+                    <app-open (openPath)="openPath($event.path, $event.name)" style="margin-left: 6px;"></app-open>
                     <app-save [path]="rawPath" [(name)]="pathName"></app-save>
 
                     <button mat-mini-fab
@@ -39,7 +39,7 @@
 
                     <button mat-mini-fab
                         color="primary"
-                        style="transform: none; margin:0 4px 0 94px;"
+                        style="transform: none; margin:0 10px 0 auto;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
                         matTooltip="Append new command"
@@ -146,7 +146,7 @@
             </app-expandable>
 
             <app-expandable panelTitle="Path Operations" [opened]="true">
-                <div class="row">
+                <div class="row path-operations-grid">
                     <div class="input-block" style="flex:1">
                         <label>Scale X</label>
                         <input appFormatter [(value)]="scaleX" class="app-input" >
@@ -164,7 +164,7 @@
                     >Scale</button>
                 </div>
 
-                <div class="row">
+                <div class="row path-operations-grid">
                     <div class="input-block" style="flex:1">
                         <label>Translate X</label>
                         <input appFormatter [(value)]="translateX" class="app-input">
@@ -182,8 +182,8 @@
                     >Translate</button>
                 </div>
                 
-                <div class="row">
-                    <div class="input-block" style="flex:2">
+                <div class="row path-operations-grid">
+                    <div class="input-block" style="grid-column: span 2;">
                         <label>Number of decimals</label>
                         <input appFormatter formatterType="positive-integer" [(value)]="roundValuesDecimals" class="app-input">
                     </div>
@@ -195,6 +195,7 @@
                         matTooltipPosition="right"
                     >Round</button>
                 </div>
+
                 <div class="row">
                     <button mat-flat-button 
                         (click)="setRelative(true)"

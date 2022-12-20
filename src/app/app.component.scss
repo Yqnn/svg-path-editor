@@ -50,7 +50,7 @@
     position: relative;
 }
 .left-column {
-    width:300px;
+    width:100%;
     overflow:auto;
     background-color:#252526;
     height: calc(100% - 28px);
@@ -68,6 +68,9 @@
 }
 .left-column-open {
     left:0;
+}
+.left-column, textarea {
+    scrollbar-width: thin;
 }
 
 input.svg-value {
@@ -106,6 +109,19 @@ div.hovered {
 }
 div.dragged {
     background-color:#094771;
+}
+
+.path-buttons {
+    display: flex;
+    margin-top: 4px;
+    width: 100%;
+}
+textarea {
+    vertical-align: top;
+}
+.path-operations-grid {
+    display: grid;
+    grid-template-columns: 6fr 6fr 7fr;
 }
 
 /* Drawings */
