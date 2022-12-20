@@ -5,6 +5,7 @@ html {
     scrollbar-width: thin;
     color:white;
     background-color: #1e1e1e;
+    font-size: 12px;
 }
 html, body {
     margin:0;
@@ -17,7 +18,7 @@ html, body {
     position: fixed;
     */
 }
-  
+
 ::-webkit-scrollbar {
     width: 6px;
 }
@@ -39,7 +40,7 @@ html, body {
 }
 
 
-
+/* app */
 input.app-input,
 textarea.app-input {
     color:white;
@@ -75,17 +76,35 @@ textarea.app-input:focus {
     border-color: #2196f3;
 }
 
+/* app */
 button.mat-flat-button {
     padding:0 8px !important;
-    height:32px;
+    height:32px !important;
     line-height: 32px;
     min-width: auto !important;
+    .mat-icon {
+        margin:0;
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+    }
 }
 button.mat-mini-fab .mat-button-wrapper {
     line-height: 20px;
 }
 
+
+/* app */
 .row {
+    --mdc-checkbox-state-layer-size:20px;
+    .mat-mdc-checkbox {
+        margin:0;
+    }
+    .mat-mdc-checkbox-touch-target {
+        width: 20px;
+        height: 20px;
+    }
+
     display: flex;
     align-items: center;
     padding-left:2px;
@@ -100,27 +119,36 @@ button.mat-mini-fab .mat-button-wrapper {
     .small-checkbox label.mat-checkbox-layout {
         display:flex !important;
     }
-    >.mat-checkbox {
-        margin-left:2px;
-        margin-right:2px;
-    }
 }
 
-.mat-checkbox-label {
-    font-size: 12px;
-}
 
-button.mat-icon-button.more-button {
+/* app::deep */
+button.mat-mdc-icon-button.more-button {
+    --mdc-icon-button-state-layer-size:20px;
     width:20px;
     height:20px;
+    margin:0;
+    padding:0;
     line-height: 20px !important;
     mat-icon {
         width: 12px;
         height: 12px;
         line-height: 12px !important;
+        display: block;
+        margin: auto;
+    }
+    svg {
+        width: 12px;
+        height: 12px;
+        display: block;
+    }
+    .mat-mdc-button-touch-target {
+        width:20px;
+        height:20px;
     }
 }
 
+/* app */
 .input-block {
     margin:2px;
     position: relative;
@@ -155,16 +183,24 @@ button.mat-icon-button.more-button {
     &.disabled>input {
         border-color: transparent;
     }
-}
-.input-block:focus-within>label {
-    color: #2196f3;
+    &:focus-within>label {
+        color: #2196f3;
+    }
 }
 
 
+/* global */
 .app-tooltip {
-    margin:1px !important;
+    margin-top:-8px;
 }
 
-.dialog .mat-dialog-container {
-    background-color: #252526;
+/* ::deep */
+.dialog .mat-mdc-dialog-container {
+    --mdc-dialog-container-color:  #252526 !important;
+}
+.mat-mdc-menu-panel {
+    max-width: 320px  !important;
+}
+.mat-mdc-form-field.mat-focused .mat-mdc-form-field-focus-overlay {
+    opacity: 0.08;
 }

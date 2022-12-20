@@ -96,7 +96,8 @@ export class ExportComponent {
     this.dialog.open(ExportDialogComponent, {
       width: '800px',
       panelClass: 'dialog',
-      data: {path: this.path, name: this.name}
+      data: {path: this.path, name: this.name},
+      autoFocus: false
     });
   }
 }

@@ -12,7 +12,7 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$svg-path-editor-primary: mat.define-palette(mat.$blue-palette);
+$svg-path-editor-primary: mat.define-palette(mat.$grey-palette, 800);
 $svg-path-editor-accent: mat.define-palette(mat.$blue-palette);
 
 // The warn palette is optional (defaults to red).
@@ -20,15 +20,32 @@ $svg-path-editor-warn: mat.define-palette(mat.$red-palette);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $svg-path-editor-theme: mat.define-dark-theme((
-    color: (
-      primary: $svg-path-editor-primary,
-      accent: $svg-path-editor-accent,
-      warn: $svg-path-editor-warn
-    )
-  ));
+  color: (
+    primary: $svg-path-editor-primary,
+    accent: $svg-path-editor-accent,
+    warn: $svg-path-editor-warn
+  ),
+  typography: mat.define-typography-config(
+    $body-2: mat.define-typography-level($font-size: 12px),
+    $button: mat.define-typography-level($font-size: 14px, $font-weight: 500)
+  ),
+  density: 0
+));
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.all-component-themes($svg-path-editor-theme);
+@include mat.core-theme($svg-path-editor-theme);
+@include mat.button-theme($svg-path-editor-theme);
+@include mat.fab-theme($svg-path-editor-theme);
+@include mat.icon-button-theme($svg-path-editor-theme);
+@include mat.checkbox-theme($svg-path-editor-theme);
+@include mat.menu-theme($svg-path-editor-theme);
+@include mat.dialog-theme($svg-path-editor-theme);
+@include mat.tooltip-theme($svg-path-editor-theme);
+@include mat.form-field-theme($svg-path-editor-theme);
+@include mat.table-theme($svg-path-editor-theme);
+@include mat.slider-theme($svg-path-editor-theme);
+
+@include mat.typography-hierarchy($svg-path-editor-theme);
 

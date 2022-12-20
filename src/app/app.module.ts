@@ -6,7 +6,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -86,6 +86,13 @@ import { ShareComponent, ShareDialogComponent, ShareDialogSnackbarComponent } fr
     deps: [Overlay],
     useFactory(overlay: Overlay): () => ScrollStrategy {
       return () => overlay.scrollStrategies.close();
+    }
+  }, {
+    provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+    useValue: {
+      appearance: 'fill',
+      floatLabels: 'always',
+      color: 'accent'
     }
   }],
   bootstrap: [AppComponent]

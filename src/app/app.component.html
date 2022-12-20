@@ -27,7 +27,7 @@
                     <app-save [path]="rawPath" [(name)]="pathName"></app-save>
 
                     <button mat-mini-fab
-                        color="basic"
+                        color="primary"
                         style="transform: none; margin:0 4px;"
                         matTooltip="Clear path"
                         matTooltipPosition="below"
@@ -38,7 +38,7 @@
                     </button>
 
                     <button mat-mini-fab
-                        color="primary"
+                        color="accent"
                         style="transform: none; margin:0 10px 0 auto;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
@@ -101,6 +101,7 @@
                         (click)="cfg.viewPortLocked = !cfg.viewPortLocked"
                         [matTooltip]="cfg.viewPortLocked ? 'Unlock viewBox' : 'Lock viewBox'"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >
                         <mat-icon *ngIf="!cfg.viewPortLocked">lock_open</mat-icon>
                         <mat-icon *ngIf="cfg.viewPortLocked">lock</mat-icon>
@@ -161,6 +162,7 @@
                         style="flex:1"
                         matTooltip="Scale the full path with provided values"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Scale</button>
                 </div>
 
@@ -179,6 +181,7 @@
                         style="flex:1"
                         matTooltip="Translate the full path with provided values"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Translate</button>
                 </div>
 
@@ -201,6 +204,7 @@
                         style="flex:1"
                         matTooltip="Rotate the full path by the given angle in degrees about the given point"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Rotate</button>
                 </div>
 
@@ -215,6 +219,7 @@
                         style="flex:1"
                         matTooltip="Round all values, input the number of decimals to keep"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Round</button>
                 </div>
 
@@ -223,11 +228,13 @@
                         (click)="setRelative(true)"
                         matTooltip="Convert all commands to relative"
                         style="flex:1"
+                        class="mat-flat-button"
                     >Convert to relative</button>
                     <button mat-flat-button 
                         (click)="setRelative(false)"
                         matTooltip="Convert all commands to absolute"
                         style="flex:1"
+                        class="mat-flat-button"
                     >Convert to absolute</button>
                 </div>
             </app-expandable>
@@ -293,7 +300,7 @@
             <mat-icon>arrow_right</mat-icon>
         </button>
         <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(cfg.preview || isEditingImages)"
-            color="primary"
+            color="accent"
             class="add-button"
             [ngStyle]="{
                 'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-cfg.viewPortX)/strokeWidth+'px',
@@ -311,11 +318,11 @@
 
 
         <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
-            color="primary"
+            color="accent"
             class="add-button"
             [ngStyle]="{
-                'left': (max(focusedImage.x1,focusedImage.x2) - cfg.viewPortX)/strokeWidth+'px',
-                'top': (max(focusedImage.y1,focusedImage.y2) - cfg.viewPortY)/strokeWidth+'px'
+                'left': 8 + (max(focusedImage.x1,focusedImage.x2) - cfg.viewPortX)/strokeWidth+'px',
+                'top': 8 + (max(focusedImage.y1,focusedImage.y2) - cfg.viewPortY)/strokeWidth+'px'
             }"
             [ngClass]="{'opened':isContextualMenuOpened}"
             [matMenuTriggerFor]="appImage"
@@ -328,7 +335,7 @@
 
         <div class="scene-top-actions">
             <button mat-mini-fab
-                color="basic"
+                color="primary"
                 matTooltip="Undo"
                 matTooltipPosition="below"
                 (click)="undo()"
@@ -337,7 +344,7 @@
                 <mat-icon>undo</mat-icon>
             </button>
             <button mat-mini-fab
-                color="basic"
+                color="primary"
                 matTooltip="Redo"
                 matTooltipPosition="below"
                 (click)="redo()"
@@ -356,8 +363,8 @@
             ></app-upload-image>
 
             <button mat-mini-fab
-                [color]="isEditingImages ? 'primary' : 'basic'"
-                [matTooltip]="isEditingImages ? '' : 'Toggle image magemement mode'"
+                [color]="isEditingImages ? 'accent' : 'primary'"
+                [matTooltip]="isEditingImages ? '' : 'Toggle image management mode'"
                 matTooltipPosition="below"
                 style="margin-right: 24px"
                 (click)="toggleImageEditing(uploader)"
@@ -371,7 +378,7 @@
         <div class="scene-bottom-actions">
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.snapToGrid = !cfg.snapToGrid"
                 matTooltip="Snap to Grid"
                 matTooltipPosition="left"
@@ -380,7 +387,7 @@
             </button>
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(9/10)"
                 matTooltip="Zoom In"
                 matTooltipPosition="left"
@@ -390,7 +397,7 @@
             </button>
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.viewPortLocked=false;zoomAuto()"
                 matTooltip="Zoom to Fit"
                 matTooltipPosition="left"
@@ -399,7 +406,7 @@
             </button>
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(10/9)"
                 matTooltip="Zoom Out"
                 matTooltipPosition="left"
@@ -502,9 +509,9 @@
         <div mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
             <mat-icon>opacity</mat-icon>
             <ng-container>Opacity</ng-container>
-            <div style="display:inline-block; width:150px;">
-                <mat-slider min="0" max="1" step="0.01" style="margin:0 8px; min-width:100px">
-                    <input matSliderThumb [(value)]="image.opacity">
+            <div style="display:inline-block; width:180px;">
+                <mat-slider min="0" max="1" step="0.01" style="margin:0 16px; min-width:100px" color="accent">
+                    <input matSliderThumb [(ngModel)]="image.opacity">
                 </mat-slider>
                 {{image.opacity}}
             </div>

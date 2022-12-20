@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Save path</h1>
 <div mat-dialog-content>
-  <mat-form-field floatLabel="always" appearance="fill" style="width: 100%;">
+  <mat-form-field style="width: 100%;">
     <mat-label>Name</mat-label>
     <input matInput [(ngModel)]="data.name" cdkFocusInitial>
   </mat-form-field>
@@ -12,8 +12,8 @@
   </p>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
-  <button mat-raised-button (click)="onSave()" color="primary" [disabled]="!data.name">
+  <button mat-raised-button (click)="onCancel()" color="primary">Cancel</button>
+  <button mat-raised-button (click)="onSave()" color="accent" [disabled]="!data.name">
     <ng-container *ngIf="!storageService.hasPath(data.name)">Save</ng-container>
     <ng-container *ngIf="storageService.hasPath(data.name)">Replace</ng-container>
   </button>

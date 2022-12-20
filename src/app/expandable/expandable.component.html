@@ -4,7 +4,7 @@
     <mat-icon>{{opened ? 'expand_more':'expand_less'}}</mat-icon>
 </div>
 <div *ngIf="opened" @openClose class="panel" >
-    <div #contentWrapper style="padding-top:2px">
+    <div #contentWrapper style="padding-top:2px;padding-bottom:6px">
         <ng-content></ng-content>
     </div>
 </div>

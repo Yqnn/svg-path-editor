@@ -52,7 +52,7 @@ export class SaveComponent {
     }
 
     const dialogRef = this.dialog.open(SaveDialogComponent, {
-      width: '300px',
+      width: '350px',
       panelClass: 'dialog',
       data: {name}
     });
