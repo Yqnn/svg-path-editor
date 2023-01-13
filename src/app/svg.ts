@@ -173,15 +173,17 @@ export abstract class SvgItem {
         });
     }
 
-    public rotate(ox: number, oy: number, degrees: number) {
+    public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
         const rad = degrees * Math.PI / 180;
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
         for(let i = 0 ; i < this.values.length ; i += 2) {
             const px = this.values[i];
             const py = this.values[i + 1];
-            const qx = ox + (px - ox) * cos - (py - oy) * sin;
-            const qy = oy + (px - ox) * sin + (py - oy) * cos;
+            const x = this.relative && !force ? 0 : ox;
+            const y = this.relative && !force ? 0 : oy;
+            const qx = x + (px - x) * cos - (py - y) * sin;
+            const qy = y + (px - x) * sin + (py - y) * cos;
             this.values[i] = qx;
             this.values[i + 1] = qy;
         }
@@ -427,14 +429,16 @@ class EllipticalArcTo extends SvgItem {
             this.values[6] += y;
         }
     }
-    public rotate(ox: number, oy: number, degrees: number) {
+    public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
         const rad = degrees * Math.PI / 180.;
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
         const px = this.values[5];
         const py = this.values[6];
-        const qx = (px - ox) * cos - (py - oy) * sin + ox;
-        const qy = (px - ox) * sin + (py - oy) * cos + oy;
+        const x = this.relative && !force ? 0 : ox;
+        const y = this.relative && !force ? 0 : oy;
+        const qx = (px - x) * cos - (py - y) * sin + x;
+        const qy = (px - x) * sin + (py - y) * cos + y;
         this.values[5] = qx;
         this.values[6] = qy;
     }
@@ -523,7 +527,7 @@ export class Svg {
                 }
             }
 
-            it.rotate(ox, oy, degrees);
+            it.rotate(ox, oy, degrees, idx===0);
         });
         this.refreshAbsolutePositions();
         return this;
