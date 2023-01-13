@@ -173,6 +173,20 @@ export abstract class SvgItem {
         });
     }
 
+    public rotate(ox: number, oy: number, degrees: number) {
+        const rad = degrees * Math.PI / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        for(let i = 0 ; i < this.values.length ; i += 2) {
+            const px = this.values[i];
+            const py = this.values[i + 1];
+            const qx = ox + (px - ox) * cos - (py - oy) * sin;
+            const qy = oy + (px - ox) * sin + (py - oy) * cos;
+            this.values[i] = qx;
+            this.values[i + 1] = qy;
+        }
+    }
+
     public targetLocation(): SvgPoint {
         const l = this.absolutePoints.length;
         return this.absolutePoints[l - 1];
@@ -413,6 +427,17 @@ class EllipticalArcTo extends SvgItem {
             this.values[6] += y;
         }
     }
+    public rotate(ox: number, oy: number, degrees: number) {
+        const rad = degrees * Math.PI / 180.;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        const px = this.values[5];
+        const py = this.values[6];
+        const qx = (px - ox) * cos - (py - oy) * sin + ox;
+        const qy = (px - ox) * sin + (py - oy) * cos + oy;
+        this.values[5] = qx;
+        this.values[6] = qy;
+    }
     public scale(kx: number, ky: number) {
         const a = this.values[0];
         const b = this.values[1];
@@ -482,6 +507,23 @@ export class Svg {
     scale(kx: number, ky: number): Svg {
         this.path.forEach( (it) => {
             it.scale(kx, ky);
+        });
+        this.refreshAbsolutePositions();
+        return this;
+    }
+
+    rotate(ox: number, oy: number, degrees: number): Svg {
+        this.path.forEach( (it, idx) => {
+            // Must convert HorizontalLineTo and VerticalLineTo to LineTo
+            // or else the rotation will not work properly.
+            if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
+                const newIt = this.changeType(it, LineTo.key);
+                if (newIt instanceof LineTo) {
+                    it = newIt;
+                }
+            }
+
+            it.rotate(ox, oy, degrees);
         });
         this.refreshAbsolutePositions();
         return this;

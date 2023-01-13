@@ -181,7 +181,29 @@
                         matTooltipPosition="right"
                     >Translate</button>
                 </div>
-                
+
+                <div class="row">
+                    <div class="input-block" style="flex:1">
+                        <label>Rotate X</label>
+                        <input appFormatter [(value)]="rotateX" class="app-input">
+                    </div>
+                    <div class="input-block" style="flex:1">
+                        <label>Rotate Y</label>
+                        <input appFormatter [(value)]="rotateY" class="app-input">
+                    </div>
+                    <div class="input-block" style="flex:1">
+                        <label>Angle (deg)</label>
+                        <input appFormatter [(value)]="rotateAngle" class="app-input">
+                    </div>
+                    <button
+                        mat-flat-button 
+                        (click)="rotate(rotateX, rotateY, rotateAngle)"
+                        style="flex:1"
+                        matTooltip="Rotate the full path by the given angle in degrees about the given point"
+                        matTooltipPosition="right"
+                    >Rotate</button>
+                </div>
+
                 <div class="row path-operations-grid">
                     <div class="input-block" style="grid-column: span 2;">
                         <label>Number of decimals</label>

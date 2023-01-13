@@ -50,6 +50,9 @@ export class AppComponent implements AfterViewInit {
   scaleY = 1;
   translateX = 0;
   translateY = 0;
+  rotateX = 0;
+  rotateY = 0;
+  rotateAngle = 0;
   roundValuesDecimals = 1;
 
   // Canvas Data:
@@ -319,6 +322,14 @@ export class AppComponent implements AfterViewInit {
     this.parsedPath.translate(1 * x, 1 * y);
     this.translateX = 0;
     this.translateY = 0;
+    this.afterModelChange();
+  }
+
+  rotate(x: number, y: number, angle: number) {
+    this.parsedPath.rotate(1 * x, 1 * y, 1 * angle);
+    this.rotateX = x;
+    this.rotateY = y;
+    this.rotateAngle = angle;
     this.afterModelChange();
   }
 
