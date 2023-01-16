@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1671558586055,
+  "timestamp": 1673903105474,
   "index": "/svg-path-editor/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/svg-path-editor/favicon.ico",
         "/svg-path-editor/index.html",
-        "/svg-path-editor/main.50fab9d94187846c.js",
+        "/svg-path-editor/main.1c7bba99c4981272.js",
         "/svg-path-editor/manifest.webmanifest",
         "/svg-path-editor/polyfills.f89984eec34c06c4.js",
         "/svg-path-editor/runtime.271e5cc5d269dc49.js",
@@ -70,8 +70,8 @@
     "/svg-path-editor/assets/zoom_in.svg": "bf3ac558a23c8e5de36d2526618eac96e867af4a",
     "/svg-path-editor/assets/zoom_out.svg": "2e7c0be5fb00f1468a89685dc13139a63d34588d",
     "/svg-path-editor/favicon.ico": "5e89bcef8dcf5abfb8442b0a182fbe76dfbf61a9",
-    "/svg-path-editor/index.html": "3421c0c36416ecd914ddfd46e5e9576929503ba7",
-    "/svg-path-editor/main.50fab9d94187846c.js": "159dfe9779101417d8d75cb0e7171709f1a19121",
+    "/svg-path-editor/index.html": "f97d31ae1fb67bea567446039ce388c33b00a14d",
+    "/svg-path-editor/main.1c7bba99c4981272.js": "1beec2e4b9c6094af645af02278c0b877500a2f0",
     "/svg-path-editor/manifest.webmanifest": "80b98f13afc36553e06626b0f03032fcaac82c58",
     "/svg-path-editor/polyfills.f89984eec34c06c4.js": "25e86e175dce79e55193192e9dff2aa0e6e296fb",
     "/svg-path-editor/runtime.271e5cc5d269dc49.js": "54826e1c8d8f9b125ca49102005daff2e0dc3451",
