@@ -383,6 +383,11 @@ class ClosePath extends SvgItem {
 }
 class HorizontalLineTo extends SvgItem {
     static readonly key = 'H';
+    public rotate(ox:number, oy: number, angle: number, force: boolean = false) {
+      if (angle == 180) {
+          this.values[0] = -this.values[0];
+      }
+  }
     public refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
         if (this.relative) {
@@ -399,6 +404,12 @@ class HorizontalLineTo extends SvgItem {
 }
 class VerticalLineTo extends SvgItem {
     static readonly key = 'V';
+    public rotate(ox:number, oy: number, angle: number, force: boolean = false) {
+        if (angle == 180) {
+            this.values[0] = -this.values[0];
+        }
+    }
+
     public translate(x: number, y: number, force = false) {
         if (!this.relative) {
             this.values[0] += y;
@@ -518,17 +529,35 @@ export class Svg {
     }
 
     rotate(ox: number, oy: number, degrees: number): Svg {
+        degrees %= 360;
+        if (degrees == 0) {
+            return this;
+        }
+
         this.path.forEach( (it, idx) => {
-            // Must convert HorizontalLineTo and VerticalLineTo to LineTo
-            // or else the rotation will not work properly.
-            if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
-                const newIt = this.changeType(it, LineTo.key);
-                if (newIt instanceof LineTo) {
-                    it = newIt;
+            let lastInstanceOf = it.constructor;
+            if (degrees !== 180) {
+                if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
+                    let newType = it.relative ? LineTo.key.toLowerCase() : LineTo.key;
+                    it = this.changeType(it, newType) || it;
                 }
             }
 
-            it.rotate(ox, oy, degrees, idx===0);
+            it.rotate(ox, oy, degrees, idx === 0);
+
+            if (degrees === 90 || degrees === 270) {
+                if (lastInstanceOf === HorizontalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    let newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
+                    this.changeType(it, newType);
+                } else if (lastInstanceOf === VerticalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    let newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
+                    this.changeType(it, newType);
+                }
+            }
         });
         this.refreshAbsolutePositions();
         return this;
