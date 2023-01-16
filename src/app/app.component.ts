@@ -327,9 +327,6 @@ export class AppComponent implements AfterViewInit {
 
   rotate(x: number, y: number, angle: number) {
     this.parsedPath.rotate(1 * x, 1 * y, 1 * angle);
-    this.rotateX = x;
-    this.rotateY = y;
-    this.rotateAngle = angle;
     this.afterModelChange();
   }
 
