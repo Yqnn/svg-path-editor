@@ -430,6 +430,7 @@ class EllipticalArcTo extends SvgItem {
         }
     }
     public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
+        this.values[2] = (this.values[2] + degrees) % 360;
         const rad = degrees * Math.PI / 180.;
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
