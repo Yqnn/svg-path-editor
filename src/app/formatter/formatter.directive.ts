@@ -7,6 +7,7 @@ import { formatNumber } from '../svg';
 export class FormatterDirective implements OnChanges {
   @Input() formatterType: 'float'|'positive-float'|'integer'|'positive-integer' = 'float';
   @Input() value: number = 0;
+  @Input() suffix: string = '';
   @Output() valueChange = new EventEmitter<number>();
   internalValue: number = 0;
 
@@ -26,6 +27,17 @@ export class FormatterDirective implements OnChanges {
   onBlur(e: FocusEvent) {
     if (this.internalValue !== parseFloat(this.viewValue)) {
       this.viewValue = formatNumber(this.internalValue, 4);
+    }
+
+    if (this.suffix !== '') {
+      this.viewValue += this.suffix;
+    }
+  }
+
+  @HostListener('focus', ['$event'])
+  onFocus(e: FocusEvent) {
+    if (this.suffix !== '') {
+      this.viewValue = this.viewValue.replace(this.suffix, '');
     }
   }
 
@@ -48,7 +60,7 @@ export class FormatterDirective implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes.value) {
       if (changes.value.currentValue !== parseFloat(this.viewValue)) {
-        this.viewValue = formatNumber(changes.value.currentValue, 4);
+        this.viewValue = formatNumber(changes.value.currentValue, 4) + this.suffix;
         this.internalValue = changes.value.currentValue;
       }
     }

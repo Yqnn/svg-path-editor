@@ -26,6 +26,7 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 ##### Path operations:
 - Scale the full path with the **Scale** button
 - Translate the full path with the **Translate** button
+- Rotate the full path with the **Rotate** button
 - Round all coordinates of the current path with the **Round** button
 - Convert all commands to relative or absolute coordinates with **Convert to relative** or **Convert to absolute** button
 

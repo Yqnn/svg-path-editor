@@ -173,6 +173,22 @@ export abstract class SvgItem {
         });
     }
 
+    public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
+        const rad = degrees * Math.PI / 180;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        for(let i = 0 ; i < this.values.length ; i += 2) {
+            const px = this.values[i];
+            const py = this.values[i + 1];
+            const x = this.relative && !force ? 0 : ox;
+            const y = this.relative && !force ? 0 : oy;
+            const qx = x + (px - x) * cos - (py - y) * sin;
+            const qy = y + (px - x) * sin + (py - y) * cos;
+            this.values[i] = qx;
+            this.values[i + 1] = qy;
+        }
+    }
+
     public targetLocation(): SvgPoint {
         const l = this.absolutePoints.length;
         return this.absolutePoints[l - 1];
@@ -367,6 +383,11 @@ class ClosePath extends SvgItem {
 }
 class HorizontalLineTo extends SvgItem {
     static readonly key = 'H';
+    public rotate(ox:number, oy: number, angle: number, force: boolean = false) {
+      if (angle == 180) {
+          this.values[0] = -this.values[0];
+      }
+  }
     public refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
         if (this.relative) {
@@ -383,6 +404,12 @@ class HorizontalLineTo extends SvgItem {
 }
 class VerticalLineTo extends SvgItem {
     static readonly key = 'V';
+    public rotate(ox:number, oy: number, angle: number, force: boolean = false) {
+        if (angle == 180) {
+            this.values[0] = -this.values[0];
+        }
+    }
+
     public translate(x: number, y: number, force = false) {
         if (!this.relative) {
             this.values[0] += y;
@@ -412,6 +439,20 @@ class EllipticalArcTo extends SvgItem {
             this.values[5] += x;
             this.values[6] += y;
         }
+    }
+    public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
+        this.values[2] = (this.values[2] + degrees) % 360;
+        const rad = degrees * Math.PI / 180.;
+        const cos = Math.cos(rad);
+        const sin = Math.sin(rad);
+        const px = this.values[5];
+        const py = this.values[6];
+        const x = this.relative && !force ? 0 : ox;
+        const y = this.relative && !force ? 0 : oy;
+        const qx = (px - x) * cos - (py - y) * sin + x;
+        const qy = (px - x) * sin + (py - y) * cos + y;
+        this.values[5] = qx;
+        this.values[6] = qy;
     }
     public scale(kx: number, ky: number) {
         const a = this.values[0];
@@ -482,6 +523,41 @@ export class Svg {
     scale(kx: number, ky: number): Svg {
         this.path.forEach( (it) => {
             it.scale(kx, ky);
+        });
+        this.refreshAbsolutePositions();
+        return this;
+    }
+
+    rotate(ox: number, oy: number, degrees: number): Svg {
+        degrees %= 360;
+        if (degrees == 0) {
+            return this;
+        }
+
+        this.path.forEach( (it, idx) => {
+            let lastInstanceOf = it.constructor;
+            if (degrees !== 180) {
+                if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
+                    let newType = it.relative ? LineTo.key.toLowerCase() : LineTo.key;
+                    it = this.changeType(it, newType) || it;
+                }
+            }
+
+            it.rotate(ox, oy, degrees, idx === 0);
+
+            if (degrees === 90 || degrees === 270) {
+                if (lastInstanceOf === HorizontalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    let newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
+                    this.changeType(it, newType);
+                } else if (lastInstanceOf === VerticalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    let newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
+                    this.changeType(it, newType);
+                }
+            }
         });
         this.refreshAbsolutePositions();
         return this;

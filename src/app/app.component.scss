@@ -121,7 +121,11 @@ textarea {
 }
 .path-operations-grid {
     display: grid;
-    grid-template-columns: 6fr 6fr 7fr;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.path-operations-grid4 {
+    display: grid;
+    grid-template-columns: 2fr 2fr 2fr 3fr;
 }
 
 /* Drawings */
