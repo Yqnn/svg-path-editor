@@ -354,8 +354,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   roundValues(decimals: number) {
-    this.reloadPath(this.parsedPath.asString(decimals));
-    this.afterModelChange();
+    this.reloadPath(this.parsedPath.asString(decimals, this.cfg.minifyOutput));
   }
 
   canDelete(item: SvgItem): boolean {
