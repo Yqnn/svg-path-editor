@@ -58,8 +58,8 @@
                         <input
                             class="app-input"
                             appFormatter
-                            [value]="cfg.viewPortX"
-                            (valueChange)="updateViewPort($event, cfg.viewPortY, cfg.viewPortWidth, cfg.viewPortHeight)"
+                            [numberValue]="cfg.viewPortX"
+                            (numberValueChange)="updateViewPort($event, cfg.viewPortY, cfg.viewPortWidth, cfg.viewPortHeight)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -68,8 +68,8 @@
                         <input
                             class="app-input"
                             appFormatter
-                            [value]="cfg.viewPortY"
-                            (valueChange)="updateViewPort(cfg.viewPortX, $event, cfg.viewPortWidth, cfg.viewPortHeight)"
+                            [numberValue]="cfg.viewPortY"
+                            (numberValueChange)="updateViewPort(cfg.viewPortX, $event, cfg.viewPortWidth, cfg.viewPortHeight)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -79,8 +79,8 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
-                            [value]="cfg.viewPortWidth"
-                            (valueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, $event, null)"
+                            [numberValue]="cfg.viewPortWidth"
+                            (numberValueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, $event, null)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -90,8 +90,8 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
-                            [value]="cfg.viewPortHeight"
-                            (valueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, null, $event)"
+                            [numberValue]="cfg.viewPortHeight"
+                            (numberValueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, null, $event)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -120,7 +120,7 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(value)]="cfg.decimalPrecision"
+                            [(numberValue)]="cfg.decimalPrecision"
                             [disabled]="cfg.snapToGrid">
                     </div>
                 </div>
@@ -134,7 +134,7 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(value)]="cfg.tickInterval" 
+                            [(numberValue)]="cfg.tickInterval" 
                             [disabled]="!cfg.showTicks">
                     </div>
                 </div>
@@ -150,11 +150,11 @@
                 <div class="row path-operations-grid">
                     <div class="input-block" style="flex:1">
                         <label>Scale X</label>
-                        <input appFormatter [(value)]="scaleX" class="app-input" >
+                        <input appFormatter [(numberValue)]="scaleX" class="app-input" >
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Scale Y</label>
-                        <input appFormatter [(value)]="scaleY" class="app-input">
+                        <input appFormatter [(numberValue)]="scaleY" class="app-input">
                     </div>
                     <button
                         mat-flat-button
@@ -169,11 +169,11 @@
                 <div class="row path-operations-grid">
                     <div class="input-block" style="flex:1">
                         <label>Translate X</label>
-                        <input appFormatter [(value)]="translateX" class="app-input">
+                        <input appFormatter [(numberValue)]="translateX" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Translate Y</label>
-                        <input appFormatter [(value)]="translateY" class="app-input">
+                        <input appFormatter [(numberValue)]="translateY" class="app-input">
                     </div>
                     <button
                         mat-flat-button
@@ -188,15 +188,15 @@
                 <div class="row path-operations-grid4">
                     <div class="input-block" style="flex:1">
                         <label>Origin X</label>
-                        <input appFormatter [(value)]="rotateX" class="app-input">
+                        <input appFormatter [(numberValue)]="rotateX" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Origin Y</label>
-                        <input appFormatter [(value)]="rotateY" class="app-input">
+                        <input appFormatter [(numberValue)]="rotateY" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Angle</label>
-                        <input appFormatter suffix="°" [(value)]="rotateAngle" class="app-input">
+                        <input appFormatter suffix="°" [(numberValue)]="rotateAngle" class="app-input">
                     </div>
                     <button
                         mat-flat-button 
@@ -211,7 +211,7 @@
                 <div class="row path-operations-grid">
                     <div class="input-block" style="grid-column: span 2;">
                         <label>Number of decimals</label>
-                        <input appFormatter formatterType="positive-integer" [(value)]="roundValuesDecimals" class="app-input">
+                        <input appFormatter formatterType="positive-integer" [(numberValue)]="roundValuesDecimals" class="app-input">
                     </div>
                     <button
                         mat-flat-button 
@@ -273,8 +273,8 @@
                             appKeyboardNavigable
                             keyboardNavigableIdPrefix="svg_command"
                             appFormatter
-                            [value]="value" 
-                            (valueChange)="setValue(item,i,$event);"
+                            [numberValue]="value" 
+                            (numberValueChange)="setValue(item,i,$event);"
                             class="svg-value app-input"
                             id="svg_command_{{j}}_{{item.getType().toLowerCase()==='a' && i>4 ? i-1 : i}}"
                             (focus)="focusedItem=item"
