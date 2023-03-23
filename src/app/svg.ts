@@ -472,8 +472,10 @@ class EllipticalArcTo extends SvgItem {
         this.values[2] = B !== 0 ? Math.atan((C - A - val1) / B) * 180 / Math.PI : (A < C ? 0 : 90);
 
         // New radius-x, radius-y
-        this.values[0] = -Math.sqrt(2 * det * F * ((A + C) + val1)) / det;
-        this.values[1] = -Math.sqrt(2 * det * F * ((A + C) - val1)) / det;
+        if(det !== 0) {
+            this.values[0] = -Math.sqrt(2 * det * F * ((A + C) + val1)) / det;
+            this.values[1] = -Math.sqrt(2 * det * F * ((A + C) - val1)) / det;
+        }
 
         // New target
         this.values[5] *= kx;
