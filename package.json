@@ -22,6 +22,7 @@
     "@angular/platform-browser-dynamic": "^14.0.6",
     "@angular/router": "^14.0.6",
     "@angular/service-worker": "^14.0.6",
+    "@vercel/analytics": "^1.0.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.1.0",
     "zone.js": "~0.11.4"
