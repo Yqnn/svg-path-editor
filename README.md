@@ -1,6 +1,6 @@
 # SvgPathEditor
-Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
-[![Image of Yaktocat](./doc/screenshot.png)](https://yqnn.github.io/svg-path-editor/)
+Edit or create SVG paths in browser: [SwiftDraw.vercel.app](https://SwiftDraw.vercel.app)
+[![OctoCat in the swift draw editor](./doc/SwiftDraw.png)](https://SwiftDraw.vercel.app)
 
 ## How to Use
 
@@ -58,8 +58,6 @@ Run `npm run build` to build the project. The build artifacts will be stored in 
 ##### Running unit tests
 Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-### With Docker
-Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-editor` or `docker-compose up`.
 
 ---
 
