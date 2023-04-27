@@ -9,7 +9,7 @@
         <div>
           <mat-checkbox class="example-margin" [ngModel]="cfg.fill" (ngModelChange)="cfg.fill=$event;cfg.stroke=cfg.stroke||!$event">Fill</mat-checkbox>
         </div>
-        <mat-form-field floatLabel="always" appearance="fill">
+        <mat-form-field>
           <mat-label>Fill Color</mat-label>
           <input matInput [(ngModel)]="cfg.fillColor" [disabled]="!cfg.fill">
         </mat-form-field>
@@ -20,13 +20,13 @@
         </div>
         <div class="style-form-stroke-fields">
           <div class="style-form-stroke-field">
-            <mat-form-field floatLabel="always" appearance="fill">
+            <mat-form-field>
               <mat-label>Stroke Color</mat-label>
               <input matInput [(ngModel)]="cfg.strokeColor" [disabled]="!cfg.stroke">
             </mat-form-field>
           </div>
           <div class="style-form-stroke-field">
-            <mat-form-field floatLabel="always" appearance="fill">
+            <mat-form-field>
               <mat-label>Stroke width</mat-label>
               <input matInput [(ngModel)]="cfg.strokeWidth" [disabled]="!cfg.stroke">
             </mat-form-field>
@@ -38,27 +38,27 @@
         <button mat-flat-button (click)="refreshViewbox()" color="basic" class="reset-button">Reset</button>
       </div>
       <div class="viewbox-form-field">
-        <mat-form-field floatLabel="always" appearance="fill">
+        <mat-form-field>
           <mat-label>X</mat-label>
-          <input matInput appFormatter [(ngModel)]="x">
+          <input matInput appFormatter [(numberValue)]="x">
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
-        <mat-form-field floatLabel="always" appearance="fill">
+        <mat-form-field>
           <mat-label>Y</mat-label>
-          <input matInput appFormatter [(ngModel)]="y">
+          <input matInput appFormatter [(numberValue)]="y">
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
-        <mat-form-field floatLabel="always" appearance="fill">
+        <mat-form-field>
           <mat-label>Width</mat-label>
-          <input matInput appFormatter formatterType="positive-float" [(ngModel)]="width">
+          <input matInput appFormatter formatterType="positive-float" [(numberValue)]="width">
         </mat-form-field>
       </div>
       <div class="viewbox-form-field">
-        <mat-form-field floatLabel="always" appearance="fill">
+        <mat-form-field>
           <mat-label>Height</mat-label>
-          <input matInput appFormatter formatterType="positive-float" [(ngModel)]="height">
+          <input matInput appFormatter formatterType="positive-float" [(numberValue)]="height">
         </mat-form-field>
       </div>
     </div>
@@ -78,8 +78,8 @@
   </div>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
-  <button mat-raised-button (click)="onExport()" color="primary" [disabled]="false">
+  <button mat-raised-button (click)="onCancel()" color="primary">Cancel</button>
+  <button mat-raised-button (click)="onExport()" color="accent" [disabled]="false">
     Download
   </button>
 </div>

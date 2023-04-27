@@ -64,7 +64,7 @@ export class ShareDialogComponent implements AfterViewInit {
   templateUrl: './share.component.html'
 })
 export class ShareComponent {
-  @Input() path: string = '';
+  @Input() path = '';
   @Output() importPath = new EventEmitter<string>();
 
   constructor(
@@ -74,7 +74,7 @@ export class ShareComponent {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ShareDialogComponent, {
+    this.dialog.open(ShareDialogComponent, {
       width: '800px',
       panelClass: 'dialog',
       autoFocus: false,

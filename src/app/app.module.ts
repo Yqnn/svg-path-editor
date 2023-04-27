@@ -1,12 +1,12 @@
+import { NgModule, isDevMode } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { HttpClientModule } from '@angular/common/http';
 
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule, MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -21,7 +21,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { Overlay, ScrollStrategy } from '@angular/cdk/overlay';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
-import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { FormatterDirective } from './formatter/formatter.directive';
 import { KeyboardNavigableDirective } from './keyboard-navigable/keyboard-navigable.directive';
@@ -76,8 +75,8 @@ import { ShareComponent, ShareDialogComponent, ShareDialogSnackbarComponent } fr
     BrowserAnimationsModule,
     ScrollingModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
+      enabled: !isDevMode(),
+      // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     })
@@ -88,9 +87,14 @@ import { ShareComponent, ShareDialogComponent, ShareDialogSnackbarComponent } fr
     useFactory(overlay: Overlay): () => ScrollStrategy {
       return () => overlay.scrollStrategies.close();
     }
+  }, {
+    provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
+    useValue: {
+      appearance: 'fill',
+      floatLabels: 'always',
+      color: 'accent'
+    }
   }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-
-

@@ -31,8 +31,8 @@ export class SaveDialogComponent {
   styleUrls: ['./save.component.css']
 })
 export class SaveComponent {
-  @Input() path: string = '';
-  @Input() name: string = '';
+  @Input() path = '';
+  @Input() name = '';
   @Output() nameChange = new EventEmitter<string>();
 
   constructor(
@@ -52,7 +52,7 @@ export class SaveComponent {
     }
 
     const dialogRef = this.dialog.open(SaveDialogComponent, {
-      width: '300px',
+      width: '350px',
       panelClass: 'dialog',
       data: {name}
     });

@@ -26,8 +26,8 @@ export class UploadImageDialogComponent {
   private importFile(file: File) {
     if (window.FileReader !== undefined) {
       const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.data = e.target.result;
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        this.data = e.target?.result?.toString() ?? null;
         if(this.data) {
           this.displayableData = this.domSanitizer.bypassSecurityTrustResourceUrl(this.data);
         }

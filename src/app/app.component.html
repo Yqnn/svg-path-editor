@@ -27,7 +27,7 @@
                     <app-save [path]="rawPath" [(name)]="pathName"></app-save>
 
                     <button mat-mini-fab
-                        color="basic"
+                        color="primary"
                         style="transform: none; margin:0 4px;"
                         matTooltip="Clear path"
                         matTooltipPosition="below"
@@ -38,7 +38,7 @@
                     </button>
 
                     <button mat-mini-fab
-                        color="primary"
+                        color="accent"
                         style="transform: none; margin:0 10px 0 auto;"
                         [matMenuTriggerFor]="appCreate"
                         [matMenuTriggerData]="{item:null, idx:-1}"
@@ -58,8 +58,8 @@
                         <input
                             class="app-input"
                             appFormatter
-                            [value]="cfg.viewPortX"
-                            (valueChange)="updateViewPort($event, cfg.viewPortY, cfg.viewPortWidth, cfg.viewPortHeight)"
+                            [numberValue]="cfg.viewPortX"
+                            (numberValueChange)="updateViewPort($event, cfg.viewPortY, cfg.viewPortWidth, cfg.viewPortHeight)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -68,8 +68,8 @@
                         <input
                             class="app-input"
                             appFormatter
-                            [value]="cfg.viewPortY"
-                            (valueChange)="updateViewPort(cfg.viewPortX, $event, cfg.viewPortWidth, cfg.viewPortHeight)"
+                            [numberValue]="cfg.viewPortY"
+                            (numberValueChange)="updateViewPort(cfg.viewPortX, $event, cfg.viewPortWidth, cfg.viewPortHeight)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -79,8 +79,8 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
-                            [value]="cfg.viewPortWidth"
-                            (valueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, $event, null)"
+                            [numberValue]="cfg.viewPortWidth"
+                            (numberValueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, $event, null)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -90,8 +90,8 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-float"
-                            [value]="cfg.viewPortHeight"
-                            (valueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, null, $event)"
+                            [numberValue]="cfg.viewPortHeight"
+                            (numberValueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, null, $event)"
                             [disabled]="cfg.viewPortLocked" 
                         >
                     </div>
@@ -101,6 +101,7 @@
                         (click)="cfg.viewPortLocked = !cfg.viewPortLocked"
                         [matTooltip]="cfg.viewPortLocked ? 'Unlock viewBox' : 'Lock viewBox'"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >
                         <mat-icon *ngIf="!cfg.viewPortLocked">lock_open</mat-icon>
                         <mat-icon *ngIf="cfg.viewPortLocked">lock</mat-icon>
@@ -119,7 +120,7 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(value)]="cfg.decimalPrecision"
+                            [(numberValue)]="cfg.decimalPrecision"
                             [disabled]="cfg.snapToGrid">
                     </div>
                 </div>
@@ -133,7 +134,7 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(value)]="cfg.tickInterval" 
+                            [(numberValue)]="cfg.tickInterval" 
                             [disabled]="!cfg.showTicks">
                     </div>
                 </div>
@@ -149,11 +150,11 @@
                 <div class="row path-operations-grid">
                     <div class="input-block" style="flex:1">
                         <label>Scale X</label>
-                        <input appFormatter [(value)]="scaleX" class="app-input" >
+                        <input appFormatter [(numberValue)]="scaleX" class="app-input" >
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Scale Y</label>
-                        <input appFormatter [(value)]="scaleY" class="app-input">
+                        <input appFormatter [(numberValue)]="scaleY" class="app-input">
                     </div>
                     <button
                         mat-flat-button
@@ -161,17 +162,18 @@
                         style="flex:1"
                         matTooltip="Scale the full path with provided values"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Scale</button>
                 </div>
 
                 <div class="row path-operations-grid">
                     <div class="input-block" style="flex:1">
                         <label>Translate X</label>
-                        <input appFormatter [(value)]="translateX" class="app-input">
+                        <input appFormatter [(numberValue)]="translateX" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Translate Y</label>
-                        <input appFormatter [(value)]="translateY" class="app-input">
+                        <input appFormatter [(numberValue)]="translateY" class="app-input">
                     </div>
                     <button
                         mat-flat-button
@@ -179,21 +181,22 @@
                         style="flex:1"
                         matTooltip="Translate the full path with provided values"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Translate</button>
                 </div>
 
                 <div class="row path-operations-grid4">
                     <div class="input-block" style="flex:1">
                         <label>Origin X</label>
-                        <input appFormatter [(value)]="rotateX" class="app-input">
+                        <input appFormatter [(numberValue)]="rotateX" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Origin Y</label>
-                        <input appFormatter [(value)]="rotateY" class="app-input">
+                        <input appFormatter [(numberValue)]="rotateY" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Angle</label>
-                        <input appFormatter suffix="°" [(value)]="rotateAngle" class="app-input">
+                        <input appFormatter suffix="°" [(numberValue)]="rotateAngle" class="app-input">
                     </div>
                     <button
                         mat-flat-button 
@@ -201,13 +204,14 @@
                         style="flex:1"
                         matTooltip="Rotate the full path by the given angle in degrees about the given point"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Rotate</button>
                 </div>
 
                 <div class="row path-operations-grid">
                     <div class="input-block" style="grid-column: span 2;">
                         <label>Number of decimals</label>
-                        <input appFormatter formatterType="positive-integer" [(value)]="roundValuesDecimals" class="app-input">
+                        <input appFormatter formatterType="positive-integer" [(numberValue)]="roundValuesDecimals" class="app-input">
                     </div>
                     <button
                         mat-flat-button 
@@ -215,6 +219,7 @@
                         style="flex:1"
                         matTooltip="Round all values, input the number of decimals to keep"
                         matTooltipPosition="right"
+                        class="mat-flat-button"
                     >Round</button>
                 </div>
 
@@ -223,11 +228,13 @@
                         (click)="setRelative(true)"
                         matTooltip="Convert all commands to relative"
                         style="flex:1"
+                        class="mat-flat-button"
                     >Convert to relative</button>
                     <button mat-flat-button 
                         (click)="setRelative(false)"
                         matTooltip="Convert all commands to absolute"
                         style="flex:1"
+                        class="mat-flat-button"
                     >Convert to absolute</button>
                 </div>
             </app-expandable>
@@ -266,8 +273,8 @@
                             appKeyboardNavigable
                             keyboardNavigableIdPrefix="svg_command"
                             appFormatter
-                            [value]="value" 
-                            (valueChange)="setValue(item,i,$event);"
+                            [numberValue]="value" 
+                            (numberValueChange)="setValue(item,i,$event);"
                             class="svg-value app-input"
                             id="svg_command_{{j}}_{{item.getType().toLowerCase()==='a' && i>4 ? i-1 : i}}"
                             (focus)="focusedItem=item"
@@ -292,8 +299,8 @@
         >
             <mat-icon>arrow_right</mat-icon>
         </button>
-        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(cfg.preview || isEditingImages)"
-            color="primary"
+        <button mat-mini-fab *ngIf="((!draggedPoint && focusedItem) || parsedPath.path.length===0) && !(cfg.preview || isEditingImages)"
+            color="accent"
             class="add-button"
             [ngStyle]="{
                 'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-cfg.viewPortX)/strokeWidth+'px',
@@ -311,11 +318,11 @@
 
 
         <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
-            color="primary"
+            color="accent"
             class="add-button"
             [ngStyle]="{
-                'left': (max(focusedImage.x1,focusedImage.x2) - cfg.viewPortX)/strokeWidth+'px',
-                'top': (max(focusedImage.y1,focusedImage.y2) - cfg.viewPortY)/strokeWidth+'px'
+                'left': 8 + (max(focusedImage.x1,focusedImage.x2) - cfg.viewPortX)/strokeWidth+'px',
+                'top': 8 + (max(focusedImage.y1,focusedImage.y2) - cfg.viewPortY)/strokeWidth+'px'
             }"
             [ngClass]="{'opened':isContextualMenuOpened}"
             [matMenuTriggerFor]="appImage"
@@ -328,7 +335,7 @@
 
         <div class="scene-top-actions">
             <button mat-mini-fab
-                color="basic"
+                color="primary"
                 matTooltip="Undo"
                 matTooltipPosition="below"
                 (click)="undo()"
@@ -337,7 +344,7 @@
                 <mat-icon>undo</mat-icon>
             </button>
             <button mat-mini-fab
-                color="basic"
+                color="primary"
                 matTooltip="Redo"
                 matTooltipPosition="below"
                 (click)="redo()"
@@ -356,8 +363,8 @@
             ></app-upload-image>
 
             <button mat-mini-fab
-                [color]="isEditingImages ? 'primary' : 'basic'"
-                [matTooltip]="isEditingImages ? '' : 'Toggle image magemement mode'"
+                [color]="isEditingImages ? 'accent' : 'primary'"
+                [matTooltip]="isEditingImages ? '' : 'Toggle image management mode'"
                 matTooltipPosition="below"
                 style="margin-right: 24px"
                 (click)="toggleImageEditing(uploader)"
@@ -371,7 +378,7 @@
         <div class="scene-bottom-actions">
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.snapToGrid = !cfg.snapToGrid"
                 matTooltip="Snap to Grid"
                 matTooltipPosition="left"
@@ -380,7 +387,7 @@
             </button>
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(9/10)"
                 matTooltip="Zoom In"
                 matTooltipPosition="left"
@@ -390,7 +397,7 @@
             </button>
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.viewPortLocked=false;zoomAuto()"
                 matTooltip="Zoom to Fit"
                 matTooltipPosition="left"
@@ -399,7 +406,7 @@
             </button>
             <button
                 mat-mini-fab
-                color="basic"
+                color="primary"
                 (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(10/9)"
                 matTooltip="Zoom Out"
                 matTooltipPosition="left"
@@ -502,8 +509,10 @@
         <div mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
             <mat-icon>opacity</mat-icon>
             <ng-container>Opacity</ng-container>
-            <div style="display:inline-block; width:150px;">
-                <mat-slider min="0" max="1" step="0.01" (input)="image.opacity=$event.value" [value]="image.opacity" style="margin:0 8px; min-width:100px"></mat-slider>
+            <div style="display:inline-block; width:180px;">
+                <mat-slider min="0" max="1" step="0.01" style="margin:0 16px; min-width:100px" color="accent">
+                    <input matSliderThumb [(ngModel)]="image.opacity">
+                </mat-slider>
                 {{image.opacity}}
             </div>
         </div>

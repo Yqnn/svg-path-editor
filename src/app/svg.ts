@@ -30,7 +30,7 @@ export class SvgPoint extends Point {
     }
  }
 export class SvgControlPoint extends SvgPoint {
-    subIndex: number = 0;
+    subIndex = 0;
     constructor(
         point: Point,
         public relations: Point[],
@@ -157,10 +157,11 @@ export abstract class SvgItem {
     }
 
     public resetControlPoints(previousTarget: SvgItem) {
+        // Does nothing by default
     }
 
     public translate(x: number, y: number, force = false) {
-        if (!this.relative || force) {
+        if (!this.relative || force) {
             this.values.forEach( (val, idx) => {
                 this.values[idx] = val + (idx % 2 === 0 ? x : y);
             });
@@ -173,7 +174,7 @@ export abstract class SvgItem {
         });
     }
 
-    public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
+    public rotate(ox: number, oy: number, degrees: number, force = false) {
         const rad = degrees * Math.PI / 180;
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
@@ -216,6 +217,7 @@ export abstract class SvgItem {
     }
 
     public getType(): string {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let typeKey = (this.constructor as any).key as string;
         if (this.relative) {
             typeKey = typeKey.toLowerCase();
@@ -232,7 +234,7 @@ export abstract class SvgItem {
         ].join(' ');
     }
 
-    public asString(decimals: number = 4, minify: boolean = false, trailingItems: SvgItem[] = []): string {
+    public asString(decimals = 4, minify = false, trailingItems: SvgItem[] = []): string {
         const strValues = [this.values, ...trailingItems.map(it => it.values)]
             .reduce((acc, val) => acc.concat(val), [])
             .map(it => formatNumber(it, decimals, minify));
@@ -253,7 +255,7 @@ class LineTo extends SvgItem {
 }
 class CurveTo extends SvgItem {
     static readonly key = 'C';
-    public refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
+    public override refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
         if(!previousTarget) {
             throw 'Invalid path';
         }
@@ -262,7 +264,7 @@ class CurveTo extends SvgItem {
             new SvgControlPoint(this.absolutePoints[1], [this.targetLocation()])
         ];
     }
-    public resetControlPoints(previousTarget: SvgItem) {
+    public override resetControlPoints(previousTarget: SvgItem) {
         const a = previousTarget.targetLocation();
         const b = this.targetLocation();
         const d = this.relative ? a : new Point(0, 0);
@@ -274,7 +276,7 @@ class CurveTo extends SvgItem {
 }
 class SmoothCurveTo extends SvgItem {
     static readonly key = 'S';
-    public refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
+    public override refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
         this.absoluteControlPoints = [];
         if ((previousTarget instanceof CurveTo || previousTarget instanceof SmoothCurveTo)) {
             const prevLoc = previousTarget.targetLocation();
@@ -294,7 +296,7 @@ class SmoothCurveTo extends SvgItem {
             new SvgControlPoint(this.absolutePoints[0], [this.targetLocation()]),
         );
     }
-    public asStandaloneString(): string {
+    public override asStandaloneString(): string {
         return [
             'M',
             this.previousPoint.x,
@@ -308,14 +310,14 @@ class SmoothCurveTo extends SvgItem {
             this.absolutePoints[1].y
         ].join(' ');
     }
-    public resetControlPoints(previousTarget: SvgItem) {
+    public override resetControlPoints(previousTarget: SvgItem) {
         const a = previousTarget.targetLocation();
         const b = this.targetLocation();
         const d = this.relative ? a : new Point(0, 0);
         this.values[0] = a.x / 3 + 2 * b.x / 3 - d.x;
         this.values[1] = a.y / 3 + 2 * b.y / 3 - d.y;
     }
-    public setControlLocation(idx: number, pts: Point) {
+    public override setControlLocation(idx: number, pts: Point) {
         const loc = this.absoluteControlPoints[1];
         const dx = pts.x - loc.x;
         const dy = pts.y - loc.y;
@@ -325,7 +327,7 @@ class SmoothCurveTo extends SvgItem {
 }
 class QuadraticBezierCurveTo extends SvgItem {
     static readonly key = 'Q';
-    public refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
+    public override refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
         if(!previousTarget) {
             throw 'Invalid path';
         }
@@ -333,7 +335,7 @@ class QuadraticBezierCurveTo extends SvgItem {
             new SvgControlPoint(this.absolutePoints[0], [previousTarget.targetLocation(), this.targetLocation()])
         ];
     }
-    public resetControlPoints(previousTarget: SvgItem) {
+    public override resetControlPoints(previousTarget: SvgItem) {
         const a = previousTarget.targetLocation();
         const b = this.targetLocation();
         const d = this.relative ? a : new Point(0, 0);
@@ -343,7 +345,7 @@ class QuadraticBezierCurveTo extends SvgItem {
 }
 class SmoothQuadraticBezierCurveTo extends SvgItem {
     static readonly key = 'T';
-    public refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
+    public override refreshAbsoluteControlPoints(origin: Point, previousTarget: SvgItem | null) {
         if (!(previousTarget instanceof QuadraticBezierCurveTo || previousTarget instanceof SmoothQuadraticBezierCurveTo)) {
             const previous = previousTarget ? previousTarget.targetLocation() : new Point(0, 0);
             const pts = new Point(previous.x, previous.y);
@@ -359,7 +361,7 @@ class SmoothQuadraticBezierCurveTo extends SvgItem {
             ];
         }
     }
-    public asStandaloneString(): string {
+    public override asStandaloneString(): string {
         return [
             'M',
             this.previousPoint.x,
@@ -375,7 +377,7 @@ class SmoothQuadraticBezierCurveTo extends SvgItem {
 
 class ClosePath extends SvgItem {
     static readonly key = 'Z';
-    public refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
+    public override refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
         this.absolutePoints = [new SvgPoint(origin.x, origin.y, false)];
     }
@@ -383,12 +385,12 @@ class ClosePath extends SvgItem {
 }
 class HorizontalLineTo extends SvgItem {
     static readonly key = 'H';
-    public rotate(ox:number, oy: number, angle: number, force: boolean = false) {
-      if (angle == 180) {
-          this.values[0] = -this.values[0];
-      }
-  }
-    public refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
+    public override rotate(ox:number, oy: number, angle: number, force = false) {
+        if (angle == 180) {
+            this.values[0] = -this.values[0];
+        }
+    }
+    public override refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
         if (this.relative) {
             this.absolutePoints = [new SvgPoint(this.values[0] + this.previousPoint.x, this.previousPoint.y)];
@@ -396,7 +398,7 @@ class HorizontalLineTo extends SvgItem {
             this.absolutePoints = [new SvgPoint(this.values[0], this.previousPoint.y)];
         }
     }
-    public setTargetLocation(pts: Point) {
+    public override setTargetLocation(pts: Point) {
         const loc = this.targetLocation();
         const dx = pts.x - loc.x;
         this.values[0] += dx;
@@ -404,21 +406,20 @@ class HorizontalLineTo extends SvgItem {
 }
 class VerticalLineTo extends SvgItem {
     static readonly key = 'V';
-    public rotate(ox:number, oy: number, angle: number, force: boolean = false) {
+    public override rotate(ox:number, oy: number, angle: number, force = false) {
         if (angle == 180) {
             this.values[0] = -this.values[0];
         }
     }
-
-    public translate(x: number, y: number, force = false) {
+    public override translate(x: number, y: number, force = false) {
         if (!this.relative) {
             this.values[0] += y;
         }
     }
-    public scale(kx: number, ky: number) {
+    public override scale(kx: number, ky: number) {
         this.values[0] *= ky;
     }
-    public refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
+    public override refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
         if (this.relative) {
             this.absolutePoints = [new SvgPoint(this.previousPoint.x, this.values[0] + this.previousPoint.y)];
@@ -426,7 +427,7 @@ class VerticalLineTo extends SvgItem {
             this.absolutePoints = [new SvgPoint(this.previousPoint.x, this.values[0])];
         }
     }
-    public setTargetLocation(pts: Point) {
+    public override setTargetLocation(pts: Point) {
         const loc = this.targetLocation();
         const dy = pts.y - loc.y;
         this.values[0] += dy;
@@ -434,15 +435,15 @@ class VerticalLineTo extends SvgItem {
 }
 class EllipticalArcTo extends SvgItem {
     static readonly key = 'A';
-    public translate(x: number, y: number, force = false) {
+    public override translate(x: number, y: number, force = false) {
         if (!this.relative) {
             this.values[5] += x;
             this.values[6] += y;
         }
     }
-    public rotate(ox: number, oy: number, degrees: number, force: boolean=false) {
+    public override rotate(ox: number, oy: number, degrees: number, force = false) {
         this.values[2] = (this.values[2] + degrees) % 360;
-        const rad = degrees * Math.PI / 180.;
+        const rad = degrees * Math.PI / 180;
         const cos = Math.cos(rad);
         const sin = Math.sin(rad);
         const px = this.values[5];
@@ -454,10 +455,10 @@ class EllipticalArcTo extends SvgItem {
         this.values[5] = qx;
         this.values[6] = qy;
     }
-    public scale(kx: number, ky: number) {
+    public override scale(kx: number, ky: number) {
         const a = this.values[0];
         const b = this.values[1];
-        const angle = Math.PI * this.values[2] / 180.;
+        const angle = Math.PI * this.values[2] / 180.0;
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
         const A = b * b * ky * ky * cos * cos + a * a * ky * ky * sin * sin;
@@ -471,8 +472,10 @@ class EllipticalArcTo extends SvgItem {
         this.values[2] = B !== 0 ? Math.atan((C - A - val1) / B) * 180 / Math.PI : (A < C ? 0 : 90);
 
         // New radius-x, radius-y
-        this.values[0] = -Math.sqrt(2 * det * F * ((A + C) + val1)) / det;
-        this.values[1] = -Math.sqrt(2 * det * F * ((A + C) - val1)) / det;
+        if(det !== 0) {
+            this.values[0] = -Math.sqrt(2 * det * F * ((A + C) + val1)) / det;
+            this.values[1] = -Math.sqrt(2 * det * F * ((A + C) - val1)) / det;
+        }
 
         // New target
         this.values[5] *= kx;
@@ -481,7 +484,7 @@ class EllipticalArcTo extends SvgItem {
         // New sweep flag
         this.values[4] = kx * ky >= 0 ? this.values[4] : 1 - this.values[4];
     }
-    public refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
+    public override refreshAbsolutePoints(origin: Point, previous: SvgItem | null) {
         this.previousPoint = previous ? previous.targetLocation() : new Point(0, 0);
         if (this.relative) {
             this.absolutePoints = [new SvgPoint(this.values[5] + this.previousPoint.x, this.values[6] + this.previousPoint.y)];
@@ -490,7 +493,7 @@ class EllipticalArcTo extends SvgItem {
         }
     }
 
-    public asString(decimals: number = 4, minify: boolean = false, trailingItems: SvgItem[] = []): string {
+    public override asString(decimals = 4, minify = false, trailingItems: SvgItem[] = []): string {
         if (!minify) {
             return super.asString(decimals, minify, trailingItems);
         } else {
@@ -535,10 +538,10 @@ export class Svg {
         }
 
         this.path.forEach( (it, idx) => {
-            let lastInstanceOf = it.constructor;
+            const lastInstanceOf = it.constructor;
             if (degrees !== 180) {
                 if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
-                    let newType = it.relative ? LineTo.key.toLowerCase() : LineTo.key;
+                    const newType = it.relative ? LineTo.key.toLowerCase() : LineTo.key;
                     it = this.changeType(it, newType) || it;
                 }
             }
@@ -549,12 +552,12 @@ export class Svg {
                 if (lastInstanceOf === HorizontalLineTo) {
                     this.refreshAbsolutePositions();
 
-                    let newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
+                    const newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
                     this.changeType(it, newType);
                 } else if (lastInstanceOf === VerticalLineTo) {
                     this.refreshAbsolutePositions();
 
-                    let newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
+                    const newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
                     this.changeType(it, newType);
                 }
             }
@@ -590,7 +593,7 @@ export class Svg {
         this.refreshAbsolutePositions();
     }
 
-    changeType(item: SvgItem, newType: string): SvgItem | null {
+    changeType(item: SvgItem, newType: string): SvgItem | null {
         const idx = this.path.indexOf(item);
         if (idx > 0) {
             const previous = this.path[idx - 1];
@@ -601,7 +604,7 @@ export class Svg {
         return null;
     }
 
-    asString(decimals: number = 4, minify: boolean = false): string {
+    asString(decimals = 4, minify = false): string {
         return this.path
         .reduce((acc: {type?: string, item: SvgItem, trailing: SvgItem[]}[], it: SvgItem) => {
             // Group together the items that can be merged (M 0 0 L 1 1 => M 0 0 1 1)

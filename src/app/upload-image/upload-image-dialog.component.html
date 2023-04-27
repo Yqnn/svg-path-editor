@@ -7,19 +7,19 @@
     <img *ngIf="data" class="preview" [src]="displayableData" />
     <span class="filename">{{name}}</span>
   </div>
-  <mat-form-field floatLabel="always" appearance="fill">
+  <mat-form-field>
     <mat-label>x</mat-label>
     <input matInput [(ngModel)]="x">
   </mat-form-field>
-  <mat-form-field floatLabel="always" appearance="fill">
+  <mat-form-field>
     <mat-label>y</mat-label>
     <input matInput [(ngModel)]="y">
   </mat-form-field>
-  <mat-form-field floatLabel="always" appearance="fill">
+  <mat-form-field>
     <mat-label>width</mat-label>
     <input matInput [(ngModel)]="width">
   </mat-form-field>
-  <mat-form-field floatLabel="always" appearance="fill">
+  <mat-form-field>
     <mat-label>height</mat-label>
     <input matInput [(ngModel)]="height">
   </mat-form-field>
@@ -29,6 +29,6 @@
   <input hidden (change)="onFileSelected(fileInput)" accept="image/*" #fileInput type="file">
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
-  <button mat-raised-button (click)="onUploadImage()" color="primary" [disabled]="!data">Import</button>
+  <button mat-raised-button (click)="onCancel()" color="primary">Cancel</button>
+  <button mat-raised-button (click)="onUploadImage()" color="accent" [disabled]="!data">Import</button>
 </div>

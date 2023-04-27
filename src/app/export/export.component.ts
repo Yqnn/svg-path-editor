@@ -50,7 +50,7 @@ export class ExportDialogComponent {
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
   <path d="${this.data.path}"${this.cfg.stroke ? ` stroke="${this.cfg.strokeColor}" stroke-width="${this.cfg.strokeWidth}"` : ''} fill="${this.cfg.fill ? this.cfg.fillColor : 'none'}"/>
 </svg>`;
-    this.download(this.data.name || 'svg-path.svg', svg);
+    this.download(this.data.name || 'svg-path.svg', svg);
     this.dialogRef.close();
   }
 
@@ -85,18 +85,19 @@ export class ExportDialogComponent {
   templateUrl: './export.component.html'
 })
 export class ExportComponent {
-  @Input() path: string = '';
-  @Input() name: string = '';
+  @Input() path = '';
+  @Input() name = '';
 
   constructor(
     public dialog: MatDialog
   ) {}
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(ExportDialogComponent, {
+    this.dialog.open(ExportDialogComponent, {
       width: '800px',
       panelClass: 'dialog',
-      data: {path: this.path, name: this.name}
+      data: {path: this.path, name: this.name},
+      autoFocus: false
     });
   }
 }

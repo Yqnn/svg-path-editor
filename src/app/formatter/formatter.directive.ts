@@ -6,10 +6,10 @@ import { formatNumber } from '../svg';
 })
 export class FormatterDirective implements OnChanges {
   @Input() formatterType: 'float'|'positive-float'|'integer'|'positive-integer' = 'float';
-  @Input() value: number = 0;
-  @Input() suffix: string = '';
-  @Output() valueChange = new EventEmitter<number>();
-  internalValue: number = 0;
+  @Input() numberValue = 0;
+  @Input() suffix = '';
+  @Output() numberValueChange = new EventEmitter<number>();
+  internalValue = 0;
 
   constructor(private el: ElementRef<HTMLInputElement>) { }
 
@@ -52,16 +52,16 @@ export class FormatterDirective implements OnChanges {
     this.viewValue = value;
     const floatValue = parseFloat(value);
     if (!isNaN(floatValue)) {
-      this.valueChange.emit(floatValue);
+      this.numberValueChange.emit(floatValue);
       this.internalValue = floatValue;
     }
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.value) {
-      if (changes.value.currentValue !== parseFloat(this.viewValue)) {
-        this.viewValue = formatNumber(changes.value.currentValue, 4) + this.suffix;
-        this.internalValue = changes.value.currentValue;
+    if (changes['numberValue']) {
+      if (changes['numberValue'].currentValue !== parseFloat(this.viewValue)) {
+        this.viewValue = formatNumber(changes['numberValue'].currentValue, 4) + this.suffix;
+        this.internalValue = changes['numberValue'].currentValue;
       }
     }
   }

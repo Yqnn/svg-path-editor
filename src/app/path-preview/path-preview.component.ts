@@ -16,8 +16,6 @@ export class PathPreviewComponent implements OnInit {
   @Input() strokeWidth?: number;
   @Input() path = '';
 
-  constructor() { }
-
   ngOnInit(): void {
     if(this.x === undefined || this.y === undefined || this.width === undefined || this.height === undefined) {
       const bbox = browserComputePathBoundingBox(this.path);

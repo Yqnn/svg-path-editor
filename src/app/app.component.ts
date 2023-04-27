@@ -37,7 +37,7 @@ export class AppComponent implements AfterViewInit {
 
   // Raw path:
   _rawPath = this.storage.getPath()?.path || kDefaultPath;
-  pathName: string = '';
+  pathName = '';
   invalidSyntax = false;
 
   // Undo/redo
@@ -59,12 +59,12 @@ export class AppComponent implements AfterViewInit {
   @ViewChild(CanvasComponent) canvas?: CanvasComponent;
   canvasWidth = 100;
   canvasHeight = 100;
-  strokeWidth: number = 1;
+  strokeWidth = 1;
 
   // Dragged & hovered elements
   draggedPoint: SvgPoint | null = null;
   focusedItem: SvgItem | null = null;
-  hoveredItem: SvgItem | null = null;
+  hoveredItem: SvgItem | null = null;
   wasCanvasDragged = false;
   draggedIsNew = false;
   dragging = false;
@@ -80,7 +80,7 @@ export class AppComponent implements AfterViewInit {
 
   // Utility functions:
   max = Math.max;
-  trackByIndex = (idx: number, _: any) => idx;
+  trackByIndex = (idx: number, _: unknown) => idx;
   formatNumber = (v: number) => formatNumber(v, 4);
 
   constructor(
@@ -89,7 +89,6 @@ export class AppComponent implements AfterViewInit {
     public cfg: ConfigService,
     private storage: StorageService
   ) {
-    (window as any).browserComputePathBoundingBox = browserComputePathBoundingBox;
     for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit', 'sponsor']) {
       matRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(`./assets/${icon}.svg`));
     }
@@ -97,8 +96,8 @@ export class AppComponent implements AfterViewInit {
     this.reloadPath(this.rawPath, true);
   }
 
-  @HostListener('document:keydown', ['$event']) onKeyDown($event: any) {
-    const tag = $event.target.tagName;
+  @HostListener('document:keydown', ['$event']) onKeyDown($event: KeyboardEvent) {
+    const tag = $event.target instanceof Element ? $event.target.tagName : null;
     if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
       if ($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
         this.redo();
@@ -210,7 +209,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  updateViewPort(x: number, y: number, w: number | null, h: number | null, force = false) {
+  updateViewPort(x: number, y: number, w: number | null, h: number | null, force = false) {
     if (!force && this.cfg.viewPortLocked) {
       return;
     }
@@ -220,7 +219,7 @@ export class AppComponent implements AfterViewInit {
     if (h === null && w !==null) {
       h = this.canvasHeight * w / this.canvasWidth;
     }
-    if (!w || !h) {
+    if (!w || !h) {
       return;
     }
 
@@ -231,7 +230,7 @@ export class AppComponent implements AfterViewInit {
     this.strokeWidth = this.cfg.viewPortWidth / this.canvasWidth;
   }
 
-  insert(type: string, after: SvgItem | null, convert: boolean) {
+  insert(type: string, after: SvgItem | null, convert: boolean) {
     if (convert) {
       if(after) {
         this.focusedItem =
@@ -311,14 +310,14 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  scale(x: number, y: number) {
+  scale(x: number, y: number) {
     this.parsedPath.scale(1 * x, 1 * y);
     this.scaleX = 1;
     this.scaleY = 1;
     this.afterModelChange();
   }
 
-  translate(x: number, y: number) {
+  translate(x: number, y: number) {
     this.parsedPath.translate(1 * x, 1 * y);
     this.translateX = 0;
     this.translateY = 0;
@@ -355,16 +354,15 @@ export class AppComponent implements AfterViewInit {
   }
 
   roundValues(decimals: number) {
-    this.reloadPath(this.parsedPath.asString(decimals));
-    this.afterModelChange();
+    this.reloadPath(this.parsedPath.asString(decimals, this.cfg.minifyOutput));
   }
 
   canDelete(item: SvgItem): boolean {
     const idx = this.parsedPath.path.indexOf(item);
     return idx > 0;
   }
-  canInsertAfter(item: SvgItem | null, type: string): boolean {
-    let previousType: string | null = null;
+  canInsertAfter(item: SvgItem | null, type: string): boolean {
+    let previousType: string | null = null;
     if (item !== null) {
       previousType = item.getType().toUpperCase();
     } else if (this.parsedPath.path.length > 0) {
@@ -483,14 +481,16 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  focusItem(it: SvgItem | null): void {
+  focusItem(it: SvgItem | null): void {
     if(it !== this.focusedItem) {
       this.focusedItem = it;
-      const idx = this.parsedPath.path.indexOf(this.focusedItem!);
-      document.getElementById(`svg_command_row_${idx}`)?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest'
-      });
+      if(this.focusedItem) {
+        const idx = this.parsedPath.path.indexOf(this.focusedItem);
+        document.getElementById(`svg_command_row_${idx}`)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest'
+        });
+      }
     }
   }
 }

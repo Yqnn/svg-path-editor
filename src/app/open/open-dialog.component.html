@@ -6,11 +6,11 @@
       <td mat-cell *matCellDef="let element"> {{element.name}} </td>
     </ng-container>
     <ng-container matColumnDef="create">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width:170px"> Creation Date </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header  style="width:180px"> Creation Date </th>
       <td mat-cell *matCellDef="let element"> {{formatDate(element.creationDate)}} </td>
     </ng-container>
     <ng-container matColumnDef="change">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:170px"> Change Date </th>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header style="width:180px"> Change Date </th>
       <td mat-cell *matCellDef="let element"> {{formatDate(element.changeDate)}} </td>
     </ng-container>
     <ng-container matColumnDef="preview">
@@ -26,9 +26,9 @@
       </td>
     </ng-container>
     <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef style="width:90px"></th>
+      <th mat-header-cell *matHeaderCellDef style="width:122px"></th>
       <td mat-cell *matCellDef="let element" style="text-align: center;">
-        <button *ngIf="!beingRemoved" (click)="beingRemoved=element.name;$event.stopPropagation();" mat-mini-fab color="basic" 
+        <button *ngIf="!beingRemoved" (click)="beingRemoved=element.name;$event.stopPropagation();" mat-mini-fab color="primary" 
           matTooltip="Delete"
           matTooltipPosition="below"
           matTooltipClass="app-tooltip"
@@ -36,7 +36,7 @@
           <mat-icon>delete</mat-icon>
         </button>
         <ng-container *ngIf="beingRemoved===element.name">
-          <button (click)="beingRemoved=undefined;$event.stopPropagation();" mat-mini-fab color="basic" style="margin-right: 8px;"
+          <button (click)="beingRemoved=undefined;$event.stopPropagation();" mat-mini-fab color="primary" style="margin-right: 8px;"
             matTooltip="Cancel"
             matTooltipPosition="below"
             matTooltipClass="app-tooltip"
@@ -59,5 +59,5 @@
   </table>
 </div>
 <div mat-dialog-actions align="end">
-  <button mat-raised-button (click)="onCancel()" color="basic">Cancel</button>
+  <button mat-raised-button (click)="onCancel()" color="primary">Cancel</button>
 </div>

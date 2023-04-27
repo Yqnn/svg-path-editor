@@ -57,11 +57,19 @@
 }
 .left-column-close, .left-column-open {
     position: absolute;
+    height: 52px;
     top:8px;
     border-radius: 0;
     min-width:16px;
-    padding:8px 2px;
+    padding:0;
+    margin:0;
     z-index:10;
+    .mat-icon {
+        margin:0;
+        width:28px;
+        height:28px;
+        font-size:28px;
+    }
 }
 .left-column-close {
     right:-28px;
@@ -136,7 +144,7 @@ textarea {
     overflow:hidden;
 
     &:hover .add-button, .add-button.opened {
-        display: block;
+        display: flex;
     }
     .add-button {
         display: none;

@@ -4,7 +4,7 @@
     <app-path-preview [path]="data.path ?? ''"></app-path-preview>
     <div style="padding:0 32px; flex:1">
       <p>The current path can be shared using the following link:</p>
-      <mat-form-field floatLabel="always" appearance="fill" style="width: 100%;">
+      <mat-form-field style="width: 100%;">
         <mat-label>URL</mat-label>
         <input matInput readonly [ngModel]="getUrl()" #input>
         <button mat-icon-button matSuffix matTooltip="Copy to clipboard" (click)="copy()">
