@@ -68,6 +68,7 @@ export class AppComponent implements AfterViewInit {
   wasCanvasDragged = false;
   draggedIsNew = false;
   dragging = false;
+	cursorPosition: Point = {x: 0, y: 0};
 
   // Images
   images: Image[] = [];
@@ -167,6 +168,10 @@ export class AppComponent implements AfterViewInit {
       this.draggedIsNew = false;
     }
   }
+
+	setCursorPosition(position: Point) {
+		this.cursorPosition = position;
+	}
 
   setHistoryDisabled(value: boolean) {
     this.historyDisabled = value;
@@ -493,4 +498,8 @@ export class AppComponent implements AfterViewInit {
       }
     }
   }
+
+	isTouchDevice(): boolean {
+		return window.matchMedia("(pointer: coarse)").matches
+	}
 }

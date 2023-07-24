@@ -200,3 +200,14 @@ textarea {
         width: 100%;
     }
 }
+
+label.cursor-position {
+    position: relative;
+    right: 0;
+    float: right;
+    align-items: center;
+    width: max-content;
+    height: 20px;
+    margin-bottom: -10px;
+    display: inline-flex;
+}

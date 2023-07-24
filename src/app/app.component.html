@@ -413,6 +413,9 @@
             >
                 <mat-icon svgIcon="zoom_out"></mat-icon> 
             </button>
+            <label class="cursor-position" *ngIf="!isTouchDevice()" >
+                {{cursorPosition.x.toFixed(1)}}, {{cursorPosition.y.toFixed(1)}}
+            </label>
         </div>
 
         <svg
@@ -450,6 +453,7 @@
             [editImages]="isEditingImages"
             [images]="images"
             [(focusedImage)]="focusedImage"
+            (cursorPosition)="setCursorPosition($event)"
         ></svg>
     </div>
 </div>
