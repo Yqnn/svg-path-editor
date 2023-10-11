@@ -1,3 +1,9 @@
+Things I want to change: 
+* Recalculated with new start point specified
+* Highlight currently hovered command coordinates when mouse over a specific screen point
+ and the reverse of hovering over a command coordinate and it highlighting the point
+* Add button to mirror along an axis 
+
 # SvgPathEditor
 Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 [![Image of Yaktocat](./doc/screenshot.png)](https://yqnn.github.io/svg-path-editor/)
