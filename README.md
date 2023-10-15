@@ -3,6 +3,7 @@ Things I want to change:
 * Highlight currently hovered command coordinates when mouse over a specific screen point
  and the reverse of hovering over a command coordinate and it highlighting the point
 * Add button to mirror along an axis 
+* button/check to modify only currently selected points
 
 # SvgPathEditor
 Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
