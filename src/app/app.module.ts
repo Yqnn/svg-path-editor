@@ -32,7 +32,8 @@ import { SaveComponent, SaveDialogComponent } from './save/save.component';
 import { ExportComponent, ExportDialogComponent } from './export/export.component';
 import { UploadImageComponent, UploadImageDialogComponent } from './upload-image/upload-image.component';
 import { ImportComponent, ImportDialogComponent } from './import/import.component';
-import { ShareComponent, ShareDialogComponent, ShareDialogSnackbarComponent } from './share/share.component';
+import { ShareComponent, ShareDialogComponent } from './share/share.component';
+import { CopiedSnackbarComponent } from './copied-snackbar/copied-snackbar.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,7 @@ import { ShareComponent, ShareDialogComponent, ShareDialogSnackbarComponent } fr
     ImportDialogComponent,
     ShareComponent,
     ShareDialogComponent,
-    ShareDialogSnackbarComponent,
+    CopiedSnackbarComponent,
     FormatterDirective,
     KeyboardNavigableDirective,
     PathPreviewComponent

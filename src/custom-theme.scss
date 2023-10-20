@@ -46,6 +46,7 @@ $svg-path-editor-theme: mat.define-dark-theme((
 @include mat.form-field-theme($svg-path-editor-theme);
 @include mat.table-theme($svg-path-editor-theme);
 @include mat.slider-theme($svg-path-editor-theme);
+@include mat.snack-bar-theme($svg-path-editor-theme);
 
 @include mat.typography-hierarchy($svg-path-editor-theme);
 
