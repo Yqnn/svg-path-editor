@@ -316,6 +316,10 @@
             <mat-icon *ngIf="!focusedItem">add</mat-icon>
         </button>
 
+        <label class="cursor-position" *ngIf="cursorPosition" >
+            {{cursorPosition.x.toFixed(cursorPosition.decimals)}},
+            {{cursorPosition.y.toFixed(cursorPosition.decimals)}}
+        </label>
 
         <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
             color="accent"
@@ -412,9 +416,6 @@
             >
                 <mat-icon svgIcon="zoom_out"></mat-icon> 
             </button>
-            <label class="cursor-position" *ngIf="!isTouchDevice()" >
-                {{cursorPosition.x.toFixed(1)}}, {{cursorPosition.y.toFixed(1)}}
-            </label>
         </div>
 
         <svg
