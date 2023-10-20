@@ -349,7 +349,6 @@
                 matTooltipPosition="below"
                 (click)="redo()"
                 [disabled]="!canRedo()"
-                style="margin-right: 16px"
             >
                 <mat-icon>redo</mat-icon>
             </button>
@@ -366,7 +365,7 @@
                 [color]="isEditingImages ? 'accent' : 'primary'"
                 [matTooltip]="isEditingImages ? '' : 'Toggle image management mode'"
                 matTooltipPosition="below"
-                style="margin-right: 24px"
+                style="margin-right: 24px;margin-left: 24px"
                 (click)="toggleImageEditing(uploader)"
             >
                 <mat-icon>image</mat-icon>
