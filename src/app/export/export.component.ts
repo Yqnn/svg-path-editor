@@ -4,6 +4,8 @@ import { ExportConfigService } from '../config.service';
 import { StorageService } from '../storage.service';
 import { Svg } from '../svg';
 import { browserComputePathBoundingBox } from '../svg-bbox';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CopiedSnackbarComponent } from '../copied-snackbar/copied-snackbar.component';
 
 interface DialogData {
   path: string;
@@ -20,13 +22,13 @@ export class ExportDialogComponent {
   y = 0;
   width = 0;
   height = 0;
-	copied = false;
 
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
     public storageService: StorageService,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public cfg: ExportConfigService
+    public cfg: ExportConfigService,
+    private snackBar: MatSnackBar
   ) {
     this.refreshViewbox();
   }
@@ -44,13 +46,12 @@ export class ExportDialogComponent {
   }
 	
 	copyToClipboard(data: string) {
-		if (navigator && navigator.clipboard) {
-			navigator.clipboard.writeText(data);
-			this.copied = true;
-			setTimeout(() => (this.copied = false), 2000);
-		} else {
-			throw new Error('browser do not support clipboard');
-		}
+    navigator.clipboard.writeText(data);
+    this.snackBar.openFromComponent(CopiedSnackbarComponent, {
+      horizontalPosition:'center',
+      verticalPosition: 'top',
+      duration: 2000
+    });
 	}
 
 	makeSVG(): string {
