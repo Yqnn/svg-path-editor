@@ -20,6 +20,7 @@ export class ExportDialogComponent {
   y = 0;
   width = 0;
   height = 0;
+	copied = false;
 
   constructor(
     public dialogRef: MatDialogRef<ExportDialogComponent>,
@@ -41,18 +42,36 @@ export class ExportDialogComponent {
     document.body.removeChild(anchor);
     setTimeout(() => window.URL.revokeObjectURL(anchor.href), 100);
   }
+	
+	copyToClipboard(data: string) {
+		if (navigator && navigator.clipboard) {
+			navigator.clipboard.writeText(data);
+			this.copied = true;
+			setTimeout(() => (this.copied = false), 2000);
+		} else {
+			throw new Error('browser do not support clipboard');
+		}
+	}
+
+	makeSVG(): string {
+		return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
+	<path d="${this.data.path}"${this.cfg.stroke ? ` stroke="${this.cfg.strokeColor}" stroke-width="${this.cfg.strokeWidth}"` : ''} fill="${this.cfg.fill ? this.cfg.fillColor : 'none'}"/>
+</svg>`;
+	}
 
   onCancel(): void {
     this.dialogRef.close();
   }
   onExport(): void {
-    const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
-  <path d="${this.data.path}"${this.cfg.stroke ? ` stroke="${this.cfg.strokeColor}" stroke-width="${this.cfg.strokeWidth}"` : ''} fill="${this.cfg.fill ? this.cfg.fillColor : 'none'}"/>
-</svg>`;
+    const svg = this.makeSVG();
+
     this.download(this.data.name || 'svg-path.svg', svg);
     this.dialogRef.close();
   }
+	onCopyToClipboard(): void {
+		const svg = this.makeSVG();
+		this.copyToClipboard(svg);
+	}
 
   refreshViewbox() {
     const p = new Svg(this.data.path);
