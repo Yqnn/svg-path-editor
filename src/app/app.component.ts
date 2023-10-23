@@ -50,6 +50,10 @@ export class AppComponent implements AfterViewInit {
   scaleY = 1;
   translateX = 0;
   translateY = 0;
+  mirrorX1 = 0;
+  mirrorY1 = 0;
+  mirrorX2 = 0;
+  mirrorY2 = 0;
   rotateX = 0;
   rotateY = 0;
   rotateAngle = 0;
@@ -321,6 +325,11 @@ export class AppComponent implements AfterViewInit {
     this.parsedPath.translate(1 * x, 1 * y);
     this.translateX = 0;
     this.translateY = 0;
+    this.afterModelChange();
+  }
+
+  mirror(x1: number, y1: number, x2:number, y2:number) {
+    this.parsedPath.mirror(1 * x1, 1 * y1, 1 * x2, 1 * y2);
     this.afterModelChange();
   }
 
