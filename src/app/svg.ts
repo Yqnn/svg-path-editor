@@ -189,8 +189,8 @@ export abstract class SvgItem {
             const y1 = this.values[i + 1];
             const offset = nor_x * x2 + nor_y * y2;
             const distance = nor_x * x1 + nor_y * y1 - offset;
-            this.values[i] = this.relative ? y1 : x1 - nor_x * 2 * distance;
-            this.values[i + 1] = this.relative ? x1 : y1 - nor_y * 2 * distance;
+            this.values[i] = this.relative ? -y1 : x1 - nor_x * 2 * distance;
+            this.values[i + 1] = this.relative ? -x1 : y1 - nor_y * 2 * distance;
         }
     }
 
@@ -269,6 +269,22 @@ class DummySvgItem extends SvgItem {
 }
 class MoveTo extends SvgItem {
     static readonly key = 'M';
+    
+    public override mirror(x2:number, y2:number, x3:number, y3:number) {
+        let dir_x = x3 - x2;
+        let dir_y = y3 - y2;
+        const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
+        dir_x = dir_x / norm;
+        dir_y = dir_y / norm;
+        const nor_x = -dir_y;
+        const nor_y = dir_x;
+        const x1 = this.values[0];
+        const y1 = this.values[1];
+        const offset = nor_x * x2 + nor_y * y2;
+        const distance = nor_x * x1 + nor_y * y1 - offset;
+        this.values[0] = x1 - nor_x * 2 * distance;
+        this.values[1] = y1 - nor_y * 2 * distance;
+    }
 }
 class LineTo extends SvgItem {
     static readonly key = 'L';
@@ -475,7 +491,7 @@ class EllipticalArcTo extends SvgItem {
         const distance = nor_x * x1 + nor_y * y1 - offset;
         this.values[5] = this.relative ? -y1 : x1 - nor_x * 2 * distance;
         this.values[6] = this.relative ? -x1 : y1 - nor_y * 2 * distance;
-        this.values[4] = this.values[6] * this.values[5] > 0 ? this.values[4] : 1 - this.values[4];
+        this.values[4] = 1 - this.values[4];
     }
     public override rotate(ox: number, oy: number, degrees: number, force = false) {
         this.values[2] = (this.values[2] + degrees) % 360;
