@@ -174,8 +174,7 @@ export abstract class SvgItem {
         });
     }
 
-    // relative breaks
-    public mirror(x2:number, y2:number, x3:number, y3:number) {
+    public reflect(x2:number, y2:number, x3:number, y3:number) {
         let dir_x = x3 - x2;
         let dir_y = y3 - y2;
         const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
@@ -270,7 +269,7 @@ class DummySvgItem extends SvgItem {
 class MoveTo extends SvgItem {
     static readonly key = 'M';
     
-    public override mirror(x2:number, y2:number, x3:number, y3:number) {
+    public override reflect(x2:number, y2:number, x3:number, y3:number) {
         let dir_x = x3 - x2;
         let dir_y = y3 - y2;
         const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
@@ -477,7 +476,7 @@ class EllipticalArcTo extends SvgItem {
             this.values[6] += y;
         }
     }
-    public override mirror(x2:number, y2:number, x3:number, y3:number) {
+    public override reflect(x2:number, y2:number, x3:number, y3:number) {
         let dir_x = x3 - x2;
         let dir_y = y3 - y2;
         const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
@@ -583,7 +582,7 @@ export class Svg {
         return this;
     }
 
-    mirror(x2: number, y2: number, x3:number, y3:number): Svg {
+    reflect(x2: number, y2: number, x3:number, y3:number): Svg {
         if(x2 == x3 && y2 == y3) {
             return this;
         }
@@ -596,7 +595,7 @@ export class Svg {
                 it = this.changeType(it, newType) || it;
             }
 
-            it.mirror(x2, y2, x3, y3);
+            it.reflect(x2, y2, x3, y3);
 
             if (slope == 0 || slope == Infinity) {
                 if (lastInstanceOf === HorizontalLineTo) {

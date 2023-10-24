@@ -188,28 +188,28 @@
                 <div class="row path-operations-grid5">
                     <div class="input-block" style="flex:1">
                         <label>X1</label>
-                        <input appFormatter [(numberValue)]="mirrorX1" class="app-input" >
+                        <input appFormatter [(numberValue)]="reflectX1" class="app-input" >
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Y1</label>
-                        <input appFormatter [(numberValue)]="mirrorY1" class="app-input">
+                        <input appFormatter [(numberValue)]="reflectY1" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>X2</label>
-                        <input appFormatter [(numberValue)]="mirrorX2" class="app-input">
+                        <input appFormatter [(numberValue)]="reflectX2" class="app-input">
                     </div>
                     <div class="input-block" style="flex:1">
                         <label>Y2</label>
-                        <input appFormatter [(numberValue)]="mirrorY2" class="app-input">
+                        <input appFormatter [(numberValue)]="reflectY2" class="app-input">
                     </div>
                     <button
                         mat-flat-button
-                        (click)="mirror(mirrorX1, mirrorY1, mirrorX2, mirrorY2)"
+                        (click)="reflect(reflectX1, reflectY1, reflectX2, reflectY2)"
                         style="flex:1"
-                        matTooltip="Mirror the full path across a line with provided values"
+                        matTooltip="Reflect the full path across a line with provided values"
                         matTooltipPosition="right"
                         class="mat-flat-button"
-                    >Mirror</button>
+                    >Reflect</button>
                 </div>
 
                 <div class="row path-operations-grid4">
