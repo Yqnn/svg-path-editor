@@ -160,7 +160,7 @@ textarea {
         }
         >.add-image-button {
             position: absolute;
-            margin-left:8px;
+            margin-left:24px;
             top:0;
             opacity: 0;
             transition: top 0.2s, opacity 0.2s;
@@ -199,4 +199,17 @@ textarea {
     .footer {
         width: 100%;
     }
+}
+
+label.cursor-position {
+    position: absolute;
+    font-size: 1.5em;
+    font-family: monospace;
+    bottom:16px;
+    left:50%;
+    transform: translateX(-50%);
+    padding:4px 16px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color:#111111;
+    border-radius: 4px;
 }

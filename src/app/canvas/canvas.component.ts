@@ -51,7 +51,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() afterModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
   @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number | null, force?: boolean}>();
-
+	@Output() cursorPosition = new EventEmitter<Point & {decimals?: number} | undefined>();
 
   @Output() emptyCanvas = new EventEmitter<void>();
 
@@ -259,6 +259,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       this.drag(this.draggedEvt);
     }
     this.dragging.emit(false);
+    this.setCursorPosition(undefined);
 
     if (!this.draggedPoint && !this.wasCanvasDragged) {
       // unselect action
@@ -317,6 +318,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
         }
         this.afterModelChange.emit();
         this.draggedEvt = null;
+        this.setCursorPosition({...pt, decimals});
       } else if(this.draggedEvt) {
         this.wasCanvasDragged = true;
         const pinchToZoom = this.pinchToZoom(this.draggedEvt, event);
@@ -337,4 +339,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       }
     }
   }
+
+	setCursorPosition(location?: {x: number, y: number, decimals?: number}) {
+		this.cursorPosition.emit(location);
+	}
 }

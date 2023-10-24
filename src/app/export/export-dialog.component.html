@@ -79,6 +79,9 @@
 </div>
 <div mat-dialog-actions align="end">
   <button mat-raised-button (click)="onCancel()" color="primary">Cancel</button>
+  <button mat-raised-button (click)="onCopyToClipboard()" color="primary">
+    Copy to clipboard
+  </button>
   <button mat-raised-button (click)="onExport()" color="accent" [disabled]="false">
     Download
   </button>
