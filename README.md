@@ -61,6 +61,7 @@ Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github
 ### With Docker
 Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-editor` or `docker-compose up`.
 
----
+## Special Thanks
+Many thanks to our sponsors 🙇 !
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.3.
+[@riovir](https://github.com/riovir), [@miniBill](https://github.com/miniBill), [@GitHub](https://github.com/GitHub), [@alexandernst](https://github.com/alexandernst), [@Filimoa](https://github.com/Filimoa), [@agrogers](https://github.com/agrogers), [@MilesTails01](https://github.com/MilesTails01), [@robetus](https://github.com/robetus), [@adcar](https://github.com/adcar), [@getsentry](https://github.com/getsentry), [@simplicitywebdesign](https://github.com/simplicitywebdesign) 😎
