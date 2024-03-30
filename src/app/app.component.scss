@@ -11,7 +11,7 @@
     position: fixed;
     left:0;
     height:28px;
-    width: 300px;
+    width: 310px;
     bottom:0px;
     background-color: #111111;
     font-size: 14px;
@@ -46,7 +46,7 @@
 
 /* UI */
 .left-column-wrapper {
-    width:300px;
+    width:310px;
     position: relative;
 }
 .left-column {
@@ -212,4 +212,5 @@ label.cursor-position {
     background-color: rgba(255, 255, 255, 0.8);
     color:#111111;
     border-radius: 4px;
+    pointer-events: none;
 }
