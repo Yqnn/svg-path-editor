@@ -69,10 +69,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "svg-path-editor:build:production"
+              "buildTarget": "svg-path-editor:build:production"
             },
             "development": {
-              "browserTarget": "svg-path-editor:build:development"
+              "buildTarget": "svg-path-editor:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -80,7 +80,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "svg-path-editor:build"
+            "buildTarget": "svg-path-editor:build"
           }
         },
         "test": {
