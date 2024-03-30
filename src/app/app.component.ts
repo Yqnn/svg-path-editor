@@ -23,7 +23,7 @@ export const kDefaultPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C
       transition(':enter', [])
     ]),
     trigger('leftColumn', [
-      state('*', style({'max-width': '300px'})),
+      state('*', style({'max-width': '310px'})),
       transition(':enter', [style({'max-width': '0'}), animate('100ms ease')]),
       transition(':leave', [animate('100ms ease', style({'max-width': '0'}))])
     ])

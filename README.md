@@ -44,7 +44,7 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 ### With Node.js
 
 ##### Requirements
-- [Node.js](https://nodejs.org/) v12.14, v14.15 or higher.
+- [Node.js](https://nodejs.org/) v18.13 or higher.
 
 ##### Dependencies
 Run `npm install` to retrieve all the depencies of the project.
@@ -64,4 +64,4 @@ Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-edito
 ## Special Thanks
 Many thanks to our sponsors 🙇 !
 
-[@riovir](https://github.com/riovir), [@miniBill](https://github.com/miniBill), [@GitHub](https://github.com/GitHub), [@alexandernst](https://github.com/alexandernst), [@Filimoa](https://github.com/Filimoa), [@agrogers](https://github.com/agrogers), [@MilesTails01](https://github.com/MilesTails01), [@robetus](https://github.com/robetus), [@adcar](https://github.com/adcar), [@getsentry](https://github.com/getsentry), [@simplicitywebdesign](https://github.com/simplicitywebdesign) 😎
+[@riovir](https://github.com/riovir), [@miniBill](https://github.com/miniBill), [@GitHub](https://github.com/GitHub), [@alexandernst](https://github.com/alexandernst), [@Filimoa](https://github.com/Filimoa), [@agrogers](https://github.com/agrogers), [@MilesTails01](https://github.com/MilesTails01), [@robetus](https://github.com/robetus), [@adcar](https://github.com/adcar), [@getsentry](https://github.com/getsentry), [@simplicitywebdesign](https://github.com/simplicitywebdesign) 😎, [@PassPilot](https://github.com/PassPilot), [@zeroin](https://github.com/zeroin), [@jholmes-dev](https://github.com/jholmes-dev)
