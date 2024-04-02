@@ -174,6 +174,25 @@ export abstract class SvgItem {
         });
     }
 
+    public reflect(x2:number, y2:number, x3:number, y3:number) {
+        let dir_x = x3 - x2;
+        let dir_y = y3 - y2;
+        const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
+        dir_x = dir_x / norm;
+        dir_y = dir_y / norm;
+        const nor_x = -dir_y;
+        const nor_y = dir_x;
+
+        for(let i = 0 ; i < this.values.length ; i += 2) {
+            const x1 = this.values[i];
+            const y1 = this.values[i + 1];
+            const offset = nor_x * x2 + nor_y * y2;
+            const distance = nor_x * x1 + nor_y * y1 - offset;
+            this.values[i] = this.relative ? -y1 : x1 - nor_x * 2 * distance;
+            this.values[i + 1] = this.relative ? -x1 : y1 - nor_y * 2 * distance;
+        }
+    }
+
     public rotate(ox: number, oy: number, degrees: number, force = false) {
         const rad = degrees * Math.PI / 180;
         const cos = Math.cos(rad);
@@ -249,6 +268,22 @@ class DummySvgItem extends SvgItem {
 }
 class MoveTo extends SvgItem {
     static readonly key = 'M';
+    
+    public override reflect(x2:number, y2:number, x3:number, y3:number) {
+        let dir_x = x3 - x2;
+        let dir_y = y3 - y2;
+        const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
+        dir_x = dir_x / norm;
+        dir_y = dir_y / norm;
+        const nor_x = -dir_y;
+        const nor_y = dir_x;
+        const x1 = this.values[0];
+        const y1 = this.values[1];
+        const offset = nor_x * x2 + nor_y * y2;
+        const distance = nor_x * x1 + nor_y * y1 - offset;
+        this.values[0] = x1 - nor_x * 2 * distance;
+        this.values[1] = y1 - nor_y * 2 * distance;
+    }
 }
 class LineTo extends SvgItem {
     static readonly key = 'L';
@@ -441,6 +476,22 @@ class EllipticalArcTo extends SvgItem {
             this.values[6] += y;
         }
     }
+    public override reflect(x2:number, y2:number, x3:number, y3:number) {
+        let dir_x = x3 - x2;
+        let dir_y = y3 - y2;
+        const norm = Math.sqrt(dir_x * dir_x + dir_y * dir_y);
+        dir_x = dir_x / norm;
+        dir_y = dir_y / norm;
+        const nor_x = -dir_y;
+        const nor_y = dir_x;
+        const x1 = this.values[5];
+        const y1 = this.values[6];
+        const offset = nor_x * x2 + nor_y * y2;
+        const distance = nor_x * x1 + nor_y * y1 - offset;
+        this.values[5] = this.relative ? -y1 : x1 - nor_x * 2 * distance;
+        this.values[6] = this.relative ? -x1 : y1 - nor_y * 2 * distance;
+        this.values[4] = 1 - this.values[4];
+    }
     public override rotate(ox: number, oy: number, degrees: number, force = false) {
         this.values[2] = (this.values[2] + degrees) % 360;
         const rad = degrees * Math.PI / 180;
@@ -526,6 +577,52 @@ export class Svg {
     scale(kx: number, ky: number): Svg {
         this.path.forEach( (it) => {
             it.scale(kx, ky);
+        });
+        this.refreshAbsolutePositions();
+        return this;
+    }
+
+    reflect(x2: number, y2: number, x3:number, y3:number): Svg {
+        if(x2 == x3 && y2 == y3) {
+            return this;
+        }
+        const slope = (y3 - y2) / (x3 - x2);
+
+        this.path.forEach( (it, idx) => {
+            const lastInstanceOf = it.constructor;
+            if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
+                const newType = it.relative ? LineTo.key.toLowerCase() : LineTo.key;
+                it = this.changeType(it, newType) || it;
+            }
+
+            it.reflect(x2, y2, x3, y3);
+
+            if (slope == 0 || slope == Infinity) {
+                if (lastInstanceOf === HorizontalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    const newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
+                    this.changeType(it, newType);
+                } else if (lastInstanceOf === VerticalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    const newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
+                    this.changeType(it, newType);
+                }
+            }
+            if (Math.abs(slope) == 1) {
+                if (lastInstanceOf === HorizontalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    const newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
+                    this.changeType(it, newType);
+                } else if (lastInstanceOf === VerticalLineTo) {
+                    this.refreshAbsolutePositions();
+
+                    const newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
+                    this.changeType(it, newType);
+                }
+            }
         });
         this.refreshAbsolutePositions();
         return this;
