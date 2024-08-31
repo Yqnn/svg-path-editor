@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, OnInit, Inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { kDefaultPath } from '../app.component';
 import { StorageService } from '../storage.service';
-import { Svg } from '../svg';
+import { SvgPath } from '../../lib/svg';
 
 export class DialogData {
   path?: string;
@@ -48,7 +48,7 @@ export class ImportComponent implements OnInit {
     if(check.test(fragment)) {
       const path = fragment.slice(2).replace(/_/g, ' ');
       try {
-        const _ = new Svg(path);
+        const _ = new SvgPath(path);
         return path;
       } catch (e) { /* */ }
     }

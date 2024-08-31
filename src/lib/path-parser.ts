@@ -17,7 +17,7 @@ const kGrammar: {[key: string]: RegExp[]}  = {
     A: [kNumberRegex, kNumberRegex, kCoordinateRegex, kFlagRegex, kFlagRegex, kCoordinateRegex, kCoordinateRegex],
 };
 
-export class SvgParser {
+export class PathParser {
 
     static components(type: string, path: string, cursor: number): [number, string[][]]
     {
@@ -36,7 +36,7 @@ export class SvgParser {
                     if (ws !== null) {
                         cursor += ws[0].length;
                     }
-                } else if (component.length === 1) {
+                } else if (component.length === 1 && components.length >= 1) {
                     return [cursor, components];
                 } else {
                     throw new Error('malformed path (first error at ' + cursor + ')');
@@ -63,8 +63,11 @@ export class SvgParser {
             const match = path.slice(cursor).match(kCommandTypeRegex);
             if (match !== null) {
                 const command = match[1];
+                if(cursor === 0 && command.toLowerCase() !== 'm') {
+                    throw new Error('malformed path (first error at ' + cursor + ')');
+                }
                 cursor += match[0].length;
-                const componentList = SvgParser.components(command, path, cursor);
+                const componentList = PathParser.components(command, path, cursor);
                 cursor = componentList[0];
                 tokens = [...tokens, ...componentList[1]];
             } else {

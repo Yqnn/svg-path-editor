@@ -2,7 +2,7 @@ import { Component, Inject, Input } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ExportConfigService } from '../config.service';
 import { StorageService } from '../storage.service';
-import { Svg } from '../svg';
+import { SvgPath } from '../../lib/svg';
 import { browserComputePathBoundingBox } from '../svg-bbox';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CopiedSnackbarComponent } from '../copied-snackbar/copied-snackbar.component';
@@ -75,7 +75,7 @@ export class ExportDialogComponent {
 	}
 
   refreshViewbox() {
-    const p = new Svg(this.data.path);
+    const p = new SvgPath(this.data.path);
     const locs = p.targetLocations();
     if (locs.length > 0) {
       const bbox = browserComputePathBoundingBox(this.data.path);

@@ -1,5 +1,5 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
-import { formatNumber } from '../svg';
+import { formatNumber } from '../../lib/svg';
 
 @Directive({
   selector: '[appFormatter]'

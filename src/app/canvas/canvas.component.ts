@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input
 import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Image } from '../image';
-import { Point, Svg, SvgControlPoint, SvgItem, SvgPoint } from '../svg';
+import { Point, SvgPath, SvgControlPoint, SvgItem, SvgPoint } from '../../lib/svg';
 
 /* eslint-disable @angular-eslint/component-selector */
 @Component({
@@ -30,7 +30,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Input() set focusedImage(focusedImage: Image | null) { this._focusedImage = focusedImage; this.focusedImageChange.emit(this.focusedImage); }
 
   constructor(public canvas: ElementRef) { }
-  @Input() parsedPath?: Svg;
+  @Input() parsedPath?: SvgPath;
   @Input() targetPoints: SvgPoint[] = [];
   @Input() controlPoints: SvgControlPoint[] = [];
 

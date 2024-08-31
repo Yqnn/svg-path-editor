@@ -8,16 +8,20 @@
         <div class="left-column" cdk-scrollable>
             <app-expandable panelTitle="Path" [panelInfo]="rawPath.length.toString()" [opened]="true">
                 <div class="row">
-                    <div class="input-block" style="flex-grow:1"> 
+                    <div class="input-block" style="flex-grow:1"  [class.has-error]="invalidSyntax"> 
                         <label class="opaque">Path</label>
                         <textarea
                             [ngModel]="rawPath"
-                            (ngModelChange)="reloadPath($event, true)"
+                            (ngModelChange)="reloadPath($event, $event.length > 0)"
                             class="app-input"
                             style="height:100px;"
                             placeholder="Paste any SVG path here"
                             (focus)="setHistoryDisabled(true)"
                             (blur)="setHistoryDisabled(false)"
+                            matTooltip="Invalid path"
+                            matTooltipPosition="below"
+                            matTooltipClass="app-tooltip"
+                            [matTooltipDisabled]="!invalidSyntax"
                         ></textarea>
                     </div>
                 </div>
@@ -237,6 +241,20 @@
                         class="mat-flat-button"
                     >Convert to absolute</button>
                 </div>
+                <div class="row">
+                    <button mat-flat-button 
+                        (click)="reverse()"
+                        matTooltip="Reverve path commands"
+                        style="flex:1"
+                        class="mat-flat-button"
+                    >Reverse</button>
+                    <button mat-flat-button 
+                        (click)="optimize()"
+                        matTooltip="Optimize the path by removing useless components, changing types and reordering"
+                        style="flex:1"
+                        class="mat-flat-button"
+                    >Optimize</button>
+                </div>
             </app-expandable>
 
 
@@ -303,8 +321,8 @@
             color="accent"
             class="add-button"
             [ngStyle]="{
-                'left': ((focusedItem ? focusedItem.targetLocation().x : 0)-cfg.viewPortX)/strokeWidth+'px',
-                'top': ((focusedItem ? focusedItem.targetLocation().y : 0)-cfg.viewPortY)/strokeWidth+'px'
+                'left': 6+((focusedItem ? focusedItem.targetLocation().x : 0)-cfg.viewPortX)/strokeWidth+'px',
+                'top': 6+((focusedItem ? focusedItem.targetLocation().y : 0)-cfg.viewPortY)/strokeWidth+'px'
             }"
             [ngClass]="{'opened':isContextualMenuOpened}"
             [matMenuTriggerFor]="focusedItem ? appMenu : appCreate"
