@@ -3,7 +3,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialo
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { StorageService } from '../storage.service';
-import { Svg } from '../svg';
+import { SvgPath } from '../../lib/svg';
 
 export class DialogData {
   name?: string;
@@ -48,7 +48,7 @@ export class OpenDialogComponent implements AfterViewInit {
   }
 
   viewbox(path: string): string {
-    const p = new Svg(path);
+    const p = new SvgPath(path);
     const locs = p.targetLocations();
     if (locs.length > 0) {
       const minx = locs.reduce((acc, pt) => Math.min(acc, pt.x), Infinity);

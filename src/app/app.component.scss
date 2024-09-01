@@ -138,6 +138,7 @@ textarea {
 
 /* Drawings */
 .drawings {
+    --mat-fab-small-touch-target-display: none;
     flex:1;
     align-self:stretch;
     position: relative;

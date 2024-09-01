@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, HostListener, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Svg, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from './svg';
+import { SvgPath, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from '../lib/svg';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StorageService } from './storage.service';
@@ -9,6 +9,8 @@ import { Image } from './image';
 import { UploadImageComponent } from './upload-image/upload-image.component';
 import { ConfigService } from './config.service';
 import { browserComputePathBoundingBox } from './svg-bbox';
+import { reversePath } from '../lib/reverse-path';
+import { optimizePath } from '../lib/optimize-path';
 
 export const kDefaultPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 `
 + `A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 `
@@ -30,8 +32,8 @@ export const kDefaultPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C
   ]
 })
 export class AppComponent implements AfterViewInit {
-  // Svg path data model:
-  parsedPath: Svg;
+  // SvgPath path data model:
+  parsedPath: SvgPath;
   targetPoints: SvgPoint[] = [];
   controlPoints: SvgControlPoint[] = [];
 
@@ -93,7 +95,7 @@ export class AppComponent implements AfterViewInit {
     for (const icon of ['delete', 'logo', 'more', 'github', 'zoom_in', 'zoom_out', 'zoom_fit', 'sponsor']) {
       matRegistry.addSvgIcon(icon, sanitizer.bypassSecurityTrustResourceUrl(`./assets/${icon}.svg`));
     }
-    this.parsedPath = new Svg('');
+    this.parsedPath = new SvgPath('');
     this.reloadPath(this.rawPath, true);
   }
 
@@ -339,6 +341,23 @@ export class AppComponent implements AfterViewInit {
     this.afterModelChange();
   }
 
+  reverse() {
+    reversePath(this.parsedPath);
+    this.afterModelChange();
+  }
+
+  optimize() {
+    optimizePath(this.parsedPath, {
+      removeUselessComponents: true,
+      useHorizontalAndVerticalLines: true,
+      useRelativeAbsolute: true,
+      useReverse: true,
+      useShorthands: true
+    });
+    this.cfg.minifyOutput=true;
+    this.afterModelChange();
+  }
+
   setValue(item: SvgItem, idx: number, val: number) {
     if (!isNaN(val)) {
       item.values[idx] = val;
@@ -438,7 +457,7 @@ export class AppComponent implements AfterViewInit {
     this.rawPath = newPath;
     this.invalidSyntax = false;
     try {
-      this.parsedPath = new Svg(this.rawPath);
+      this.parsedPath = new SvgPath(this.rawPath);
       this.reloadPoints();
       if (autozoom) {
         this.zoomAuto();
@@ -446,7 +465,7 @@ export class AppComponent implements AfterViewInit {
     } catch (e) {
       this.invalidSyntax = true;
       if (!this.parsedPath) {
-        this.parsedPath = new Svg('');
+        this.parsedPath = new SvgPath('');
       }
     }
   }

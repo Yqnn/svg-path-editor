@@ -186,6 +186,12 @@ button.mat-mdc-icon-button.more-button {
     &:focus-within>label {
         color: #2196f3;
     }
+    &.has-error>input, &.has-error>textarea {
+        border-color:#f44336;
+    }
+    &.has-error:focus-within>label {
+        color:#f44336;
+    }
 }
 
 

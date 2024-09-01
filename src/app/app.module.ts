@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatMenuModule } from '@angular/material/menu';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { MatTooltipModule, MAT_TOOLTIP_SCROLL_STRATEGY } from '@angular/material/tooltip';
+import { MatTooltipModule, MAT_TOOLTIP_SCROLL_STRATEGY, MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
@@ -95,6 +95,11 @@ import { CopiedSnackbarComponent } from './copied-snackbar/copied-snackbar.compo
       floatLabels: 'always',
       color: 'accent'
     }
+  }, {
+      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+      useValue: {
+        disableTooltipInteractivity: true,
+      }
   }],
   bootstrap: [AppComponent]
 })
