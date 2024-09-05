@@ -27,6 +27,7 @@ const optimizeRelativeAbsolute = (svg: SvgPath) => {
 
 export const optimizePath = (svg: SvgPath, {
   removeUselessComponents = false,
+  removeOrphanDots = false,
   useShorthands = false,
   useHorizontalAndVerticalLines = false,
   useRelativeAbsolute = false,
@@ -34,6 +35,7 @@ export const optimizePath = (svg: SvgPath, {
 
 }: {
   removeUselessComponents?: boolean;
+  removeOrphanDots? : boolean; // Can have an impact on stroked paths
   useShorthands?: boolean;
   useHorizontalAndVerticalLines?: boolean;
   useRelativeAbsolute?: boolean;
@@ -54,7 +56,7 @@ export const optimizePath = (svg: SvgPath, {
         i--;
         continue;
       }
-      if((c0type === 'Z' || c0type === 'M') && c1type === 'Z') {
+      if( c0type === 'Z' && c1type === 'Z') {
         path.splice(i, 1);
         i--;
         continue;
@@ -74,6 +76,13 @@ export const optimizePath = (svg: SvgPath, {
           i--;
           continue;
         }
+      }
+    }
+    if(removeOrphanDots) {
+      if( c0type === 'M' && c1type === 'Z') {
+        path.splice(i, 1);
+        i--;
+        continue;
       }
     }
     if(useHorizontalAndVerticalLines) {
@@ -109,10 +118,19 @@ export const optimizePath = (svg: SvgPath, {
           path[i] = candidate;
         }
       }
+      if((c0type !== 'C' && c0type !== 'S') && c1type === 'C') {
+        if(c1.previousPoint.x === c1.absolutePoints[0].x && c1.previousPoint.y === c1.absolutePoints[0].y) {
+          const pt = toStr(c1.targetLocation());
+          const ctrl = toStr(c1.absolutePoints[1]);
+          path[i] = SvgItem.Make(['S', ...ctrl, ...pt]);
+          path[i].refresh(o, c0);
+        }
+      }
+
     }
   }
 
-  if(removeUselessComponents) {
+  if(removeUselessComponents || removeOrphanDots) {
     if(path.length>0 && path[path.length - 1].getType(true) === 'M') {
       path.splice(path.length - 1, 1);
     }
@@ -126,13 +144,13 @@ export const optimizePath = (svg: SvgPath, {
   }
 
   if(useReverse) {
-    const length = svg.asString(4, false).length;
+    const length = svg.asString(4, true).length;
     const nonReversed = svg.path;
     reversePath(svg);
     if(useRelativeAbsolute) {
       optimizeRelativeAbsolute(svg);
     }
-    const afterLength = svg.asString(4, false).length;
+    const afterLength = svg.asString(4, true).length;
     if(afterLength >= length) {
       svg.path = nonReversed;
     }
