@@ -46,7 +46,7 @@ describe('optimizePath', () => {
     optimizePath(svg, {
       removeUselessComponents: true
     });
-    expect(svg.asString()).toBe(f(`M 2 1 L 3 2 L 4 2 L 4 0 M 6 0 L 7 1 L 5 2 Z L 9 1
+    expect(svg.asString()).toBe(f(`M 2 1 L 3 2 L 4 2 L 4 0 M 6 0 Z L 7 1 L 5 2 Z L 9 1
       ${nonSimplifiable}
       M 7 4 L 4 5
       ${curveSection}
@@ -92,18 +92,20 @@ describe('optimizePath', () => {
   it('should use reverse', () => {
     const svg = new SvgPath(testSvg);
     optimizePath(svg, {
-      useReverse: true
+      useReverse: true,
     });
     expect(svg.asString()).toBe(f(`M 4 19 Q 4 17 2 17 Q 5 15 2 14 T 0 12
       C 1 11 0 10 2 10 C 3 10 0 9 2 8 C 3 7 3 8 4 7 S 3 6 4 5 L 7 4 Z
+      M 7 1 Z
       M 7 4 L 9 2 L 7 1 Z M 9 1 L 6 0 M 5 2 L 7 1 L 6 0 Z
+      M 6 0 Z
       M 4 0 L 4 2 L 3 2 L 2 1`));
   });
 
   it('should all options together', () => {
     const svg = new SvgPath(testSvg);
     optimizePath(svg, allOptimizations);
-    expect(svg.asString()).toBe(f(`M 2 1 L 3 2 H 4 V 0 M 6 0 L 7 1 L 5 2 Z L 9 1
+    expect(svg.asString()).toBe(f(`M 2 1 L 3 2 H 4 V 0 M 6 0 Z L 7 1 L 5 2 Z L 9 1
       ${nonSimplifiable}
       M 7 4 L 4 5
       C 3 6 5 6 4 7 S 3 7 2 8 c -2 1 1 2 0 2 c -2 0 -1 1 -2 2
