@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "build-prod": "ng build --configuration production --base-href=/svg-path-editor/",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "build-svg-lib": "rimraf src/lib/dist && tsc -p src/lib/tsconfig.esm.json && tsc -p src/lib/tsconfig.cjs.json && tsconfig-to-dual-package --cwd src/lib tsconfig.esm.json  tsconfig.cjs.json"
   },
   "private": true,
   "dependencies": {
@@ -23,7 +24,9 @@
     "@angular/platform-browser-dynamic": "^17.3.2",
     "@angular/router": "^17.3.2",
     "@angular/service-worker": "^17.3.2",
+    "rimraf": "^6.0.1",
     "rxjs": "~7.8.0",
+    "tsconfig-to-dual-package": "^1.2.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.4"
   },
