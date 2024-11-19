@@ -5,7 +5,8 @@
     "module": "commonjs",
     "declarationDir": "dist/cjs",
     "outDir": "dist/cjs",
-    "declaration": true
+    "declaration": true,
+    "importHelpers": false
   },
   "files": ["index.ts"],
   "exclude": ["node_modules", "*.spec.ts"]
