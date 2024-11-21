@@ -80,6 +80,7 @@ export class AppComponent implements AfterViewInit {
   isLeftPanelOpened = true;
   isContextualMenuOpened = false;
   isEditingImages = false;
+  isCapsLock = false;
 
   // Utility functions:
   max = Math.max;
@@ -100,6 +101,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   @HostListener('document:keydown', ['$event']) onKeyDown($event: KeyboardEvent) {
+    this.isCapsLock = $event.getModifierState('CapsLock');
     const tag = $event.target instanceof Element ? $event.target.tagName : null;
     if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
       if ($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
