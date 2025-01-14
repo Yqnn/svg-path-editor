@@ -47,7 +47,7 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - [Node.js](https://nodejs.org/) v18.13 or higher.
 
 ##### Dependencies
-Run `npm install` to retrieve all the depencies of the project.
+Run `npm install` to retrieve all the dependencies of the project.
 
 ##### Development server
 Run `npm start` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

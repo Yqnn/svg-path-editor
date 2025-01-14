@@ -120,7 +120,7 @@ export class AppComponent implements AfterViewInit {
             $event.preventDefault();
           }
         } else if (!isLower && this.focusedItem && this.canConvert(this.focusedItem, key)) {
-          // Item convertion
+          // Item conversion
           this.insert(key, this.focusedItem, true);
           $event.preventDefault();
         }
