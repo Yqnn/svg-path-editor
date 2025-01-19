@@ -32,7 +32,7 @@ describe('optimizePath', () => {
     expect(svg.asString()).toBe('M 4 4 l 1 1');
   });
 
-  it('should handle pathologic pathes', () => {
+  it('should handle pathologic paths', () => {
     const svg = new SvgPath('M 4 19 L 2 1 M 1 1');
     optimizePath(svg, allOptimizations);
     expect(svg.asString()).toBe('M 4 19 L 2 1');

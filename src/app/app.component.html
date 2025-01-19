@@ -8,7 +8,7 @@
         <div class="left-column" cdk-scrollable>
             <app-expandable panelTitle="Path" [panelInfo]="rawPath.length.toString()" [opened]="true">
                 <div class="row">
-                    <div class="input-block" style="flex-grow:1"  [class.has-error]="invalidSyntax"> 
+                    <div class="input-block" style="flex-grow:1"  [class.has-error]="invalidSyntax">
                         <label class="opaque">Path</label>
                         <textarea
                             [ngModel]="rawPath"
@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <div class="path-buttons">
-                    
+
                     <app-open (openPath)="openPath($event.path, $event.name)" style="margin-left: 6px;"></app-open>
                     <app-save [path]="rawPath" [(name)]="pathName"></app-save>
 
@@ -52,7 +52,7 @@
                     >
                         <mat-icon>add</mat-icon>
                     </button>
-                </div>            
+                </div>
             </app-expandable>
 
             <app-expandable panelTitle="Configuration" [opened]="true">
@@ -64,7 +64,7 @@
                             appFormatter
                             [numberValue]="cfg.viewPortX"
                             (numberValueChange)="updateViewPort($event, cfg.viewPortY, cfg.viewPortWidth, cfg.viewPortHeight)"
-                            [disabled]="cfg.viewPortLocked" 
+                            [disabled]="cfg.viewPortLocked"
                         >
                     </div>
                     <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
@@ -74,7 +74,7 @@
                             appFormatter
                             [numberValue]="cfg.viewPortY"
                             (numberValueChange)="updateViewPort(cfg.viewPortX, $event, cfg.viewPortWidth, cfg.viewPortHeight)"
-                            [disabled]="cfg.viewPortLocked" 
+                            [disabled]="cfg.viewPortLocked"
                         >
                     </div>
                     <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
@@ -85,7 +85,7 @@
                             formatterType="positive-float"
                             [numberValue]="cfg.viewPortWidth"
                             (numberValueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, $event, null)"
-                            [disabled]="cfg.viewPortLocked" 
+                            [disabled]="cfg.viewPortLocked"
                         >
                     </div>
                     <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
@@ -96,7 +96,7 @@
                             formatterType="positive-float"
                             [numberValue]="cfg.viewPortHeight"
                             (numberValueChange)="updateViewPort(cfg.viewPortX, cfg.viewPortY, null, $event)"
-                            [disabled]="cfg.viewPortLocked" 
+                            [disabled]="cfg.viewPortLocked"
                         >
                     </div>
 
@@ -138,7 +138,7 @@
                             class="app-input"
                             appFormatter
                             formatterType="positive-integer"
-                            [(numberValue)]="cfg.tickInterval" 
+                            [(numberValue)]="cfg.tickInterval"
                             [disabled]="!cfg.showTicks">
                     </div>
                 </div>
@@ -203,7 +203,7 @@
                         <input appFormatter suffix="°" [(numberValue)]="rotateAngle" class="app-input">
                     </div>
                     <button
-                        mat-flat-button 
+                        mat-flat-button
                         (click)="rotate(rotateX, rotateY, rotateAngle)"
                         style="flex:1"
                         matTooltip="Rotate the full path by the given angle in degrees about the given point"
@@ -218,7 +218,7 @@
                         <input appFormatter formatterType="positive-integer" [(numberValue)]="roundValuesDecimals" class="app-input">
                     </div>
                     <button
-                        mat-flat-button 
+                        mat-flat-button
                         (click)="roundValues(roundValuesDecimals)"
                         style="flex:1"
                         matTooltip="Round all values, input the number of decimals to keep"
@@ -228,13 +228,13 @@
                 </div>
 
                 <div class="row">
-                    <button mat-flat-button 
+                    <button mat-flat-button
                         (click)="setRelative(true)"
                         matTooltip="Convert all commands to relative"
                         style="flex:1"
                         class="mat-flat-button"
                     >Convert to relative</button>
-                    <button mat-flat-button 
+                    <button mat-flat-button
                         (click)="setRelative(false)"
                         matTooltip="Convert all commands to absolute"
                         style="flex:1"
@@ -242,13 +242,13 @@
                     >Convert to absolute</button>
                 </div>
                 <div class="row">
-                    <button mat-flat-button 
+                    <button mat-flat-button
                         (click)="reverse()"
-                        matTooltip="Reverve path commands"
+                        matTooltip="Reverse path commands"
                         style="flex:1"
                         class="mat-flat-button"
                     >Reverse</button>
-                    <button mat-flat-button 
+                    <button mat-flat-button
                         (click)="optimize()"
                         matTooltip="Optimize the path by removing useless components, changing types and reordering"
                         style="flex:1"
@@ -259,7 +259,7 @@
 
 
             <app-expandable panelTitle="Commands" [opened]="true">
-                <div *ngFor="let item of parsedPath.path; let j=index" 
+                <div *ngFor="let item of parsedPath.path; let j=index"
                     (mouseenter)="hoveredItem=item"
                     (mouseleave)="hoveredItem=null"
                     [ngClass]="{
@@ -291,7 +291,7 @@
                             appKeyboardNavigable
                             keyboardNavigableIdPrefix="svg_command"
                             appFormatter
-                            [numberValue]="value" 
+                            [numberValue]="value"
                             (numberValueChange)="setValue(item,i,$event);"
                             class="svg-value app-input"
                             id="svg_command_{{j}}_{{item.getType().toLowerCase()==='a' && i>4 ? i-1 : i}}"
@@ -404,7 +404,7 @@
                 matTooltip="Snap to Grid"
                 matTooltipPosition="left"
             >
-                <mat-icon> {{ cfg.snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon> 
+                <mat-icon> {{ cfg.snapToGrid ? 'grid_on' : 'grid_off' }}</mat-icon>
             </button>
             <button
                 mat-mini-fab
@@ -414,7 +414,7 @@
                 matTooltipPosition="left"
                 style="margin-top: 24px"
             >
-                <mat-icon svgIcon="zoom_in"></mat-icon> 
+                <mat-icon svgIcon="zoom_in"></mat-icon>
             </button>
             <button
                 mat-mini-fab
@@ -423,7 +423,7 @@
                 matTooltip="Zoom to Fit"
                 matTooltipPosition="left"
             >
-                <mat-icon svgIcon="zoom_fit"></mat-icon> 
+                <mat-icon svgIcon="zoom_fit"></mat-icon>
             </button>
             <button
                 mat-mini-fab
@@ -432,17 +432,17 @@
                 matTooltip="Zoom Out"
                 matTooltipPosition="left"
             >
-                <mat-icon svgIcon="zoom_out"></mat-icon> 
+                <mat-icon svgIcon="zoom_out"></mat-icon>
             </button>
         </div>
 
         <svg
-            xmlns="http://www.w3.org/2000/svg" 
+            xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
-            app-canvas 
+            app-canvas
             [attr.viewBox]="cfg.viewPortX+' '+cfg.viewPortY+' '+cfg.viewPortWidth+' '+cfg.viewPortHeight"
             [ngClass]="{preview:cfg.preview}"
-        
+
             [parsedPath]="parsedPath"
             [targetPoints]="targetPoints"
             [controlPoints]="controlPoints"

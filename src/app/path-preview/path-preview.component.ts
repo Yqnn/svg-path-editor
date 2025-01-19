@@ -26,8 +26,8 @@ export class PathPreviewComponent implements OnInit {
     }
   }
 
-  patternScale(containterWidth: number, containerHeight: number): number {
-    return Math.max((this.width??0) / containterWidth, (this.height??0) / containerHeight);
+  patternScale(containerWidth: number, containerHeight: number): number {
+    return Math.max((this.width??0) / containerWidth, (this.height??0) / containerHeight);
   }
 
 }
