@@ -272,6 +272,9 @@ Apache-2.0
  
 
 
+svg-path-editor-lib
+Apache-2.0
+
 zone.js
 MIT
 The MIT License
