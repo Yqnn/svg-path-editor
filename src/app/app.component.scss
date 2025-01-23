@@ -215,3 +215,14 @@ label.cursor-position {
     border-radius: 4px;
     pointer-events: none;
 }
+
+.caps-lock {
+  padding: 4px;
+  background-color: #383838;
+  color: white;
+  opacity: 0;
+  margin-right: 24px;
+  &.displayed {
+    opacity: 1;
+  }
+}
