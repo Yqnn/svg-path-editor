@@ -23,7 +23,9 @@ parsedPath.asString(
 )
 ```
 
-### Operations
+### Global operations
+
+All operations are performed in place.
 
 Scale:
 ```typescript
@@ -56,6 +58,12 @@ import { reversePath } from 'svg-path-editor-lib';
 reversePath(parsedPath);
 ```
 
+Change origin:
+```typescript
+import { changePathOrigin } from 'svg-path-editor-lib';
+changePathOrigin(parsedPath, indexOfNewOrigin);
+```
+
 Advanced optimizations:
 ```typescript
 import { optimizePath } from 'svg-path-editor-lib';
@@ -67,4 +75,46 @@ optimizePath(parsedPath, {
   useReverse,                    // default `false`
   removeOrphanDots ,             // default `false`, may be destructive
 });
+```
+
+
+### Local operations
+
+Use `parsedPath.path` to get an array of all path items.
+```typescript
+const item = parsedPath.path[0];
+```
+
+Insert after:
+```typescript
+// Insert a the end:
+parsedPath.insert(SvgItem.Make(['M', '1', '1']), item);
+// Insert after `item`:
+parsedPath.insert(SvgItem.Make(['M', '1', '1']), item);
+```
+
+Modify item:
+```typescript
+item.values[index] = val;
+parsedPath.refreshAbsolutePositions();
+```
+
+Convert to relative:
+```typescript
+item.setRelative(true);
+```
+
+Convert to absolute:
+```typescript
+item.setRelative(false);
+```
+
+Convert to another type:
+```typescript
+parsedPath.changeType(item, 'L');
+```
+
+Remove item:
+```typescript
+parsedPath.delete(item);
 ```
