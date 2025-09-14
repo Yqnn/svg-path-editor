@@ -339,6 +339,11 @@
             {{cursorPosition.y.toFixed(cursorPosition.decimals)}}
         </label>
 
+        <label class="hover-position" *ngIf="!cursorPosition && hoverPosition && !isEditingImages" >
+            {{hoverPosition.x.toFixed(3)}},
+            {{hoverPosition.y.toFixed(3)}}
+        </label>
+
         <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
             color="accent"
             class="add-button"
@@ -472,6 +477,7 @@
             [images]="images"
             [(focusedImage)]="focusedImage"
             (cursorPosition)="setCursorPosition($event)"
+            (hoverPosition)="setHoverPosition($event)"
         ></svg>
     </div>
 </div>

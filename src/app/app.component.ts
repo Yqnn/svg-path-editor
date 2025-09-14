@@ -72,6 +72,7 @@ export class AppComponent implements AfterViewInit {
   draggedIsNew = false;
   dragging = false;
 	cursorPosition?: Point & {decimals?: number};
+	hoverPosition?: Point;
 
   // Images
   images: Image[] = [];
@@ -174,6 +175,10 @@ export class AppComponent implements AfterViewInit {
 
 	setCursorPosition(position?: Point & {decimals?: number}) {
 		this.cursorPosition = position;
+	}
+
+	setHoverPosition(position?: Point) {
+		this.hoverPosition = position;
 	}
 
   setHistoryDisabled(value: boolean) {
