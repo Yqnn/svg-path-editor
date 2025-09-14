@@ -339,6 +339,11 @@
             {{cursorPosition.y.toFixed(cursorPosition.decimals)}}
         </label>
 
+        <label class="hover-position" *ngIf="!cursorPosition && hoverPosition && !isEditingImages" >
+            {{hoverPosition.x.toFixed(3)}},
+            {{hoverPosition.y.toFixed(3)}}
+        </label>
+
         <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
             color="accent"
             class="add-button"
@@ -472,6 +477,7 @@
             [images]="images"
             [(focusedImage)]="focusedImage"
             (cursorPosition)="setCursorPosition($event)"
+            (hoverPosition)="setHoverPosition($event)"
         ></svg>
     </div>
 </div>
@@ -502,6 +508,10 @@
             <mat-icon>swap_horiz</mat-icon>
             <ng-container *ngIf="item.relative">Set Absolute</ng-container>
             <ng-container *ngIf="!item.relative">Set Relative</ng-container>
+        </button>
+        <button mat-menu-item (click)="useAsOrigin(item)" [disabled]="!canUseAsOrigin(item)">
+            <mat-icon>vertical_align_top</mat-icon>
+            Start Path From Here
         </button>
         <button mat-menu-item (click)="delete(item)" [disabled]="!canDelete(item)">
             <mat-icon>delete</mat-icon> Delete

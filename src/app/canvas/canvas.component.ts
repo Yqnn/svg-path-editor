@@ -51,6 +51,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   @Output() afterModelChange = new EventEmitter<void>();
   @Output() dragging = new EventEmitter<boolean>();
   @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number | null, force?: boolean}>();
+  @Output() hoverPosition = new EventEmitter<{x: number, y: number} | undefined>();
 	@Output() cursorPosition = new EventEmitter<Point & {decimals?: number} | undefined>();
 
   @Output() emptyCanvas = new EventEmitter<void>();
@@ -233,6 +234,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     this.dragging.emit(true);
+    this.setCursorPosition({...item, decimals: this.decimals});
+
     if (item.itemReference.getType().toLowerCase() === 'z') {
       return;
     }
@@ -259,11 +262,11 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       this.drag(this.draggedEvt);
     }
     this.dragging.emit(false);
-    this.setCursorPosition(undefined);
 
     if (!this.draggedPoint && !this.wasCanvasDragged) {
       // unselect action
       this.focusedItem = null;
+      this.setCursorPosition(undefined);
     }
     if (!this.draggedImage && !this.wasCanvasDragged) {
       this.focusedImage = null;
@@ -277,6 +280,9 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   drag(event: MouseEvent | TouchEvent) {
+    const pt = this.eventToLocation(event);
+    this.hoverPosition.emit(pt);
+
     if (this.draggedPoint || this.draggedEvt || this.draggedImage) {
 
       if (!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
@@ -286,7 +292,6 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
       }
 
       event.stopPropagation();
-      const pt = this.eventToLocation(event);
       if (this.draggedImage && this.draggedEvt) {
         const oriPt = this.eventToLocation(this.draggedEvt);
         /* eslint-disable no-bitwise */
@@ -321,6 +326,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
         this.setCursorPosition({...pt, decimals});
       } else if(this.draggedEvt) {
         this.wasCanvasDragged = true;
+        this.hoverPosition.emit(undefined);
+
         const pinchToZoom = this.pinchToZoom(this.draggedEvt, event);
         if (pinchToZoom !== null){
           const w = pinchToZoom.zoom * this.viewPortWidth;
