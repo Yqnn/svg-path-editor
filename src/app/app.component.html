@@ -503,6 +503,10 @@
             <ng-container *ngIf="item.relative">Set Absolute</ng-container>
             <ng-container *ngIf="!item.relative">Set Relative</ng-container>
         </button>
+        <button mat-menu-item (click)="useAsOrigin(item)" [disabled]="!canUseAsOrigin(item)">
+            <mat-icon>vertical_align_top</mat-icon>
+            Start Path From Here
+        </button>
         <button mat-menu-item (click)="delete(item)" [disabled]="!canDelete(item)">
             <mat-icon>delete</mat-icon> Delete
         </button>

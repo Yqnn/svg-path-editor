@@ -11,6 +11,7 @@ import { ConfigService } from './config.service';
 import { browserComputePathBoundingBox } from './svg-bbox';
 import { reversePath } from '../lib/reverse-path';
 import { optimizePath } from '../lib/optimize-path';
+import { changePathOrigin } from 'src/lib/change-path-origin';
 
 export const kDefaultPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 `
 + `A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 `
@@ -372,6 +373,12 @@ export class AppComponent implements AfterViewInit {
     this.afterModelChange();
   }
 
+  useAsOrigin(item: SvgItem) {
+    const idx = this.parsedPath.path.indexOf(item);
+    changePathOrigin(this.parsedPath, idx);
+    this.afterModelChange();
+  }
+
   afterModelChange() {
     this.reloadPoints();
     this.rawPath = this.parsedPath.asString(4, this.cfg.minifyOutput);
@@ -418,6 +425,10 @@ export class AppComponent implements AfterViewInit {
       return this.canInsertAfter(this.parsedPath.path[idx - 1], to);
     }
     return false;
+  }
+  canUseAsOrigin(item: SvgItem) {
+    return item.getType().toUpperCase() !== 'Z'
+      && this.parsedPath.path.indexOf(item) > 1;
   }
 
   getTooltip(item: SvgItem, idx: number): string {

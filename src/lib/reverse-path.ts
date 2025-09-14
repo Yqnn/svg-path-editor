@@ -1,7 +1,7 @@
 import { Point, SvgPath, SvgItem } from "./svg";
 import { optimizePath } from "./optimize-path";
 
-const toStr = (pt: Point) => {
+const toStr = (pt: Point): [string, string] => {
   return [String(pt.x), String(pt.y)];
 };
 
