@@ -42,6 +42,10 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Press **ctrl** + **shift** + **z** or **cmd** + **shift** + **z** to redo
 - Press **ctrl** while dragging to ignore `snap to grid` constraint
 
+## Library
+
+The library that powers the app is now available as a standalone package: [`svg-path-editor-lib`](https://www.npmjs.com/package/svg-path-editor-lib).
+
 ## Running Locally
 
 ### With Node.js
@@ -60,9 +64,6 @@ Run `npm run build` to build the project. The build artifacts will be stored in 
 
 ##### Running unit tests
 Run `npm test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-### With Docker
-Run `docker build -t svg-path-editor . && docker run -p 4200:4200 svg-path-editor` or `docker-compose up`.
 
 ## Special Thanks
 Many thanks to our sponsors 🙇 !

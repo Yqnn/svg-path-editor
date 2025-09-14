@@ -2,19 +2,20 @@
   "author": "Yann Armelin",
   "name": "svg-path-editor-lib",
   "description": "The library powering Yqnn SvgPathEditor.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/Yqnn/svg-path-editor/tree/master/src/lib",
   "repository": {
     "type": "git",
     "url": "git://github.com/Yqnn/svg-path-editor.git"
   },
-  "main": "./dist/cjs/index.js",
+  "main": "./dist/index.js",
   "files": [
     "dist/**",
     "index.ts",
     "optimize-path.ts",
     "path-parser.ts",
     "reverse-path.ts",
+    "change-path-origin.ts",
     "svg.ts"
   ],
   "funding": {
@@ -22,15 +23,15 @@
   },
   "exports": {
     "import": {
-      "default": "./dist/esm/index.js",
-      "types": "./dist/esm/index.d.ts"
+      "default": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     },
     "require": {
-      "default": "./dist/cjs/index.js",
-      "types": "./dist/cjs/index.d.ts"
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
-  "types": "./dist/cjs/index.d.ts",
+  "types": "./dist/index.d.ts",
   "keywords": [
     "svg",
     "path",
