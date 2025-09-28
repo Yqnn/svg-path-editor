@@ -2,7 +2,7 @@
   "author": "Yann Armelin",
   "name": "svg-path-editor-lib",
   "description": "The library powering Yqnn SvgPathEditor.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "homepage": "https://github.com/Yqnn/svg-path-editor/tree/master/src/lib",
   "repository": {
     "type": "git",
