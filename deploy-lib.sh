@@ -5,7 +5,7 @@ set -e
 git clone "https://github.com/Yqnn/svg-path-editor.git" .svg-path-editor-master
 cd .svg-path-editor-master
 npm install
-npm run build-svg-lib
+npm run build-lib
 cd src/lib
 npm publish
 TAG=`npm pkg get version | tr -d \"`
