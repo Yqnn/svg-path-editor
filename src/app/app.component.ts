@@ -354,7 +354,7 @@ export class AppComponent implements AfterViewInit {
 
   optimize() {
     optimizePath(this.parsedPath, {
-      removeUselessComponents: true,
+      removeUselessCommands: true,
       useHorizontalAndVerticalLines: true,
       useRelativeAbsolute: true,
       useReverse: true,
@@ -378,10 +378,18 @@ export class AppComponent implements AfterViewInit {
     this.afterModelChange();
   }
 
-  useAsOrigin(item: SvgItem) {
+  useAsOrigin(item: SvgItem, subpathOnly?: boolean) {
     const idx = this.parsedPath.path.indexOf(item);
-    changePathOrigin(this.parsedPath, idx);
+    changePathOrigin(this.parsedPath, idx, subpathOnly);
     this.afterModelChange();
+    this.focusedItem = null;
+  }
+
+  reverseSubPath(item: SvgItem) {
+    const idx = this.parsedPath.path.indexOf(item);
+    reversePath(this.parsedPath, idx);
+    this.afterModelChange();
+    this.focusedItem = null;
   }
 
   afterModelChange() {
@@ -431,9 +439,22 @@ export class AppComponent implements AfterViewInit {
     }
     return false;
   }
-  canUseAsOrigin(item: SvgItem) {
+  canUseAsOrigin(item: SvgItem): boolean {
     return item.getType().toUpperCase() !== 'Z'
       && this.parsedPath.path.indexOf(item) > 1;
+  }
+
+  hasSubPaths(): boolean {
+    let moveCount = 0;
+    for(const command of this.parsedPath.path) {
+      if(command.getType(true) === 'M') {
+        moveCount ++;
+        if(moveCount == 2) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   getTooltip(item: SvgItem, idx: number): string {

@@ -68,12 +68,13 @@ Advanced optimizations:
 ```typescript
 import { optimizePath } from 'svg-path-editor-lib';
 optimizePath(parsedPath, {
-  removeUselessComponents,       // default `false`
+  removeUselessCommands,         // default `false`
   useShorthands,                 // default `false`
   useHorizontalAndVerticalLines, // default `false`
   useRelativeAbsolute,           // default `false`
   useReverse,                    // default `false`
-  removeOrphanDots ,             // default `false`, may be destructive
+  removeOrphanDots,              // default `false`, may be destructive for stroked paths
+  useClosePath,                  // default `false`, may be destructive for stroked paths
 });
 ```
 
@@ -88,7 +89,7 @@ const item = parsedPath.path[0];
 Insert after:
 ```typescript
 // Insert a the end:
-parsedPath.insert(SvgItem.Make(['M', '1', '1']), item);
+parsedPath.insert(SvgItem.Make(['M', '1', '1']));
 // Insert after `item`:
 parsedPath.insert(SvgItem.Make(['M', '1', '1']), item);
 ```

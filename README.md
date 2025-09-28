@@ -17,6 +17,8 @@ Edit or create SVG paths in browser: https://yqnn.github.io/svg-path-editor/
 - Click on **...** then **Insert after** to insert a new command right after the selected one
 - Click on **...** then **Convert to** to convert the selected command to a new type
 - Click on **...** then **Start Path From Here** to reorder the path so that the selected command becomes first
+- Click on **...** then **Start Subpath From Here** to reorder the path so that the selected command becomes first in its subpath
+- Click on **...** then **Reverse Subpath** to reverse the command order in the subpath of the selected command
 
 ##### ViewBox:
 - Use mouse wheel, or click **Zoom in** and **Zoom out** to zoom in/out
