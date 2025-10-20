@@ -1,17 +1,27 @@
 import { Point, SvgPath, SvgItem } from "./svg";
 import { optimizePath } from "./optimize-path";
+import { getSubPathBounds } from "./get-sub-path-bounds";
 
-const toStr = (pt: Point) => {
+const toStr = (pt: Point): [string, string] => {
   return [String(pt.x), String(pt.y)];
 };
 
-export const reversePath = (svg: SvgPath)=> {
-  if(svg.path.length <= 1) {
+
+export const reversePath = (svg: SvgPath, subpathOfItem?: number)=> {
+  const {start, end} = getSubPathBounds(svg, subpathOfItem);
+
+  if((end - start) <= 1) {
     return;
   }
 
+  const isBeforeRelative = end < svg.path.length && svg.path[end].relative;
+  if(isBeforeRelative) {
+    svg.path[end].setRelative(false);
+  }
+
+  const subPath = svg.path.slice(start, end);
   const outputPath: SvgItem[] = [];
-  const reversedPath = [...svg.path].reverse().slice(0, -1);
+  const reversedPath = [...subPath].reverse().slice(0, -1);
 
   const startPoint = reversedPath[0].targetLocation();
   outputPath.push(SvgItem.Make(['M', ...toStr(startPoint)]));
@@ -77,11 +87,18 @@ export const reversePath = (svg: SvgPath)=> {
   if(isClosed) {
     outputPath.push(SvgItem.Make(['Z']));
   }
-  svg.path = outputPath;
+  svg.path = [
+    ...svg.path.slice(0, start),
+    ...outputPath,
+    ...svg.path.slice(end),
+  ];
   svg.refreshAbsolutePositions();
+  if(isBeforeRelative) {
+    svg.path[start + outputPath.length].setRelative(true);
+  }
 
   optimizePath(svg, {
-    removeUselessComponents: true,
+    removeUselessCommands: true,
     useShorthands: true
   });
 };

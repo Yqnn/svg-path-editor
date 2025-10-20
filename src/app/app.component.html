@@ -339,6 +339,11 @@
             {{cursorPosition.y.toFixed(cursorPosition.decimals)}}
         </label>
 
+        <label class="hover-position" *ngIf="!cursorPosition && hoverPosition && !isEditingImages" >
+            {{hoverPosition.x.toFixed(3)}},
+            {{hoverPosition.y.toFixed(3)}}
+        </label>
+
         <button mat-mini-fab *ngIf="(focusedImage && !cfg.preview && !dragging)"
             color="accent"
             class="add-button"
@@ -472,6 +477,7 @@
             [images]="images"
             [(focusedImage)]="focusedImage"
             (cursorPosition)="setCursorPosition($event)"
+            (hoverPosition)="setHoverPosition($event)"
         ></svg>
     </div>
 </div>
@@ -495,13 +501,25 @@
             Insert After
         </button>
         <button mat-menu-item [matMenuTriggerFor]="appCreate" [matMenuTriggerData]="{item:item, idx:idx, convert:true}">
-            <mat-icon>swap_horiz</mat-icon>
+            <mat-icon>autorenew</mat-icon>
             Convert To
         </button>
         <button mat-menu-item (click)="item.setRelative(!item.relative); afterModelChange();">
-            <mat-icon>swap_horiz</mat-icon>
+            <mat-icon>autorenew</mat-icon>
             <ng-container *ngIf="item.relative">Set Absolute</ng-container>
             <ng-container *ngIf="!item.relative">Set Relative</ng-container>
+        </button>
+        <button mat-menu-item (click)="useAsOrigin(item)" [disabled]="!canUseAsOrigin(item)">
+            <mat-icon>vertical_align_top</mat-icon>
+            Start Path From Here
+        </button>
+        <button mat-menu-item (click)="useAsOrigin(item, true)" [disabled]="!canUseAsOrigin(item) || !hasSubPaths()">
+            <mat-icon>vertical_align_top</mat-icon>
+            Start Subpath From Here
+        </button>
+        <button mat-menu-item (click)="reverseSubPath(item)" [disabled]="!hasSubPaths()">
+            <mat-icon>swap_vert</mat-icon>
+            Reverse Subpath
         </button>
         <button mat-menu-item (click)="delete(item)" [disabled]="!canDelete(item)">
             <mat-icon>delete</mat-icon> Delete

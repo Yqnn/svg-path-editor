@@ -26,30 +26,37 @@ const optimizeRelativeAbsolute = (svg: SvgPath) => {
 }
 
 export const optimizePath = (svg: SvgPath, {
-  removeUselessComponents = false,
+  removeUselessCommands = false,
   removeOrphanDots = false,
   useShorthands = false,
   useHorizontalAndVerticalLines = false,
   useRelativeAbsolute = false,
   useReverse = false,
-
+  useClosePath = false,
 }: {
-  removeUselessComponents?: boolean;
+  removeUselessCommands?: boolean;
   removeOrphanDots? : boolean; // Can have an impact on stroked paths
   useShorthands?: boolean;
   useHorizontalAndVerticalLines?: boolean;
   useRelativeAbsolute?: boolean;
   useReverse?: boolean;
+  useClosePath?: boolean;
 }) => {
   const path = svg.path;
   const o = new Point(0,0);
+  let initialPt = new Point(0,0);
   for(let i=1 ; i<path.length ; ++i) {
+
     const c0 = path[i-1];
     const c1 = path[i];
     const c0type = c0.getType(true);
     const c1type = c1.getType(true);
 
-    if(removeUselessComponents) {
+    if(c0type === 'M') {
+      initialPt = c0.targetLocation();
+    }
+
+    if(removeUselessCommands) {
       if(c0type === 'M' && c1type === 'M') {
         c1.setRelative(false);
         path.splice(i-1, 1);
@@ -128,14 +135,23 @@ export const optimizePath = (svg: SvgPath, {
       }
 
     }
+    if(useClosePath) {
+      if(c1type === 'L' || c1type === 'H' || c1type === 'V') {
+        const target = c1.targetLocation();
+        if(initialPt.x === target.x && initialPt.y === target.y) {
+          path[i] = SvgItem.Make(['Z']);
+          path[i].refresh(initialPt, c0);
+        }
+      }
+    }
   }
 
-  if(removeUselessComponents || removeOrphanDots) {
+  if(removeUselessCommands || removeOrphanDots) {
     if(path.length>0 && path[path.length - 1].getType(true) === 'M') {
       path.splice(path.length - 1, 1);
     }
 
-    // With removeUselessComponents, links to previous items may become dirty:
+    // With removeUselessCommands, links to previous items may become dirty:
     svg.refreshAbsolutePositions();
   }
 

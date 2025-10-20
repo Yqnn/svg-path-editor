@@ -17,7 +17,7 @@ const testSvg = `${uselessMovesSection}
 
 const allOptimizations =  {
   useReverse: true,
-  removeUselessComponents: true,
+  removeUselessCommands: true,
   useHorizontalAndVerticalLines: true,
   useRelativeAbsolute: true,
   useShorthands: true
@@ -27,7 +27,7 @@ describe('optimizePath', () => {
   it('should handle relative components', () => {
     const svg = new SvgPath(`M 3 2 m 1 0 m 0 1 m 0 1 l 1 1`);
     optimizePath(svg, {
-      removeUselessComponents: true
+      removeUselessCommands: true
     });
     expect(svg.asString()).toBe('M 4 4 l 1 1');
   });
@@ -44,7 +44,7 @@ describe('optimizePath', () => {
   it('should remove useless components', () => {
     const svg = new SvgPath(testSvg);
     optimizePath(svg, {
-      removeUselessComponents: true
+      removeUselessCommands: true
     });
     expect(svg.asString()).toBe(f(`M 2 1 L 3 2 L 4 2 L 4 0 M 6 0 Z L 7 1 L 5 2 Z L 9 1
       ${nonSimplifiable}
@@ -100,6 +100,14 @@ describe('optimizePath', () => {
       M 7 4 L 9 2 L 7 1 Z M 9 1 L 6 0 M 5 2 L 7 1 L 6 0 Z
       M 6 0 Z
       M 4 0 L 4 2 L 3 2 L 2 1`));
+  });
+
+  it('should use close path', () => {
+    const svg = new SvgPath('M 5 5 L 8 5 L 5 2 V 5 L 5 7 L 3 5 H 5 L 8 7 L 7 8 L 5 5');
+    optimizePath(svg, {
+      useClosePath: true,
+    });
+    expect(svg.asString()).toBe('M 5 5 L 8 5 L 5 2 Z L 5 7 L 3 5 Z L 8 7 L 7 8 Z');
   });
 
   it('should all options together', () => {

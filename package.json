@@ -9,7 +9,7 @@
     "build-prod": "ng build --configuration production --base-href=/svg-path-editor/",
     "test": "ng test",
     "lint": "ng lint",
-    "build-svg-lib": "rimraf src/lib/dist && tsc -p src/lib/tsconfig.esm.json && tsc -p src/lib/tsconfig.cjs.json && tsconfig-to-dual-package --cwd src/lib tsconfig.esm.json  tsconfig.cjs.json"
+    "build-lib": "rimraf ./src/lib/dist &&  tsdown"
   },
   "private": true,
   "dependencies": {
@@ -48,7 +48,7 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.0.0",
     "rimraf": "^6.0.1",
-    "typescript": "~5.4.3",
-    "tsconfig-to-dual-package": "^1.2.0"
+    "tsdown": "^0.15.1",
+    "typescript": "~5.4.3"
   }
 }

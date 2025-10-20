@@ -202,7 +202,7 @@ textarea {
     }
 }
 
-label.cursor-position {
+label.cursor-position, label.hover-position {
     position: absolute;
     font-size: 1.5em;
     font-family: monospace;
@@ -214,4 +214,12 @@ label.cursor-position {
     color:#111111;
     border-radius: 4px;
     pointer-events: none;
+}
+
+label.hover-position {
+    display:none;
+    opacity:0.7;
+}
+.drawings:hover label.hover-position {
+    display: block;
 }

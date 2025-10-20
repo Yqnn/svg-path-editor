@@ -8,7 +8,6 @@ describe('reversePath', () => {
     const svg = new SvgPath('M 5 2 L 9 2 L 9 6 Z L 1 7 L 4 9 Z L 6 9 L 8 7 Z');
     reversePath(svg); 
     expect(svg.asString()).toBe('M 8 7 L 6 9 L 5 2 Z M 4 9 L 1 7 L 5 2 Z M 9 6 L 9 2 L 5 2 Z');
-
   });
 
   it('should reverse complex path', () => {
@@ -31,5 +30,17 @@ describe('reversePath', () => {
     const svg = new SvgPath('M 2 2 C 3 1 5 1 6 2 S 7 5 6 6 C 6 7 3 9 2 6');
     reversePath(svg); 
     expect(svg.asString()).toBe('M 2 6 C 3 9 6 7 6 6 C 7 5 7 3 6 2 S 3 1 2 2');
+  });
+
+  it('should reverse subpath', () => {
+    const svg = new SvgPath('M 3 4 L 4 4 L 4 5 L 3 5 Z M 5 5 L 6 4 L 7 4 L 8 5 L 8 6 L 7 7 L 6 7 L 5 6 Z M 9 6 L 10 6 L 10 7 L 9 7 Z');
+    reversePath(svg, 8); 
+    expect(svg.asString()).toBe('M 3 4 L 4 4 L 4 5 L 3 5 Z M 5 6 L 6 7 L 7 7 L 8 6 L 8 5 L 7 4 L 6 4 L 5 5 Z M 9 6 L 10 6 L 10 7 L 9 7 Z');
+  });
+
+  it('should preserve relative moveTo', () => {
+    const svg = new SvgPath('M 3 4 L 4 4 L 4 5 L 3 5 Z M 5 5 L 6 4 L 7 4 L 8 5 L 8 6 L 7 7 L 6 7 L 5 6 Z m 9 6 L 10 6 L 10 7 L 9 7 Z');
+    reversePath(svg, 8); 
+    expect(svg.asString()).toBe('M 3 4 L 4 4 L 4 5 L 3 5 Z M 5 6 L 6 7 L 7 7 L 8 6 L 8 5 L 7 4 L 6 4 L 5 5 Z m 9 5 L 10 6 L 10 7 L 9 7 Z');
   });
 });
