@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, HostListener, ViewChild } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SvgPath, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from '../lib/svg';
+import type { SvgCommandType, SvgCommandTypeAny } from '../lib/svg-command-types';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { StorageService } from './storage.service';
@@ -12,6 +13,7 @@ import { browserComputePathBoundingBox } from './svg-bbox';
 import { reversePath } from '../lib/reverse-path';
 import { optimizePath } from '../lib/optimize-path';
 import { changePathOrigin } from 'src/lib/change-path-origin';
+import { KEYBOARD } from './constants/keyboard.const';
 
 export const kDefaultPath = `M 4 8 L 10 1 L 13 0 L 12 3 L 5 9 C 6 10 6 11 7 10 C 7 11 8 12 7 12 A 1.42 1.42 0 0 1 6 13 `
 + `A 5 5 0 0 0 4 10 Q 3.5 9.9 3.5 10.5 T 2 11.8 T 1.2 11 T 2.5 9.5 T 3 9 A 5 5 90 0 0 0 7 A 1.42 1.42 0 0 1 1 6 `
@@ -104,15 +106,15 @@ export class AppComponent implements AfterViewInit {
   @HostListener('document:keydown', ['$event']) onKeyDown($event: KeyboardEvent) {
     const tag = $event.target instanceof Element ? $event.target.tagName : null;
     if (tag !== 'INPUT' && tag !== 'TEXTAREA') {
-      if ($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
+      if ($event.shiftKey && ($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === KEYBOARD.KEYS.UNDO) {
         this.redo();
         $event.preventDefault();
-      } else if (($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === 'z') {
+      } else if (($event.metaKey || $event.ctrlKey) && $event.key.toLowerCase() === KEYBOARD.KEYS.UNDO) {
         this.undo();
         $event.preventDefault();
-      } else if (!$event.metaKey && !$event.ctrlKey && /^[mlvhcsqtaz]$/i.test($event.key)) {
+      } else if (!$event.metaKey && !$event.ctrlKey && KEYBOARD.PATTERNS.SVG_COMMAND.test($event.key)) {
         const isLower = $event.key === $event.key.toLowerCase();
-        const key = $event.key.toUpperCase();
+        const key = $event.key.toUpperCase() as SvgCommandType;
         if (isLower) {
           // Item insertion
           const lastItem = this.parsedPath.path.length ?  this.parsedPath.path[this.parsedPath.path.length - 1] : null;
@@ -126,7 +128,7 @@ export class AppComponent implements AfterViewInit {
           this.insert(key, this.focusedItem, true);
           $event.preventDefault();
         }
-      } else if (!$event.metaKey && !$event.ctrlKey && $event.key === 'Escape') {
+      } else if (!$event.metaKey && !$event.ctrlKey && $event.key === KEYBOARD.KEYS.ESCAPE) {
         if (this.dragging) {
           // If an element is being dragged, undo by reloading the current history entry
           this.reloadPath(this.history[this.historyCursor]);
@@ -135,7 +137,7 @@ export class AppComponent implements AfterViewInit {
           this.canvas.stopDrag();
         }
         $event.preventDefault();
-      } else if (!$event.metaKey && !$event.ctrlKey && ($event.key === 'Delete' || $event.key === 'Backspace')) {
+      } else if (!$event.metaKey && !$event.ctrlKey && ($event.key === KEYBOARD.KEYS.DELETE || $event.key === KEYBOARD.KEYS.BACKSPACE)) {
         if (this.focusedItem && this.canDelete(this.focusedItem)) {
           this.delete(this.focusedItem);
           $event.preventDefault();
@@ -243,11 +245,11 @@ export class AppComponent implements AfterViewInit {
     this.strokeWidth = this.cfg.viewPortWidth / this.canvasWidth;
   }
 
-  insert(type: string, after: SvgItem | null, convert: boolean) {
+  insert(type: SvgCommandTypeAny, after: SvgItem | null, convert: boolean) {
     if (convert) {
       if(after) {
         this.focusedItem =
-          this.parsedPath.changeType(after, after.relative ? type.toLowerCase() : type);
+          this.parsedPath.changeType(after, (after.relative ? type.toLowerCase() as SvgCommandTypeAny : type));
         this.afterModelChange();
       }
     } else {
@@ -405,12 +407,12 @@ export class AppComponent implements AfterViewInit {
     const idx = this.parsedPath.path.indexOf(item);
     return idx > 0;
   }
-  canInsertAfter(item: SvgItem | null, type: string): boolean {
-    let previousType: string | null = null;
+  canInsertAfter(item: SvgItem | null, type: SvgCommandType): boolean {
+    let previousType: SvgCommandType | null = null;
     if (item !== null) {
-      previousType = item.getType().toUpperCase();
+      previousType = item.getType().toUpperCase() as SvgCommandType;
     } else if (this.parsedPath.path.length > 0) {
-      previousType = this.parsedPath.path[this.parsedPath.path.length - 1].getType().toUpperCase();
+      previousType = this.parsedPath.path[this.parsedPath.path.length - 1].getType().toUpperCase() as SvgCommandType;
     }
     if (!previousType) {
       return type !== 'Z';
@@ -429,7 +431,7 @@ export class AppComponent implements AfterViewInit {
     }
     return type !== 'T' && type !== 'S';
   }
-  canConvert(item: SvgItem, to: string): boolean {
+  canConvert(item: SvgItem, to: SvgCommandType): boolean {
     const idx = this.parsedPath.path.indexOf(item) ;
     if (idx === 0) {
       return false;
@@ -458,27 +460,30 @@ export class AppComponent implements AfterViewInit {
   }
 
   getTooltip(item: SvgItem, idx: number): string {
-    const labels: {[key: string]: string[]} = {
-      M: ['x', 'y'],
-      m: ['dx', 'dy'],
-      L: ['x', 'y'],
-      l: ['dx', 'dy'],
-      V: ['y'],
-      v: ['dy'],
-      H: ['x'],
-      h: ['dx'],
-      C: ['x1', 'y1', 'x2', 'y2', 'x', 'y'],
-      c: ['dx1', 'dy1', 'dx2', 'dy2', 'dx', 'dy'],
-      S: ['x2', 'y2', 'x', 'y'],
-      s: ['dx2', 'dy2', 'dx', 'dy'],
-      Q: ['x1', 'y1', 'x', 'y'],
-      q: ['dx1', 'dy1', 'dx', 'dy'],
-      T: ['x', 'y'],
-      t: ['dx', 'dy'],
-      A: ['rx', 'ry', 'x-axis-rotation', 'large-arc-flag', 'sweep-flag', 'x', 'y'],
-      a: ['rx', 'ry', 'x-axis-rotation', 'large-arc-flag', 'sweep-flag', 'dx', 'dy']
+    const labels: Record<SvgCommandTypeAny, string[]> = {
+      'M': ['x', 'y'],
+      'm': ['dx', 'dy'],
+      'L': ['x', 'y'],
+      'l': ['dx', 'dy'],
+      'V': ['y'],
+      'v': ['dy'],
+      'H': ['x'],
+      'h': ['dx'],
+      'C': ['x1', 'y1', 'x2', 'y2', 'x', 'y'],
+      'c': ['dx1', 'dy1', 'dx2', 'dy2', 'dx', 'dy'],
+      'S': ['x2', 'y2', 'x', 'y'],
+      's': ['dx2', 'dy2', 'dx', 'dy'],
+      'Q': ['x1', 'y1', 'x', 'y'],
+      'q': ['dx1', 'dy1', 'dx', 'dy'],
+      'T': ['x', 'y'],
+      't': ['dx', 'dy'],
+      'A': ['rx', 'ry', 'x-axis-rotation', 'large-arc-flag', 'sweep-flag', 'x', 'y'],
+      'a': ['rx', 'ry', 'x-axis-rotation', 'large-arc-flag', 'sweep-flag', 'dx', 'dy'],
+      'Z': [],
+      'z': []
     };
-    return labels[item.getType()][idx];
+    const commandType = item.getType() as SvgCommandTypeAny;
+    return labels[commandType][idx];
   }
 
   openPath(newPath: string, name: string): void {

@@ -1,4 +1,5 @@
 import { PathParser } from './path-parser';
+import type { SvgCommandType, SvgCommandTypeAny, SvgCommandTypeRelative } from './svg-command-types';
 
 export function formatNumber(v: number, d: number, minify = false): string {
     let result = v.toFixed(d)
@@ -56,41 +57,42 @@ export abstract class SvgItem {
         let result: SvgItem | undefined = undefined;
         const relative = rawItem[0].toUpperCase() !== rawItem[0];
         const values = rawItem.slice(1).map( it => parseFloat(it) );
-        switch (rawItem[0].toUpperCase()) {
-            case MoveTo.key: result = new MoveTo(values, relative); break;
-            case LineTo.key: result = new LineTo(values, relative); break;
-            case HorizontalLineTo.key: result = new HorizontalLineTo(values, relative); break;
-            case VerticalLineTo.key: result = new VerticalLineTo(values, relative); break;
-            case ClosePath.key: result = new ClosePath(values, relative); break;
-            case CurveTo.key: result = new CurveTo(values, relative); break;
-            case SmoothCurveTo.key: result = new SmoothCurveTo(values, relative); break;
-            case QuadraticBezierCurveTo.key: result = new QuadraticBezierCurveTo(values, relative); break;
-            case SmoothQuadraticBezierCurveTo.key: result = new SmoothQuadraticBezierCurveTo(values, relative); break;
-            case EllipticalArcTo.key: result = new EllipticalArcTo(values, relative); break;
+        const commandType = rawItem[0].toUpperCase() as SvgCommandType;
+        switch (commandType) {
+            case 'M': result = new MoveTo(values, relative); break;
+            case 'L': result = new LineTo(values, relative); break;
+            case 'H': result = new HorizontalLineTo(values, relative); break;
+            case 'V': result = new VerticalLineTo(values, relative); break;
+            case 'Z': result = new ClosePath(values, relative); break;
+            case 'C': result = new CurveTo(values, relative); break;
+            case 'S': result = new SmoothCurveTo(values, relative); break;
+            case 'Q': result = new QuadraticBezierCurveTo(values, relative); break;
+            case 'T': result = new SmoothQuadraticBezierCurveTo(values, relative); break;
+            case 'A': result = new EllipticalArcTo(values, relative); break;
         }
         if(!result) {
-            throw 'Invalid SVG item';
+            throw new Error(`Invalid SVG command: ${rawItem[0]}`);
         }
         return result;
     }
 
-    public static MakeFrom(origin: SvgItem, previous: SvgItem, newType: string) {
+    public static MakeFrom(origin: SvgItem, previous: SvgItem, newType: SvgCommandTypeAny): SvgItem {
         const target = origin.targetLocation();
         const x = target.x.toString();
         const y = target.y.toString();
-        let values: string[] = [];
-        const absoluteType = newType.toUpperCase();
+        let values: string[];
+        const absoluteType = newType.toUpperCase() as SvgCommandType;
         switch (absoluteType) {
-            case MoveTo.key: values = [MoveTo.key, x, y]; break;
-            case LineTo.key: values = [LineTo.key, x, y]; break;
-            case HorizontalLineTo.key: values = [HorizontalLineTo.key, x]; break;
-            case VerticalLineTo.key: values = [VerticalLineTo.key, y]; break;
-            case ClosePath.key: values = [ClosePath.key]; break;
-            case CurveTo.key: values = [CurveTo.key, '0', '0', '0', '0', x, y]; break;
-            case SmoothCurveTo.key: values = [SmoothCurveTo.key, '0', '0', x, y]; break;
-            case QuadraticBezierCurveTo.key: values = [QuadraticBezierCurveTo.key, '0', '0', x, y]; break;
-            case SmoothQuadraticBezierCurveTo.key: values = [SmoothQuadraticBezierCurveTo.key, x, y]; break;
-            case EllipticalArcTo.key: values = [EllipticalArcTo.key, '1' , '1', '0', '0', '0', x, y]; break;
+            case 'M': values = ['M', x, y]; break;
+            case 'L': values = ['L', x, y]; break;
+            case 'H': values = ['H', x]; break;
+            case 'V': values = ['V', y]; break;
+            case 'Z': values = ['Z']; break;
+            case 'C': values = ['C', '0', '0', '0', '0', x, y]; break;
+            case 'S': values = ['S', '0', '0', x, y]; break;
+            case 'Q': values = ['Q', '0', '0', x, y]; break;
+            case 'T': values = ['T', x, y]; break;
+            case 'A': values = ['A', '1' , '1', '0', '0', '0', x, y]; break;
         }
         const result = SvgItem.Make(values);
 
@@ -223,11 +225,11 @@ export abstract class SvgItem {
         return this.absoluteControlPoints;
     }
 
-    public getType(ignoreIsRelative = false): string {
+    public getType(ignoreIsRelative = false): SvgCommandTypeAny {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let typeKey = (this.constructor as any).key as string;
+        const typeKey = (this.constructor as any).key as SvgCommandType;
         if (this.relative && !ignoreIsRelative) {
-            typeKey = typeKey.toLowerCase();
+            return typeKey.toLowerCase() as SvgCommandTypeRelative;
         }
         return typeKey;
     }
@@ -548,7 +550,7 @@ export class SvgPath {
             const lastInstanceOf = it.constructor;
             if (degrees !== 180) {
                 if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
-                    const newType = it.relative ? LineTo.key.toLowerCase() : LineTo.key;
+                    const newType = (it.relative ? 'l' : 'L');
                     it = this.changeType(it, newType) || it;
                 }
             }
@@ -559,12 +561,12 @@ export class SvgPath {
                 if (lastInstanceOf === HorizontalLineTo) {
                     this.refreshAbsolutePositions();
 
-                    const newType = it.relative ? VerticalLineTo.key.toLowerCase() : VerticalLineTo.key;
+                    const newType = (it.relative ? 'v' : 'V');
                     this.changeType(it, newType);
                 } else if (lastInstanceOf === VerticalLineTo) {
                     this.refreshAbsolutePositions();
 
-                    const newType = it.relative ? HorizontalLineTo.key.toLowerCase() : HorizontalLineTo.key;
+                    const newType = (it.relative ? 'h' : 'H');
                     this.changeType(it, newType);
                 }
             }
@@ -600,7 +602,7 @@ export class SvgPath {
         this.refreshAbsolutePositions();
     }
 
-    changeType(item: SvgItem, newType: string): SvgItem | null {
+    changeType(item: SvgItem, newType: SvgCommandTypeAny): SvgItem | null {
         const idx = this.path.indexOf(item);
         if (idx > 0) {
             const previous = this.path[idx - 1];
