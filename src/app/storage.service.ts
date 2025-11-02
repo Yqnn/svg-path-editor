@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { STORAGE } from './constants/storage.const';
 
 export class StoredPath {
   name: string | null = '';
@@ -47,7 +48,7 @@ export class StorageService {
 
   load() {
     this.storedPaths = [];
-    const stored = localStorage.getItem('storedPaths');
+    const stored = localStorage.getItem(STORAGE.STORED_PATHS);
     if (stored) {
       const parsed = JSON.parse(stored) as {creationDate: string, changeDate: string, name: string, path: string}[];
       this.storedPaths = parsed.map(it => ({
@@ -60,6 +61,6 @@ export class StorageService {
   }
 
   save() {
-    localStorage.setItem('storedPaths', JSON.stringify(this.storedPaths));
+    localStorage.setItem(STORAGE.STORED_PATHS, JSON.stringify(this.storedPaths));
   }
 }

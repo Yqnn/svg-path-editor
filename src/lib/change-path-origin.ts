@@ -1,6 +1,7 @@
 import { SvgPath, SvgItem } from "./svg";
 import { optimizePath } from "./optimize-path";
 import { getSubPathBounds } from "./get-sub-path-bounds";
+import type { SvgCommandTypeAny } from "./svg-command-types";
 
 export const changePathOrigin = (svg: SvgPath, newOriginIndex: number, subpath?: boolean)=> {
   if(svg.path.length <= newOriginIndex || newOriginIndex === 0) {
@@ -17,10 +18,12 @@ export const changePathOrigin = (svg: SvgPath, newOriginIndex: number, subpath?:
   
   const newFirstItem = svg.path[newOriginIndex];
   const newLastItem = svg.path[newOriginIndex - 1];
-  switch(newFirstItem.getType().toUpperCase()) {
-    // Shorthands must be converted to be used as origin
-    case 'S': svg.changeType(newFirstItem, newFirstItem.relative ? 'c' : 'C'); break;
-    case 'T': svg.changeType(newFirstItem, newFirstItem.relative ? 'q' : 'Q'); break;
+  const firstItemType = newFirstItem.getType().toUpperCase();
+  // Shorthands must be converted to be used as origin
+  if (firstItemType === 'S') {
+    svg.changeType(newFirstItem, (newFirstItem.relative ? 'c' : 'C') as SvgCommandTypeAny);
+  } else if (firstItemType === 'T') {
+    svg.changeType(newFirstItem, (newFirstItem.relative ? 'q' : 'Q') as SvgCommandTypeAny);
   }
   for(let i=newOriginIndex ; i<end ; ++i) {
     // Z that comes after new origin must be converted to L, up to the first M
