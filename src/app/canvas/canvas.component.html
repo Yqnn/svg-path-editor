@@ -1,47 +1,59 @@
 <ng-container *ngIf="strokeWidth" >
-    <svg:line
+    <svg:rect  *ngFor="let x of xGrid; trackBy:trackByIndex"
         class="grid"
-        [attr.x1]="viewPortX"
-        [attr.y1]="0"
-        [attr.x2]="viewPortX + viewPortWidth"
-        [attr.y2]="0"
-        [attr.stroke-width]="4*strokeWidth"
+        [attr.x]="x - 0.5*strokeWidth"
+        [attr.y]="viewPortY"
+        [attr.width]="strokeWidth"
+        [attr.height]="viewPortHeight"
     />
-    <svg:line
+    <svg:rect  *ngFor="let y of yGrid; trackBy:trackByIndex"
         class="grid"
-        [attr.x1]="0"
-        [attr.y1]="viewPortY"
-        [attr.x2]="0"
-        [attr.y2]="viewPortY + viewPortHeight"
-        [attr.stroke-width]="4*strokeWidth"
-    />
-    <svg:line *ngFor="let x of xGrid; trackBy:trackByIndex"
-        class="grid"
-        [ngClass]="{'tick': showTicks && isEvenTick(x) }"
-        [attr.x1]="x"
-        [attr.y1]="viewPortY"
-        [attr.x2]="x"
-        [attr.y2]="viewPortY + viewPortHeight"
-        [attr.stroke-width]="strokeWidth"
+        [attr.x]="viewPortX"
+        [attr.y]="y - 0.5*strokeWidth"
+        [attr.width]="viewPortWidth"
+        [attr.height]="strokeWidth"
     />
 
-    <svg:line *ngFor="let y of yGrid; trackBy:trackByIndex"
-        class="grid"
-        [ngClass]="{'tick': showTicks && isEvenTick(y) }"
-        [attr.x1]="viewPortX"
-        [attr.y1]="y"
-        [attr.x2]="viewPortX + viewPortWidth"
-        [attr.y2]="y"
+    <svg:rect *ngFor="let x of xGridSecondary; trackBy:trackByIndex"
+        class="grid tick"
+        [attr.x]="x - 0.5*strokeWidth"
+        [attr.y]="viewPortY"
+        [attr.width]="strokeWidth"
+        [attr.height]="viewPortHeight"
         [attr.stroke-width]="strokeWidth"
+    />
+    <svg:rect *ngFor="let y of yGridSecondary; trackBy:trackByIndex"
+        class="grid tick"
+        [attr.x]="viewPortX"
+        [attr.y]="y - 0.5*strokeWidth"
+        [attr.width]="viewPortWidth"
+        [attr.height]="strokeWidth"
+        [attr.stroke-width]="strokeWidth"
+    />
+    <svg:rect
+        class="grid"
+        [ngClass]="{'tick': showTicks }"
+        [attr.x]="viewPortX "
+        [attr.y]="-2*strokeWidth"
+        [attr.width]="viewPortWidth"
+        [attr.height]="4*strokeWidth"
+    />
+    <svg:rect
+        class="grid"
+        [ngClass]="{'tick': showTicks }"
+        [attr.x]="-2*strokeWidth"
+        [attr.y]="viewPortY"
+        [attr.width]="4*strokeWidth"
+        [attr.height]="viewPortHeight"
     />
 
     <ng-container *ngIf="!preview && showTicks">
-        <ng-container *ngFor="let y of yGrid; trackBy:trackByIndex">
-            <svg:text class="tick" *ngIf="isEvenTick(y)" [attr.x]="-4*strokeWidth" [attr.y]="y - 4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}" >{{ y }}</text>
+        <ng-container *ngFor="let y of yGridSecondary; trackBy:trackByIndex">
+            <svg:text class="tick" [attr.x]="-4*strokeWidth" [attr.y]="y - 4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}" >{{ y }}</text>
         </ng-container>
 
-        <ng-container *ngFor="let x of xGrid; trackBy:trackByIndex">
-            <svg:text class="tick" *ngIf="x !== 0 && isEvenTick(x)" [attr.x]="x - 4*strokeWidth" [attr.y]="-4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}">{{ x }}</text>
+        <ng-container *ngFor="let x of xGridSecondary; trackBy:trackByIndex">
+            <svg:text class="tick" *ngIf="x !== 0" [attr.x]="x - 4*strokeWidth" [attr.y]="-4*strokeWidth" [ngStyle]="{'font-size': strokeWidth*14+'px'}">{{ x }}</text>
         </ng-container>
     </ng-container>
 
