@@ -81,6 +81,8 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   draggedImageType = 0;
   xGrid: number[] = [];
   yGrid: number[] = [];
+  xGridSecondary: number[] = [];
+  yGridSecondary: number[] = [];
   gridLabelStep = 1;
 
   // Utility functions
@@ -89,7 +91,7 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   trackByIndex = (idx: number, _: unknown) => idx;
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['viewPortX'] || changes['viewPortY'] || changes['viewPortWidth'] || changes['viewPortHeight']) {
+    if (changes['viewPortX'] || changes['viewPortY'] || changes['viewPortWidth'] || changes['viewPortHeight'] || changes['showTicks']) {
       this.refreshGrid();
     }
     if (changes['draggedPoint'] && changes['draggedPoint'].currentValue) {
@@ -173,30 +175,33 @@ export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   refreshGrid() {
-    const niceStep = (minPx: number): number => {
-      const raw = this.canvasWidth > 0 ? this.viewPortWidth / (this.canvasWidth / minPx) : 1;
-      const e = Math.floor(Math.log10(Math.max(raw, 1e-10)));
-      const p = Math.pow(10, e);
-      if (raw <= p){
-        return p;
-      } else if (raw <= 2 * p) {
-        return 2 * p;
-      } else if (raw <= 5 * p) {
-        return 5 * p;
-      }
-      return 10 * p;
-    };
+    const minPx = 10;
+    const raw = this.canvasWidth > 0 ? minPx * this.viewPortWidth / this.canvasWidth  : 1;
+    const e = Math.ceil(Math.log10(Math.max(raw, 1e-10)));
 
-    const step = niceStep(8);       // fine grid lines (~4-5× denser than labels)
-    this.gridLabelStep = niceStep(40); // tick labels
-
+    let step = Math.pow(10, Math.max(e, -4));
+    if(!this.showTicks) {
+      step = Math.max(step, 1);
+    }
     const xStart = Math.floor(this.viewPortX / step) * step;
     const xCount = Math.ceil(this.viewPortWidth / step) + 2;
     this.xGrid = Array.from({length: xCount}, (_, i) => this.round(xStart + i * step));
-
     const yStart = Math.floor(this.viewPortY / step) * step;
     const yCount = Math.ceil(this.viewPortHeight / step) + 2;
     this.yGrid = Array.from({length: yCount}, (_, i) => this.round(yStart + i * step));
+
+    if(this.showTicks) {
+      const secStep = (step < 1 ? 10 : 5 )*step;
+      const xSecStart = Math.floor(this.viewPortX / secStep) * secStep;
+      const xSecCount = Math.ceil(this.viewPortWidth / secStep) + 2;
+      this.xGridSecondary = Array.from({length: xSecCount}, (_, i) => this.round(xSecStart + i * secStep));
+      const ySecStart = Math.floor(this.viewPortY / secStep) * secStep;
+      const ySecCount = Math.ceil(this.viewPortHeight / secStep) + 2;
+      this.yGridSecondary = Array.from({length: ySecCount}, (_, i) => this.round(ySecStart + i * secStep));
+    } else {
+      this.xGridSecondary = [];
+      this.yGridSecondary = [];
+    }
   }
 
   eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
