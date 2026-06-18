@@ -546,15 +546,17 @@ export class SvgPath {
             return this;
         }
 
-        this.path.forEach( (it, idx) => {
-            const lastInstanceOf = it.constructor;
-            if (degrees !== 180) {
+        if (degrees !== 180) {
+            this.path.forEach( (it) => {
                 if (it instanceof HorizontalLineTo || it instanceof VerticalLineTo) {
                     const newType = (it.relative ? 'l' : 'L');
-                    it = this.changeType(it, newType) || it;
+                    this.changeType(it, newType);
                 }
-            }
+            });
+        }
 
+        this.path.forEach( (it, idx) => {
+            const lastInstanceOf = it.constructor;
             it.rotate(ox, oy, degrees, idx === 0);
 
             if (degrees === 90 || degrees === 270) {
