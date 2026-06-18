@@ -397,6 +397,9 @@ export class AppComponent implements AfterViewInit {
   afterModelChange() {
     this.reloadPoints();
     this.rawPath = this.parsedPath.asString(4, this.cfg.minifyOutput);
+    if(this.focusedItem && this.parsedPath.path.indexOf(this.focusedItem) === -1) {
+      this.focusedItem = null;
+    }
   }
 
   roundValues(decimals: number) {
