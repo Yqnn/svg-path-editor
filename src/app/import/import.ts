@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, output } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { kDefaultPath } from '../constants/default-path.const';
 import { Storage } from '../storage';
@@ -38,7 +38,7 @@ export class Import implements OnInit {
   storageService = inject(Storage);
 
   private urlPath?: string;
-  @Output() importPath = new EventEmitter<string>();
+  readonly importPath = output<string>();
 
   constructor() {
     this.urlPath = this.readPath();
@@ -85,7 +85,7 @@ export class Import implements OnInit {
   }
 
   private finalize(result: boolean): void {
-    if(result) {
+    if (result && this.urlPath) {
       this.importPath.emit(this.urlPath);
     }
     window.location.hash = '';

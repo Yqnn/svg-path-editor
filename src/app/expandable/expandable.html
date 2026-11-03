@@ -2,19 +2,19 @@
   class="title"
   role="button"
   tabindex="0"
-  [attr.aria-expanded]="opened"
+  [attr.aria-expanded]="opened()"
   (click)="toggle()"
   (keydown.enter)="toggle()"
   (keydown.space)="toggle(); $event.preventDefault()"
   style="margin-top:0;"
 >
-  <span>{{panelTitle}}</span>
-  @if (panelInfo) {
-    <div class="panel-info">{{panelInfo}}</div>
+  <span>{{ panelTitle() }}</span>
+  @if (panelInfo()) {
+    <div class="panel-info">{{ panelInfo() }}</div>
   }
-  <mat-icon>{{opened ? 'expand_more':'expand_less'}}</mat-icon>
+  <mat-icon>{{ opened() ? 'expand_more' : 'expand_less' }}</mat-icon>
 </div>
-@if (opened) {
+@if (opened()) {
   <div animate.enter="panel-enter" animate.leave="panel-leave" class="panel">
     <div class="panel-content">
       <div #contentWrapper style="padding-top:2px;padding-bottom:6px">

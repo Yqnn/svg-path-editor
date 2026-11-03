@@ -3,7 +3,7 @@
     <div
       animate.enter="left-column-enter"
       animate.leave="left-column-leave"
-      (animationend)="canvas?.refreshCanvasSize()"
+      (animationend)="canvas()?.refreshCanvasSize()"
       class="left-column-wrapper"
     >
       <button mat-raised-button class="left-column-close"
@@ -435,7 +435,7 @@
       <button
         mat-mini-fab
         color="primary"
-        (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(9/10)"
+        (click)="cfg.viewPortLocked=false;canvas()?.zoomViewPort(9/10)"
         matTooltip="Zoom In"
         matTooltipPosition="left"
         style="margin-top: 24px"
@@ -454,7 +454,7 @@
       <button
         mat-mini-fab
         color="primary"
-        (click)="cfg.viewPortLocked=false;canvas?.zoomViewPort(10/9)"
+        (click)="cfg.viewPortLocked=false;canvas()?.zoomViewPort(10/9)"
         matTooltip="Zoom Out"
         matTooltipPosition="left"
         >

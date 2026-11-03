@@ -1,11 +1,10 @@
 import {
   ChangeDetectorRef,
   Component,
-  Output,
-  EventEmitter,
-  ViewChild,
   AfterViewInit,
   inject,
+  output,
+  viewChild,
 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
@@ -38,10 +37,10 @@ export class OpenDialog implements AfterViewInit {
   dataSource = new MatTableDataSource(this.storageService.storedPaths.filter(it => !!it.name));
   displayedColumns = ['preview', 'name', 'create', 'change', 'actions'];
   beingRemoved?: string;
-  @ViewChild(MatSort) sort: MatSort | null = null;
+  readonly sort = viewChild(MatSort);
 
   ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
+    this.dataSource.sort = this.sort() ?? null;
     this.dataSource.sortingDataAccessor = (item, property) => {
       switch (property) {
         case 'change': return new Date(item.changeDate).getTime();
@@ -96,7 +95,7 @@ export class Open {
   dialog = inject(MatDialog);
   storageService = inject(Storage);
 
-  @Output() openPath = new EventEmitter<{name: string, path: string}>();
+  readonly openPath = output<{ name: string; path: string }>();
 
   openDialog(): void {
     const dialogRef = this.dialog.open(OpenDialog, {
@@ -105,7 +104,7 @@ export class Open {
       autoFocus: false
     });
 
-    dialogRef.afterClosed().subscribe((result: DialogData)  => {
+    dialogRef.afterClosed().subscribe((result: DialogData | undefined) => {
       if (result) {
         const storedPath = this.storageService.getPath(result.name);
         if(storedPath && storedPath.name && storedPath.path) {

@@ -3,15 +3,15 @@ import {
   ChangeDetectorRef,
   DestroyRef,
   ElementRef,
-  EventEmitter,
   HostListener,
-  Input,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
   afterNextRender,
   inject,
+  input,
+  model,
+  output,
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
@@ -30,66 +30,41 @@ export class Canvas implements OnInit, OnChanges {
   private cd = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
-  get canvasWidth(): number { return this._canvasWidth; }
-  set canvasWidth(canvasWidth: number) { this._canvasWidth = canvasWidth; this.canvasWidthChange.emit(this._canvasWidth); }
-  get canvasHeight(): number { return this._canvasHeight; }
-  set canvasHeight(canvasHeight: number) { this._canvasHeight = canvasHeight; this.canvasHeightChange.emit(this._canvasHeight); }
-  get draggedPoint(): SvgPoint | null { return this._draggedPoint; }
-  @Input() set draggedPoint(draggedPoint: SvgPoint| null ) { this._draggedPoint = draggedPoint; this.draggedPointChange.emit(this.draggedPoint); }
-  get focusedItem(): SvgItem | null { return this._focusedItem; }
-  @Input() set focusedItem(focusedItem: SvgItem | null) { this._focusedItem = focusedItem; this.focusedItemChange.emit(this.focusedItem); }
-  get hoveredItem(): SvgItem | null { return this._hoveredItem; }
-  @Input() set hoveredItem(hoveredItem: SvgItem | null ) { this._hoveredItem = hoveredItem; this.hoveredItemChange.emit(this.hoveredItem); }
-  get wasCanvasDragged(): boolean { return this._wasCanvasDragged; }
-  @Input() set wasCanvasDragged(wasCanvasDragged: boolean) {
-    this._wasCanvasDragged = wasCanvasDragged;
-    this.wasCanvasDraggedChange.emit(this._wasCanvasDragged);
-  }
-  get focusedImage(): Image | null { return this._focusedImage; }
-  @Input() set focusedImage(focusedImage: Image | null) { this._focusedImage = focusedImage; this.focusedImageChange.emit(this.focusedImage); }
-  @Input() parsedPath?: SvgPath;
-  @Input() targetPoints: SvgPoint[] = [];
-  @Input() controlPoints: SvgControlPoint[] = [];
+  readonly canvasWidth = model(0);
+  readonly canvasHeight = model(0);
+  readonly draggedPoint = model<SvgPoint | null>(null);
+  readonly focusedItem = model<SvgItem | null>(null);
+  readonly hoveredItem = model<SvgItem | null>(null);
+  readonly wasCanvasDragged = model(false);
+  readonly focusedImage = model<Image | null>(null);
+  readonly parsedPath = input<SvgPath>();
+  readonly targetPoints = input<SvgPoint[]>([]);
+  readonly controlPoints = input<SvgControlPoint[]>([]);
 
-  @Input() decimals?: number;
-  @Input() viewPortX = 0;
-  @Input() viewPortY = 0;
-  @Input() viewPortWidth = 0;
-  @Input() viewPortHeight = 0;
-  @Input() strokeWidth = 1;
-  @Input() preview = false;
-  @Input() filled = false;
-  @Input() showTicks = false;
-  @Input() draggedIsNew = false;
-  @Input() images: Image[] = [];
-  @Input() editImages = true;
+  readonly decimals = input<number>();
+  readonly viewPortX = input(0);
+  readonly viewPortY = input(0);
+  readonly viewPortWidth = input(0);
+  readonly viewPortHeight = input(0);
+  readonly strokeWidth = input(1);
+  readonly preview = input(false);
+  readonly filled = input(false);
+  readonly showTicks = input(false);
+  readonly draggedIsNew = input(false);
+  readonly images = input<Image[]>([]);
+  readonly editImages = input(true);
 
-  @Output() afterModelChange = new EventEmitter<void>();
-  @Output() dragging = new EventEmitter<boolean>();
-  @Output() viewPort = new EventEmitter<{x: number, y: number, w: number, h: number | null, force?: boolean}>();
-  @Output() hoverPosition = new EventEmitter<{x: number, y: number} | undefined>();
-	@Output() cursorPosition = new EventEmitter<Point & {decimals?: number} | undefined>();
-
-  _canvasWidth = 0;
-  @Output() canvasWidthChange = new EventEmitter<number>();
-
-  _canvasHeight = 0;
-  @Output() canvasHeightChange = new EventEmitter<number>();
-
-  _draggedPoint: SvgPoint | null = null;
-  @Output() draggedPointChange = new EventEmitter<SvgPoint | null>();
-
-  _focusedItem: SvgItem | null = null;
-  @Output() focusedItemChange = new EventEmitter<SvgItem | null>();
-
-  _hoveredItem: SvgItem | null = null;
-  @Output() hoveredItemChange = new EventEmitter<SvgItem | null>();
-
-  _wasCanvasDragged = false;
-  @Output() wasCanvasDraggedChange = new EventEmitter<boolean>();
-
-  _focusedImage: Image | null = null;
-  @Output() focusedImageChange = new EventEmitter<Image | null>();
+  readonly afterModelChange = output<void>();
+  readonly dragging = output<boolean>();
+  readonly viewPort = output<{
+    x: number;
+    y: number;
+    w: number;
+    h: number | null;
+    force?: boolean;
+  }>();
+  readonly hoverPosition = output<{ x: number; y: number } | undefined>();
+  readonly cursorPosition = output<Point & { decimals?: number } | undefined>();
 
   draggedEvt: MouseEvent | TouchEvent | null = null;
   wheel$ = new Subject<WheelEvent>();
@@ -174,7 +149,7 @@ export class Canvas implements OnInit, OnChanges {
     this.wheel$.next($event);
   }
   @HostListener('click', ['$event']) onClick($event: MouseEvent) {
-    this.hoveredItem = null;
+    this.hoveredItem.set(null);
   }
 
 
@@ -184,13 +159,13 @@ export class Canvas implements OnInit, OnChanges {
       return;
     }
     const rect = parent.getBoundingClientRect();
-    this.canvasWidth = rect.width;
-    this.canvasHeight = rect.height;
+    this.canvasWidth.set(rect.width);
+    this.canvasHeight.set(rect.height);
 
     this.viewPort.emit({
-      x: this.viewPortX,
-      y: this.viewPortY,
-      w: this.viewPortWidth,
+      x: this.viewPortX(),
+      y: this.viewPortY(),
+      w: this.viewPortWidth(),
       h: null,
       force: true
     });
@@ -206,27 +181,27 @@ export class Canvas implements OnInit, OnChanges {
 
   refreshGrid() {
     const minPx = 10;
-    const raw = this.canvasWidth > 0 ? minPx * this.viewPortWidth / this.canvasWidth  : 1;
+    const raw = this.canvasWidth() > 0 ? minPx * this.viewPortWidth() / this.canvasWidth()  : 1;
     const e = Math.ceil(Math.log10(Math.max(raw, 1e-10)));
 
     let step = Math.pow(10, Math.max(e, -4));
-    if(!this.showTicks) {
+    if(!this.showTicks()) {
       step = Math.max(step, 1);
     }
-    const xStart = Math.floor(this.viewPortX / step) * step;
-    const xCount = Math.ceil(this.viewPortWidth / step) + 2;
+    const xStart = Math.floor(this.viewPortX() / step) * step;
+    const xCount = Math.ceil(this.viewPortWidth() / step) + 2;
     this.xGrid = Array.from({length: xCount}, (_, i) => this.round(xStart + i * step));
-    const yStart = Math.floor(this.viewPortY / step) * step;
-    const yCount = Math.ceil(this.viewPortHeight / step) + 2;
+    const yStart = Math.floor(this.viewPortY() / step) * step;
+    const yCount = Math.ceil(this.viewPortHeight() / step) + 2;
     this.yGrid = Array.from({length: yCount}, (_, i) => this.round(yStart + i * step));
 
-    if(this.showTicks) {
+    if(this.showTicks()) {
       const secStep = (step < 1 ? 10 : 5 )*step;
-      const xSecStart = Math.floor(this.viewPortX / secStep) * secStep;
-      const xSecCount = Math.ceil(this.viewPortWidth / secStep) + 2;
+      const xSecStart = Math.floor(this.viewPortX() / secStep) * secStep;
+      const xSecCount = Math.ceil(this.viewPortWidth() / secStep) + 2;
       this.xGridSecondary = Array.from({length: xSecCount}, (_, i) => this.round(xSecStart + i * secStep));
-      const ySecStart = Math.floor(this.viewPortY / secStep) * secStep;
-      const ySecCount = Math.ceil(this.viewPortHeight / secStep) + 2;
+      const ySecStart = Math.floor(this.viewPortY() / secStep) * secStep;
+      const ySecCount = Math.ceil(this.viewPortHeight() / secStep) + 2;
       this.yGridSecondary = Array.from({length: ySecCount}, (_, i) => this.round(ySecStart + i * secStep));
     } else {
       this.xGridSecondary = [];
@@ -237,8 +212,8 @@ export class Canvas implements OnInit, OnChanges {
   eventToLocation(event: MouseEvent | TouchEvent, idx = 0): {x: number, y: number} {
     const rect = this.canvas.nativeElement.getBoundingClientRect();
     const touch = event instanceof MouseEvent ? event : event.touches[idx];
-    const x = this.viewPortX + (touch.clientX - rect.left) * this.strokeWidth;
-    const y = this.viewPortY + (touch.clientY - rect.top) * this.strokeWidth;
+    const x = this.viewPortX() + (touch.clientX - rect.left) * this.strokeWidth();
+    const y = this.viewPortY() + (touch.clientY - rect.top) * this.strokeWidth();
     return {x, y};
   }
 
@@ -274,34 +249,34 @@ export class Canvas implements OnInit, OnChanges {
 
   zoomViewPort(scale: number,  pt?: {x: number, y: number}) {
     if (!pt) {
-      pt = {x: this.viewPortX + 0.5 * this.viewPortWidth, y: this.viewPortY + 0.5 * this.viewPortHeight};
+      pt = {x: this.viewPortX() + 0.5 * this.viewPortWidth(), y: this.viewPortY() + 0.5 * this.viewPortHeight()};
     }
-    const w = scale * this.viewPortWidth;
-    const h = scale * this.viewPortHeight;
-    const x = this.viewPortX + ((pt.x - this.viewPortX) - scale * (pt.x - this.viewPortX));
-    const y = this.viewPortY + ((pt.y - this.viewPortY) - scale * (pt.y - this.viewPortY));
+    const w = scale * this.viewPortWidth();
+    const h = scale * this.viewPortHeight();
+    const x = this.viewPortX() + ((pt.x - this.viewPortX()) - scale * (pt.x - this.viewPortX()));
+    const y = this.viewPortY() + ((pt.y - this.viewPortY()) - scale * (pt.y - this.viewPortY()));
 
     this.viewPort.emit({x, y, w, h});
   }
 
   startDrag(item: SvgPoint) {
-    if (item !== this.draggedPoint) {
+    if (item !== this.draggedPoint()) {
       this.dragWithoutClick = false;
     }
 
     this.dragging.emit(true);
-    this.setCursorPosition({...item, decimals: this.decimals});
+    this.setCursorPosition({...item, decimals: this.decimals()});
 
     if (item.itemReference.getType().toLowerCase() === 'z') {
       return;
     }
-    this.focusedItem = item.itemReference;
-    this.draggedPoint = item;
+    this.focusedItem.set(item.itemReference);
+    this.draggedPoint.set(item);
   }
 
   startDragCanvas(event: MouseEvent | TouchEvent) {
     this.draggedEvt = event;
-    this.wasCanvasDragged = false;
+    this.wasCanvasDragged.set(false);
     this.dragWithoutClick = false;
   }
 
@@ -310,25 +285,25 @@ export class Canvas implements OnInit, OnChanges {
     this.draggedEvt = event;
     this.draggedImage = im;
     this.draggedImageType = type;
-    this.focusedImage = im;
+    this.focusedImage.set(im);
   }
 
   stopDrag() {
-    if (this.draggedPoint && this.draggedEvt) {
+    if (this.draggedPoint() && this.draggedEvt) {
       this.drag(this.draggedEvt);
     }
     this.dragging.emit(false);
 
-    if (!this.draggedPoint && !this.wasCanvasDragged) {
+    if (!this.draggedPoint() && !this.wasCanvasDragged()) {
       // unselect action
-      this.focusedItem = null;
+      this.focusedItem.set(null);
       this.setCursorPosition(undefined);
     }
-    if (!this.draggedImage && !this.wasCanvasDragged) {
-      this.focusedImage = null;
+    if (!this.draggedImage && !this.wasCanvasDragged()) {
+      this.focusedImage.set(null);
     }
 
-    this.draggedPoint = null;
+    this.draggedPoint.set(null);
     this.draggedEvt = null;
     this.dragWithoutClick = true;
 
@@ -339,7 +314,7 @@ export class Canvas implements OnInit, OnChanges {
     const pt = this.eventToLocation(event);
     this.hoverPosition.emit(pt);
 
-    if (this.draggedPoint || this.draggedEvt || this.draggedImage) {
+    if (this.draggedPoint() || this.draggedEvt || this.draggedImage) {
 
       if (!this.dragWithoutClick && event instanceof MouseEvent && event.buttons === 0) {
         // Stop dragging if click is not maintained anymore.
@@ -364,36 +339,38 @@ export class Canvas implements OnInit, OnChanges {
         }
         this.draggedEvt = event;
 
-      } else if (this.draggedPoint && this.parsedPath) {
-        const decimals = event.ctrlKey ? (this.decimals ? 0 : 3) : this.decimals;
+      } else if (this.draggedPoint() && this.parsedPath()) {
+        const draggedPoint = this.draggedPoint()!;
+        const parsedPath = this.parsedPath()!;
+        const decimals = event.ctrlKey ? (this.decimals() ? 0 : 3) : this.decimals();
         pt.x = parseFloat(pt.x.toFixed(decimals));
         pt.y = parseFloat(pt.y.toFixed(decimals));
-        this.parsedPath.setLocation(this.draggedPoint, pt as Point);
-        if (this.draggedIsNew) {
-          const previousIdx = this.parsedPath.path.indexOf(this.draggedPoint.itemReference) - 1;
+        parsedPath.setLocation(draggedPoint, pt as Point);
+        if (this.draggedIsNew()) {
+          const previousIdx = parsedPath.path.indexOf(draggedPoint.itemReference) - 1;
           if (previousIdx >= 0) {
-            this.draggedPoint.itemReference.resetControlPoints(this.parsedPath.path[previousIdx]);
+            draggedPoint.itemReference.resetControlPoints(parsedPath.path[previousIdx]);
           }
         }
         this.afterModelChange.emit();
         this.draggedEvt = null;
         this.setCursorPosition({...pt, decimals});
       } else if(this.draggedEvt) {
-        this.wasCanvasDragged = true;
+        this.wasCanvasDragged.set(true);
         this.hoverPosition.emit(undefined);
 
         const pinchToZoom = this.pinchToZoom(this.draggedEvt, event);
         if (pinchToZoom !== null){
-          const w = pinchToZoom.zoom * this.viewPortWidth;
-          const h = pinchToZoom.zoom * this.viewPortHeight;
-          const x = this.viewPortX + pinchToZoom.delta.x + (pinchToZoom.center.x - this.viewPortX) * (1 - pinchToZoom.zoom);
-          const y = this.viewPortY + pinchToZoom.delta.y + (pinchToZoom.center.y - this.viewPortY) * (1 - pinchToZoom.zoom);
+          const w = pinchToZoom.zoom * this.viewPortWidth();
+          const h = pinchToZoom.zoom * this.viewPortHeight();
+          const x = this.viewPortX() + pinchToZoom.delta.x + (pinchToZoom.center.x - this.viewPortX()) * (1 - pinchToZoom.zoom);
+          const y = this.viewPortY() + pinchToZoom.delta.y + (pinchToZoom.center.y - this.viewPortY()) * (1 - pinchToZoom.zoom);
           this.viewPort.emit({x, y, w, h});
         } else {
           const oriPt = this.eventToLocation(this.draggedEvt);
           this.viewPort.emit({
-            x: this.viewPortX + (oriPt.x - pt.x), y: this.viewPortY + (oriPt.y - pt.y),
-            w: this.viewPortWidth, h: this.viewPortHeight
+            x: this.viewPortX() + (oriPt.x - pt.x), y: this.viewPortY() + (oriPt.y - pt.y),
+            w: this.viewPortWidth(), h: this.viewPortHeight()
           });
         }
         this.draggedEvt = event;

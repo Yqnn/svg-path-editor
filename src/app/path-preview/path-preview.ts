@@ -1,33 +1,37 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit, input, model } from '@angular/core';
 import { browserComputePathBoundingBox } from '../svg-bbox';
 
 @Component({
-    selector: 'app-path-preview',
-    templateUrl: './path-preview.html'
+  selector: 'app-path-preview',
+  templateUrl: './path-preview.html',
 })
 export class PathPreview implements OnInit {
-  @Input() x?: number;
-  @Input() y?: number;
-  @Input() width?: number;
-  @Input() height?: number;
+  readonly x = model<number | undefined>(undefined);
+  readonly y = model<number | undefined>(undefined);
+  readonly width = model<number | undefined>(undefined);
+  readonly height = model<number | undefined>(undefined);
 
-  @Input() fillColor?: string = '#000000';
-  @Input() strokeColor?: string;
-  @Input() strokeWidth?: number;
-  @Input() path = '';
+  readonly fillColor = input<string | undefined>('#000000');
+  readonly strokeColor = input<string>();
+  readonly strokeWidth = input<number>();
+  readonly path = input('');
 
   ngOnInit(): void {
-    if(this.x === undefined || this.y === undefined || this.width === undefined || this.height === undefined) {
-      const bbox = browserComputePathBoundingBox(this.path);
-      this.x = bbox.x;
-      this.y = bbox.y;
-      this.width = bbox.width;
-      this.height = bbox.height;
+    if (
+      this.x() === undefined ||
+      this.y() === undefined ||
+      this.width() === undefined ||
+      this.height() === undefined
+    ) {
+      const bbox = browserComputePathBoundingBox(this.path());
+      this.x.set(bbox.x);
+      this.y.set(bbox.y);
+      this.width.set(bbox.width);
+      this.height.set(bbox.height);
     }
   }
 
   patternScale(containerWidth: number, containerHeight: number): number {
-    return Math.max((this.width??0) / containerWidth, (this.height??0) / containerHeight);
+    return Math.max((this.width() ?? 0) / containerWidth, (this.height() ?? 0) / containerHeight);
   }
-
 }

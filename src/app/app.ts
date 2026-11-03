@@ -2,9 +2,9 @@ import {
   Component,
   ChangeDetectorRef,
   HostListener,
-  ViewChild,
   afterNextRender,
   inject,
+  viewChild,
 } from '@angular/core';
 import { SvgPath, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from '../lib/svg';
 import type { SvgCommandType, SvgCommandTypeAny } from '../lib/svg-command-types';
@@ -75,7 +75,7 @@ export class App {
   roundValuesDecimals = 1;
 
   // Canvas Data:
-  @ViewChild(Canvas) canvas?: Canvas;
+  readonly canvas = viewChild(Canvas);
   canvasWidth = 100;
   canvasHeight = 100;
   strokeWidth = 1;
@@ -149,9 +149,9 @@ export class App {
         if (this.dragging) {
           // If an element is being dragged, undo by reloading the current history entry
           this.reloadPath(this.history[this.historyCursor]);
-        } else if(this.canvas){
+        } else if (this.canvas()) {
           // stopDrag will unselect selected item if any
-          this.canvas.stopDrag();
+          this.canvas()?.stopDrag();
         }
         $event.preventDefault();
       } else if (!$event.metaKey && !$event.ctrlKey && ($event.key === KEYBOARD.KEYS.DELETE || $event.key === KEYBOARD.KEYS.BACKSPACE)) {

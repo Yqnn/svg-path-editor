@@ -1,15 +1,37 @@
-import { Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges, inject } from '@angular/core';
+import {
+  Directive,
+  ElementRef,
+  HostListener,
+  effect,
+  inject,
+  input,
+  model,
+} from '@angular/core';
 import { formatNumber } from '../../lib/svg';
 
-@Directive({ selector: '[appFormatter]' })
-export class Formatter implements OnChanges {
+@Directive({
+  selector: '[appFormatter]',
+})
+export class Formatter {
   private el = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
-  @Input() formatterType: 'float'|'positive-float'|'integer'|'positive-integer' = 'float';
-  @Input() numberValue = 0;
-  @Input() suffix = '';
-  @Output() numberValueChange = new EventEmitter<number>();
+  readonly formatterType = input<'float' | 'positive-float' | 'integer' | 'positive-integer'>(
+    'float',
+  );
+  readonly numberValue = model(0);
+  readonly suffix = input('');
   internalValue = 0;
+
+  constructor() {
+    effect(() => {
+      const numberValue = this.numberValue();
+      const suffix = this.suffix();
+      if (numberValue !== parseFloat(this.viewValue)) {
+        this.viewValue = formatNumber(numberValue, 4) + suffix;
+        this.internalValue = numberValue;
+      }
+    });
+  }
 
   private get viewValue(): string {
     return this.el.nativeElement.value;
@@ -22,45 +44,47 @@ export class Formatter implements OnChanges {
   }
 
   @HostListener('blur', ['$event'])
-  onBlur(e: FocusEvent) {
+  onBlur(_e: FocusEvent) {
     if (this.internalValue !== parseFloat(this.viewValue)) {
       this.viewValue = formatNumber(this.internalValue, 4);
     }
 
-    if (this.suffix !== '') {
-      this.viewValue += this.suffix;
+    const suffix = this.suffix();
+    if (suffix !== '') {
+      this.viewValue += suffix;
     }
   }
 
   @HostListener('focus', ['$event'])
-  onFocus(e: FocusEvent) {
-    if (this.suffix !== '') {
-      this.viewValue = this.viewValue.replace(this.suffix, '');
+  onFocus(_e: FocusEvent) {
+    const suffix = this.suffix();
+    if (suffix !== '') {
+      this.viewValue = this.viewValue.replace(suffix, '');
     }
   }
 
   @HostListener('input', ['$event'])
   onInput(_e: Event) {
+    const formatterType = this.formatterType();
     let value = '';
-    if (this.formatterType === 'float') { value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^\-0-9.eE]/g, ''); }
-    if (this.formatterType === 'integer') { value = this.viewValue.replace(/[^\-0-9]/g, ''); }
-    if (this.formatterType === 'positive-float') { value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^0-9.eE]/g, ''); }
-    if (this.formatterType === 'positive-integer') { value = this.viewValue.replace(/[^0-9]/g, ''); }
+    if (formatterType === 'float') {
+      value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^\-0-9.eE]/g, '');
+    }
+    if (formatterType === 'integer') {
+      value = this.viewValue.replace(/[^\-0-9]/g, '');
+    }
+    if (formatterType === 'positive-float') {
+      value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^0-9.eE]/g, '');
+    }
+    if (formatterType === 'positive-integer') {
+      value = this.viewValue.replace(/[^0-9]/g, '');
+    }
 
     this.viewValue = value;
     const floatValue = parseFloat(value);
     if (!isNaN(floatValue)) {
-      this.numberValueChange.emit(floatValue);
+      this.numberValue.set(floatValue);
       this.internalValue = floatValue;
-    }
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['numberValue']) {
-      if (changes['numberValue'].currentValue !== parseFloat(this.viewValue)) {
-        this.viewValue = formatNumber(changes['numberValue'].currentValue, 4) + this.suffix;
-        this.internalValue = changes['numberValue'].currentValue;
-      }
     }
   }
 }

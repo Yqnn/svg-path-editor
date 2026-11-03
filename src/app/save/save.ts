@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, inject, input, model } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { Storage } from '../storage';
 import { MatMiniFabButton, MatButton } from '@angular/material/button';
@@ -41,12 +41,11 @@ export class Save {
   dialog = inject(MatDialog);
   storageService = inject(Storage);
 
-  @Input() path = '';
-  @Input() name = '';
-  @Output() nameChange = new EventEmitter<string>();
+  readonly path = input('');
+  readonly name = model('');
 
   openDialog(): void {
-    let name = this.name;
+    let name = this.name();
     if (!name) {
       let i = 1;
       name = 'My path';
@@ -62,11 +61,10 @@ export class Save {
       data: {name}
     });
 
-    dialogRef.afterClosed().subscribe((result: DialogData)  => {
+    dialogRef.afterClosed().subscribe((result: DialogData | undefined) => {
       if (result) {
-        this.storageService.addPath(result.name, this.path);
-        this.name = result.name;
-        this.nameChange.emit(this.name);
+        this.storageService.addPath(result.name, this.path());
+        this.name.set(result.name);
       }
     });
   }

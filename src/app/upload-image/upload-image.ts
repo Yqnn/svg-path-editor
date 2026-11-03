@@ -1,10 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  Output,
-  EventEmitter,
-  inject,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, inject, output } from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Image } from '../image';
@@ -98,15 +92,15 @@ export class UploadImageDialog {
 export class UploadImage {
   dialog = inject(MatDialog);
 
-  @Output() addImage = new EventEmitter<Image>();
-  @Output() cancelled = new EventEmitter<void>();
+  readonly addImage = output<Image>();
+  readonly cancelled = output<void>();
 
   openDialog(): void {
     const dialogRef = this.dialog.open(UploadImageDialog, {
       width: '800px',
-      panelClass: 'dialog'
+      panelClass: 'dialog',
     });
-    dialogRef.afterClosed().subscribe((result: Image)  => {
+    dialogRef.afterClosed().subscribe((result: Image | undefined) => {
       if (result) {
         this.addImage.emit(result);
       } else {

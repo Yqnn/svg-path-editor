@@ -1,13 +1,17 @@
-import { Directive, ElementRef, HostListener, Input, inject } from '@angular/core';
+import { Directive, ElementRef, HostListener, inject, input } from '@angular/core';
 
-@Directive({ selector: '[appKeyboardNavigable]' })
+@Directive({
+  selector: '[appKeyboardNavigable]',
+})
 export class KeyboardNavigable {
   private el = inject<ElementRef<HTMLInputElement>>(ElementRef);
 
-  @Input() keyboardNavigableIdPrefix = '';
+  readonly keyboardNavigableIdPrefix = input('');
 
   setFocus(row: number, col: number, event: KeyboardEvent): boolean {
-    const el = document.getElementById(`${this.keyboardNavigableIdPrefix}_${row}_${col}`) as HTMLInputElement;
+    const el = document.getElementById(
+      `${this.keyboardNavigableIdPrefix()}_${row}_${col}`,
+    ) as HTMLInputElement;
     if (el) {
       el.focus();
       el.select();

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, model } from '@angular/core';
 
 import { MatIcon } from '@angular/material/icon';
 
@@ -9,12 +9,11 @@ import { MatIcon } from '@angular/material/icon';
   imports: [MatIcon],
 })
 export class Expandable {
-  @Input() opened = true;
-  @Input() panelTitle = '';
-  @Input() panelInfo = '';
+  readonly opened = model(true);
+  readonly panelTitle = input('');
+  readonly panelInfo = input('');
 
   toggle() {
-    this.opened = !this.opened;
+    this.opened.update((opened) => !opened);
   }
-
 }

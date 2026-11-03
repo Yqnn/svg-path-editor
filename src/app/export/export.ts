@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ExportConfig } from '../config';
 import { Storage } from '../storage';
@@ -118,15 +118,15 @@ export class ExportDialog {
 export class Export {
   dialog = inject(MatDialog);
 
-  @Input() path = '';
-  @Input() name = '';
+  readonly path = input('');
+  readonly name = input('');
 
   openDialog(): void {
     this.dialog.open(ExportDialog, {
       width: '800px',
       panelClass: 'dialog',
-      data: {path: this.path, name: this.name},
-      autoFocus: false
+      data: { path: this.path(), name: this.name() },
+      autoFocus: false,
     });
   }
 }

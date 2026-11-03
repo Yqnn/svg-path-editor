@@ -1,16 +1,13 @@
 import {
   Component,
-  Output,
-  EventEmitter,
-  Input,
-  ViewChild,
   ElementRef,
   afterNextRender,
   inject,
+  input,
+  viewChild,
 } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Storage } from '../storage';
 import { CopiedSnackbar } from '../copied-snackbar/copied-snackbar';
 import { MatMiniFabButton, MatIconButton, MatButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
@@ -34,14 +31,14 @@ export class ShareDialog {
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private snackBar = inject(MatSnackBar);
 
-  @ViewChild('input') inputField?: ElementRef;
+  readonly inputField = viewChild<ElementRef<HTMLInputElement>>('input');
 
   constructor() {
     afterNextRender(() => this.selectText());
   }
 
   private selectText(): void {
-    const el = this.inputField?.nativeElement;
+    const el = this.inputField()?.nativeElement;
     el?.focus();
     el?.select();
   }
@@ -52,11 +49,11 @@ export class ShareDialog {
 
   copy(): void {
     this.selectText();
-    navigator.clipboard.writeText(this.inputField?.nativeElement.value);
+    navigator.clipboard.writeText(this.inputField()?.nativeElement.value ?? '');
     this.snackBar.openFromComponent(CopiedSnackbar, {
-      horizontalPosition:'center',
+      horizontalPosition: 'center',
       verticalPosition: 'top',
-      duration: 2000
+      duration: 2000,
     });
   }
 
@@ -74,17 +71,15 @@ export class ShareDialog {
 })
 export class Share {
   dialog = inject(MatDialog);
-  storageService = inject(Storage);
 
-  @Input() path = '';
-  @Output() importPath = new EventEmitter<string>();
+  readonly path = input('');
 
   openDialog(): void {
     this.dialog.open(ShareDialog, {
       width: '800px',
       panelClass: 'dialog',
       autoFocus: false,
-      data: {path: this.path}
+      data: { path: this.path() },
     });
   }
 }
