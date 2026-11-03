@@ -82,7 +82,7 @@ export class UploadImageDialogComponent {
 })
 export class UploadImageComponent {
   @Output() addImage = new EventEmitter<Image>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() cancelled = new EventEmitter<void>();
 
   constructor(
     public dialog: MatDialog,
@@ -97,7 +97,7 @@ export class UploadImageComponent {
       if (result) {
         this.addImage.emit(result);
       } else {
-        this.cancel.emit();
+        this.cancelled.emit();
       }
     });
   }
