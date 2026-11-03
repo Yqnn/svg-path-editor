@@ -20,7 +20,7 @@
           style="margin:6px 16px 4px 8px"
           width="50" height="50"
           xmlns="http://www.w3.org/2000/svg"
-        >
+          >
           <path [attr.d]="element.path" fill="white"></path>
         </svg>
       </td>
@@ -28,32 +28,34 @@
     <ng-container matColumnDef="actions">
       <th mat-header-cell *matHeaderCellDef style="width:122px"></th>
       <td mat-cell *matCellDef="let element" style="text-align: center;">
-        <button *ngIf="!beingRemoved" (click)="beingRemoved=element.name;$event.stopPropagation();" mat-mini-fab color="primary" 
-          matTooltip="Delete"
-          matTooltipPosition="below"
-          matTooltipClass="app-tooltip"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-        <ng-container *ngIf="beingRemoved===element.name">
+        @if (!beingRemoved) {
+          <button (click)="beingRemoved=element.name;$event.stopPropagation();" mat-mini-fab color="primary"
+            matTooltip="Delete"
+            matTooltipPosition="below"
+            matTooltipClass="app-tooltip"
+            >
+            <mat-icon>delete</mat-icon>
+          </button>
+        }
+        @if (beingRemoved===element.name) {
           <button (click)="beingRemoved=undefined;$event.stopPropagation();" mat-mini-fab color="primary" style="margin-right: 8px;"
             matTooltip="Cancel"
             matTooltipPosition="below"
             matTooltipClass="app-tooltip"
-          >
+            >
             <mat-icon>clear</mat-icon>
           </button>
           <button (click)="onRemove(element.name);$event.stopPropagation();" mat-mini-fab color="warn"
             matTooltip="Confirm Deletion"
             matTooltipPosition="below"
             matTooltipClass="app-tooltip"
-          >
+            >
             <mat-icon>check</mat-icon>
           </button>
-        </ng-container>
+        }
       </td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onOpen(row.name)"></tr>
   </table>

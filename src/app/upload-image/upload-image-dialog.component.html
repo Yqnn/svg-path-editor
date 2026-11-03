@@ -1,10 +1,12 @@
 <h1 mat-dialog-title>Import image</h1>
 <div mat-dialog-content class="upload-image-dialog-content"
   (drop)="onDrop($event)" (dragover)="onDragOver($event)"
->
+  >
   <div class="upload-button-row">
     <button type="button" mat-raised-button (click)="fileInput.click()" (drop)="onDrop($event)">Choose File</button>
-    <img *ngIf="data" class="preview" [src]="displayableData" />
+    @if (data) {
+      <img class="preview" [src]="displayableData" />
+    }
     <span class="filename">{{name}}</span>
   </div>
   <mat-form-field>
@@ -24,7 +26,7 @@
     <input matInput [(ngModel)]="height">
   </mat-form-field>
   <div>
-      <mat-checkbox class="example-margin" [(ngModel)]="preserveAspectRatio">Preserve Aspect Ratio</mat-checkbox>
+    <mat-checkbox class="example-margin" [(ngModel)]="preserveAspectRatio">Preserve Aspect Ratio</mat-checkbox>
   </div>
   <input hidden (change)="onFileSelected(fileInput)" accept="image/*" #fileInput type="file">
 </div>

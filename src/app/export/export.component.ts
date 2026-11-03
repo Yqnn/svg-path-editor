@@ -1,4 +1,4 @@
-import { Component, Inject, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ExportConfigService } from '../config.service';
 import { StorageService } from '../storage.service';
@@ -28,18 +28,18 @@ interface DialogData {
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatCheckbox, FormsModule, MatFormField, MatLabel, MatInput, MatButton, FormatterDirective, PathPreviewComponent, MatDialogActions]
 })
 export class ExportDialogComponent {
+  dialogRef = inject<MatDialogRef<ExportDialogComponent>>(MatDialogRef);
+  storageService = inject(StorageService);
+  data = inject<DialogData>(MAT_DIALOG_DATA);
+  cfg = inject(ExportConfigService);
+  private snackBar = inject(MatSnackBar);
+
   x = 0;
   y = 0;
   width = 0;
   height = 0;
 
-  constructor(
-    public dialogRef: MatDialogRef<ExportDialogComponent>,
-    public storageService: StorageService,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public cfg: ExportConfigService,
-    private snackBar: MatSnackBar
-  ) {
+  constructor() {
     this.refreshViewbox();
   }
 
@@ -116,12 +116,10 @@ export class ExportDialogComponent {
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class ExportComponent {
+  dialog = inject(MatDialog);
+
   @Input() path = '';
   @Input() name = '';
-
-  constructor(
-    public dialog: MatDialog
-  ) {}
 
   openDialog(): void {
     this.dialog.open(ExportDialogComponent, {

@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Inject, Input, ViewChild, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewChild, AfterViewInit, ElementRef, inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from '../storage.service';
@@ -21,14 +21,11 @@ export class DialogData {
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreviewComponent, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, MatDialogActions, MatButton]
 })
 export class ShareDialogComponent implements AfterViewInit {
-  @ViewChild('input') inputField?: ElementRef;
+  dialogRef = inject<MatDialogRef<ShareDialogComponent>>(MatDialogRef);
+  data = inject<DialogData>(MAT_DIALOG_DATA);
+  private snackBar = inject(MatSnackBar);
 
-  constructor(
-    public dialogRef: MatDialogRef<ShareDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    private snackBar: MatSnackBar
-  ) {
-  }
+  @ViewChild('input') inputField?: ElementRef;
 
   ngAfterViewInit(): void {
     setTimeout(() => this.selectText());
@@ -67,14 +64,11 @@ export class ShareDialogComponent implements AfterViewInit {
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class ShareComponent {
+  dialog = inject(MatDialog);
+  storageService = inject(StorageService);
+
   @Input() path = '';
   @Output() importPath = new EventEmitter<string>();
-
-  constructor(
-    public dialog: MatDialog,
-    public storageService: StorageService,
-  ) {
-  }
 
   openDialog(): void {
     this.dialog.open(ShareDialogComponent, {

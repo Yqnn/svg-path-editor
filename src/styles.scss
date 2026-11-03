@@ -97,7 +97,7 @@ button.mat-mini-fab .mat-button-wrapper {
 /* app */
 .row {
     min-height: 24px;
-    --mdc-checkbox-state-layer-size:20px;
+    --mat-checkbox-state-layer-size:20px;
     .mat-mdc-checkbox {
         margin:0;
     }
@@ -125,7 +125,7 @@ button.mat-mini-fab .mat-button-wrapper {
 
 /* app::deep */
 button.mat-mdc-icon-button.more-button {
-    --mdc-icon-button-state-layer-size:20px;
+    --mat-icon-button-state-layer-size:20px;
     width:20px;
     height:20px;
     margin:0;
@@ -203,7 +203,7 @@ button.mat-mdc-icon-button.more-button {
 
 /* ::deep */
 .dialog .mat-mdc-dialog-container {
-    --mdc-dialog-container-color:  #252526 !important;
+    --mat-dialog-container-color:  #252526 !important;
 }
 .mat-mdc-menu-panel {
     max-width: 320px  !important;

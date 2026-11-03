@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, Inject } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { kDefaultPath } from '../app.component';
 import { StorageService } from '../storage.service';
@@ -17,11 +17,9 @@ export class DialogData {
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreviewComponent, MatDialogActions, MatButton]
 })
 export class ImportDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<ImportDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData
-  ) {
-  }
+  dialogRef = inject<MatDialogRef<ImportDialogComponent>>(MatDialogRef);
+  data = inject<DialogData>(MAT_DIALOG_DATA);
+
 
   onConfirm(): void {
     this.dialogRef.close(true);
@@ -36,13 +34,13 @@ export class ImportDialogComponent {
     template: ''
 })
 export class ImportComponent implements OnInit {
+  dialog = inject(MatDialog);
+  storageService = inject(StorageService);
+
   private urlPath?: string;
   @Output() importPath = new EventEmitter<string>();
 
-  constructor(
-    public dialog: MatDialog,
-    public storageService: StorageService,
-  ) {
+  constructor() {
     this.urlPath = this.readPath();
   }
 

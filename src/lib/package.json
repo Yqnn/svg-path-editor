@@ -23,12 +23,12 @@
   },
   "exports": {
     "import": {
-      "default": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.mjs"
     },
     "require": {
-      "default": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "types": "./dist/index.d.ts",

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgIf } from '@angular/common';
+
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
@@ -14,7 +14,7 @@ import { MatIcon } from '@angular/material/icon';
             transition(':leave', [animate('100ms ease', style({ height: '0' }))]),
         ])
     ],
-    imports: [NgIf, MatIcon]
+    imports: [MatIcon]
 })
 export class ExpandableComponent {
   @Input() opened = true;
