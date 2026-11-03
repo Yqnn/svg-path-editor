@@ -27,8 +27,37 @@ div.title {
 }
 
 .panel {
-    transition: max-height 200ms;
+  display: grid;
+  grid-template-rows: 1fr;
 }
-.ng-animating {
-    overflow: hidden;
+
+.panel-content {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.panel-enter {
+  animation: panel-enter 100ms ease;
+}
+
+.panel-leave {
+  animation: panel-leave 100ms ease;
+}
+
+@keyframes panel-enter {
+  from {
+    grid-template-rows: 0fr;
+  }
+  to {
+    grid-template-rows: 1fr;
+  }
+}
+
+@keyframes panel-leave {
+  from {
+    grid-template-rows: 1fr;
+  }
+  to {
+    grid-template-rows: 0fr;
+  }
 }

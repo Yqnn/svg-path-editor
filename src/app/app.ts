@@ -1,5 +1,11 @@
-import { Component, AfterViewInit, HostListener, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import {
+  Component,
+  ChangeDetectorRef,
+  HostListener,
+  ViewChild,
+  afterNextRender,
+  inject,
+} from '@angular/core';
 import { SvgPath, SvgItem, Point, SvgPoint, SvgControlPoint, formatNumber } from '../lib/svg';
 import type { SvgCommandType, SvgCommandTypeAny } from '../lib/svg-command-types';
 import { MatIconRegistry, MatIcon } from '@angular/material/icon';
@@ -33,25 +39,15 @@ import { MatSlider, MatSliderThumb } from '@angular/material/slider';
 import { kDefaultPath } from './constants/default-path.const';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.html',
-    styleUrls: ['./app.scss'],
-    animations: [
-        trigger('leftColumnParent', [
-            transition(':enter', [])
-        ]),
-        trigger('leftColumn', [
-            state('*', style({ 'max-width': '310px' })),
-            transition(':enter', [style({ 'max-width': '0' }), animate('100ms ease')]),
-            transition(':leave', [animate('100ms ease', style({ 'max-width': '0' }))])
-        ])
-    ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [MatButton, MatIcon, CdkScrollable, Expandable, FormsModule, MatTooltip, Open, Save, MatMiniFabButton, MatMenuTrigger, NgClass, Formatter, MatCheckbox, KeyboardNavigable, MatIconButton, NgStyle, UploadImage, Export, Share, Canvas, Import, MatMenu, MatMenuContent, MatMenuItem, MatSlider, MatSliderThumb]
+  selector: 'app-root',
+  templateUrl: './app.html',
+  styleUrls: ['./app.scss'],
+  imports: [MatButton, MatIcon, CdkScrollable, Expandable, FormsModule, MatTooltip, Open, Save, MatMiniFabButton, MatMenuTrigger, NgClass, Formatter, MatCheckbox, KeyboardNavigable, MatIconButton, NgStyle, UploadImage, Export, Share, Canvas, Import, MatMenu, MatMenuContent, MatMenuItem, MatSlider, MatSliderThumb]
 })
-export class App implements AfterViewInit {
+export class App {
   cfg = inject(Config);
   private storage = inject(Storage);
+  private cd = inject(ChangeDetectorRef);
 
   // SvgPath path data model:
   parsedPath: SvgPath;
@@ -117,6 +113,11 @@ export class App implements AfterViewInit {
     }
     this.parsedPath = new SvgPath('');
     this.reloadPath(this.rawPath, true);
+
+    afterNextRender(() => {
+      this.zoomAuto();
+      this.cd.markForCheck();
+    });
   }
 
   @HostListener('document:keydown', ['$event']) onKeyDown($event: KeyboardEvent) {
@@ -168,12 +169,6 @@ export class App implements AfterViewInit {
   get decimals() {
     return  this.cfg.snapToGrid ? 0 : this.cfg.decimalPrecision;
  }
-
-  ngAfterViewInit() {
-    setTimeout(() => {
-      this.zoomAuto();
-    }, 0);
-  }
 
   get rawPath(): string {
     return this._rawPath;
@@ -523,7 +518,7 @@ export class App implements AfterViewInit {
       if (autozoom) {
         this.zoomAuto();
       }
-    } catch (e) {
+    } catch {
       this.invalidSyntax = true;
       if (!this.parsedPath) {
         this.parsedPath = new SvgPath('');

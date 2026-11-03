@@ -4,7 +4,7 @@ const kNumberRegex = /^[+-]?(([0-9]*\.[0-9]+)|([0-9]+\.)|([0-9]+))([eE][+-]?[0-9
 const kCoordinateRegex = kNumberRegex;
 const kCommaWsp = /^(([\t\n\f\r ]+,?[\t\n\f\r ]*)|(,[\t\n\f\r ]*))/;
 
-const kGrammar: {[key: string]: RegExp[]}  = {
+const kGrammar: Record<string, RegExp[]> = {
     M: [kCoordinateRegex, kCoordinateRegex],
     L: [kCoordinateRegex, kCoordinateRegex],
     H: [kCoordinateRegex],

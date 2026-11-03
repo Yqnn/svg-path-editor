@@ -1,4 +1,13 @@
-import { Component, Output, EventEmitter, Input, ViewChild, AfterViewInit, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  Input,
+  ViewChild,
+  ElementRef,
+  afterNextRender,
+  inject,
+} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Storage } from '../storage';
@@ -18,18 +27,17 @@ export class DialogData {
 @Component({
     selector: 'app-share-dialog',
     templateUrl: 'share-dialog.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreview, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, MatDialogActions, MatButton]
 })
-export class ShareDialog implements AfterViewInit {
+export class ShareDialog {
   dialogRef = inject<MatDialogRef<ShareDialog>>(MatDialogRef);
   data = inject<DialogData>(MAT_DIALOG_DATA);
   private snackBar = inject(MatSnackBar);
 
   @ViewChild('input') inputField?: ElementRef;
 
-  ngAfterViewInit(): void {
-    setTimeout(() => this.selectText());
+  constructor() {
+    afterNextRender(() => this.selectText());
   }
 
   private selectText(): void {
@@ -62,7 +70,6 @@ export class ShareDialog implements AfterViewInit {
 @Component({
     selector: 'app-share',
     templateUrl: './share.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class Share {

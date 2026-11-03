@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { kDefaultPath } from '../constants/default-path.const';
 import { Storage } from '../storage';
@@ -14,7 +14,6 @@ export class DialogData {
 @Component({
     selector: 'app-import-dialog',
     templateUrl: 'import-dialog.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreview, MatDialogActions, MatButton]
 })
 export class ImportDialog {
@@ -32,7 +31,6 @@ export class ImportDialog {
 
 @Component({
     selector: 'app-import',
-    changeDetection: ChangeDetectionStrategy.Eager,
     template: ''
 })
 export class Import implements OnInit {
@@ -54,7 +52,9 @@ export class Import implements OnInit {
       try {
         const _ = new SvgPath(path);
         return path;
-      } catch (e) { /* */ }
+      } catch {
+        // Ignore malformed paths from the URL fragment.
+      }
     }
     return '';
   }

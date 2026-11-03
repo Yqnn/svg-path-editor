@@ -1,4 +1,12 @@
-import { Component, Output, EventEmitter, ViewChild, AfterViewInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Output,
+  EventEmitter,
+  ViewChild,
+  AfterViewInit,
+  inject,
+} from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -18,13 +26,13 @@ export class DialogData {
     selector: 'app-open-dialog',
     templateUrl: 'open-dialog.html',
     styleUrls: ['./open-dialog.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatMiniFabButton, MatTooltip, MatIcon, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatDialogActions, MatButton]
 })
 export class OpenDialog implements AfterViewInit {
   dialogRef = inject<MatDialogRef<OpenDialog>>(MatDialogRef);
   storageService = inject(Storage);
   data = inject<DialogData>(MAT_DIALOG_DATA);
+  private cd = inject(ChangeDetectorRef);
 
 
   dataSource = new MatTableDataSource(this.storageService.storedPaths.filter(it => !!it.name));
@@ -42,6 +50,7 @@ export class OpenDialog implements AfterViewInit {
         default: return item.path;
       }
     };
+    this.cd.markForCheck();
   }
 
   formatDate(date: Date): string {
@@ -81,7 +90,6 @@ export class OpenDialog implements AfterViewInit {
     selector: 'app-open',
     templateUrl: './open.html',
     styleUrls: ['./open.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class Open {

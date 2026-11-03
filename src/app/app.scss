@@ -46,8 +46,34 @@
 
 /* UI */
 .left-column-wrapper {
-    width:310px;
-    position: relative;
+  width: 310px;
+  position: relative;
+}
+
+.left-column-enter {
+  animation: left-column-enter 100ms ease;
+}
+
+.left-column-leave {
+  animation: left-column-leave 100ms ease;
+}
+
+@keyframes left-column-enter {
+  from {
+    max-width: 0;
+  }
+  to {
+    max-width: 310px;
+  }
+}
+
+@keyframes left-column-leave {
+  from {
+    max-width: 310px;
+  }
+  to {
+    max-width: 0;
+  }
 }
 .left-column {
     width:100%;
@@ -202,7 +228,7 @@ textarea {
     }
 }
 
-label.cursor-position, label.hover-position {
+.cursor-position, .hover-position {
     position: absolute;
     font-size: 1.5em;
     font-family: monospace;
@@ -216,10 +242,10 @@ label.cursor-position, label.hover-position {
     pointer-events: none;
 }
 
-label.hover-position {
+.hover-position {
     display:none;
     opacity:0.7;
 }
-.drawings:hover label.hover-position {
+.drawings:hover .hover-position {
     display: block;
 }

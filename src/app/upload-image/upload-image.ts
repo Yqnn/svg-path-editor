@@ -1,4 +1,10 @@
-import { Component, Output, EventEmitter, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Output,
+  EventEmitter,
+  inject,
+} from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Image } from '../image';
@@ -15,12 +21,12 @@ import { MatCheckbox } from '@angular/material/checkbox';
     selector: 'app-upload-image-dialog',
     templateUrl: 'upload-image-dialog.html',
     styleUrls: ['./upload-image-dialog.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatButton, MatFormField, MatLabel, MatInput, FormsModule, MatCheckbox, MatDialogActions]
 })
 export class UploadImageDialog {
   dialogRef = inject<MatDialogRef<UploadImageDialog>>(MatDialogRef);
   domSanitizer = inject(DomSanitizer);
+  private cd = inject(ChangeDetectorRef);
 
   data: string | null = null;
   displayableData: SafeResourceUrl | null = null;
@@ -38,6 +44,7 @@ export class UploadImageDialog {
         if(this.data) {
           this.displayableData = this.domSanitizer.bypassSecurityTrustResourceUrl(this.data);
         }
+        this.cd.markForCheck();
       };
       this.name = file.name;
       reader.readAsDataURL(file);
@@ -86,7 +93,6 @@ export class UploadImageDialog {
 @Component({
     selector: 'app-upload-image',
     templateUrl: './upload-image.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class UploadImage {

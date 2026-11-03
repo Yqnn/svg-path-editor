@@ -1,20 +1,34 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectorRef,
+  DestroyRef,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+  afterNextRender,
+  inject,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Image } from '../image';
 import { Point, SvgPath, SvgControlPoint, SvgItem, SvgPoint } from '../../lib/svg';
 import { NgClass, NgStyle } from '@angular/common';
 
-/* eslint-disable @angular-eslint/component-selector */
 @Component({
-    selector: '[app-canvas]',
-    templateUrl: './canvas.html',
-    styleUrls: ['./canvas.css'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass, NgStyle]
+  selector: '[app-canvas]',
+  templateUrl: './canvas.html',
+  styleUrls: ['./canvas.css'],
+  imports: [NgClass, NgStyle],
 })
-export class Canvas implements OnInit, OnChanges, AfterViewInit {
+export class Canvas implements OnInit, OnChanges {
   canvas = inject(ElementRef);
+  private cd = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
 
   get canvasWidth(): number { return this._canvasWidth; }
   set canvasWidth(canvasWidth: number) { this._canvasWidth = canvasWidth; this.canvasWidthChange.emit(this._canvasWidth); }
@@ -102,16 +116,25 @@ export class Canvas implements OnInit, OnChanges, AfterViewInit {
     }
   }
 
-  ngAfterViewInit() {
-    setTimeout(() => {
+  constructor() {
+    afterNextRender(() => {
       this.refreshCanvasSize();
-    });
-    window.addEventListener('resize', () => {
-      this.refreshCanvasSize();
+      this.cd.markForCheck();
     });
 
+    const onResize = () => {
+      this.refreshCanvasSize();
+      this.cd.markForCheck();
+    };
     // Following line is a workaround for a bug in Safari preventing the Wheel events to be fired:
-    window.addEventListener('wheel', () => { /* */ });
+    const onWheel = () => undefined;
+
+    window.addEventListener('resize', onResize);
+    window.addEventListener('wheel', onWheel);
+    this.destroyRef.onDestroy(() => {
+      window.removeEventListener('resize', onResize);
+      window.removeEventListener('wheel', onWheel);
+    });
   }
 
   ngOnInit(): void {
@@ -246,6 +269,7 @@ export class Canvas implements OnInit, OnChanges, AfterViewInit {
     const pt = this.eventToLocation(event.event);
 
     this.zoomViewPort(scale, pt);
+    this.cd.markForCheck();
   }
 
   zoomViewPort(scale: number,  pt?: {x: number, y: number}) {
@@ -326,7 +350,6 @@ export class Canvas implements OnInit, OnChanges, AfterViewInit {
       event.stopPropagation();
       if (this.draggedImage && this.draggedEvt) {
         const oriPt = this.eventToLocation(this.draggedEvt);
-        /* eslint-disable no-bitwise */
         if (this.draggedImageType & 0b0001) {
           this.draggedImage.x1 += (pt.x - oriPt.x);
         }
@@ -339,7 +362,6 @@ export class Canvas implements OnInit, OnChanges, AfterViewInit {
         if (this.draggedImageType & 0b1000) {
           this.draggedImage.y2 += (pt.y - oriPt.y);
         }
-        /* eslint-enable no-bitwise */
         this.draggedEvt = event;
 
       } else if (this.draggedPoint && this.parsedPath) {

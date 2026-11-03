@@ -5,7 +5,7 @@
   <div class="upload-button-row">
     <button type="button" mat-raised-button (click)="fileInput.click()" (drop)="onDrop($event)">Choose File</button>
     @if (data) {
-      <img class="preview" [src]="displayableData" />
+      <img class="preview" [src]="displayableData" [alt]="'Preview of ' + name" />
     }
     <span class="filename">{{name}}</span>
   </div>

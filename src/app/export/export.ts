@@ -1,4 +1,4 @@
-import { Component, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { ExportConfig } from '../config';
 import { Storage } from '../storage';
@@ -25,7 +25,6 @@ interface DialogData {
     selector: 'app-export-dialog',
     templateUrl: 'export-dialog.html',
     styleUrls: ['./export-dialog.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatCheckbox, FormsModule, MatFormField, MatLabel, MatInput, MatButton, Formatter, PathPreview, MatDialogActions]
 })
 export class ExportDialog {
@@ -114,7 +113,6 @@ export class ExportDialog {
 @Component({
     selector: 'app-export',
     templateUrl: './export.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class Export {

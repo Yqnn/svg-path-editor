@@ -1,6 +1,11 @@
-<div style="display:flex;flex-direction:row;height: 100%;" @leftColumnParent>
+<div style="display:flex;flex-direction:row;height: 100%;">
   @if (isLeftPanelOpened) {
-    <div @leftColumn (@leftColumn.done)="canvas?.refreshCanvasSize()" class="left-column-wrapper">
+    <div
+      animate.enter="left-column-enter"
+      animate.leave="left-column-leave"
+      (animationend)="canvas?.refreshCanvasSize()"
+      class="left-column-wrapper"
+    >
       <button mat-raised-button class="left-column-close"
         (click)="toggleLeftPanel()"
         >
@@ -10,8 +15,9 @@
         <app-expandable panelTitle="Path" [panelInfo]="rawPath.length.toString()" [opened]="true">
           <div class="row">
             <div class="input-block" style="flex-grow:1"  [class.has-error]="invalidSyntax">
-              <label class="opaque">Path</label>
+              <label class="opaque" for="path-input">Path</label>
               <textarea
+                id="path-input"
                 [ngModel]="rawPath"
                 (ngModelChange)="reloadPath($event, $event.length > 0)"
                 class="app-input"
@@ -55,8 +61,9 @@
         <app-expandable panelTitle="Configuration" [opened]="true">
           <div class="row">
             <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
-              <label>X</label>
+              <label for="viewbox-x">X</label>
               <input
+                id="viewbox-x"
                 class="app-input"
                 appFormatter
                 [numberValue]="cfg.viewPortX"
@@ -65,8 +72,9 @@
                 >
             </div>
             <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
-              <label>Y</label>
+              <label for="viewbox-y">Y</label>
               <input
+                id="viewbox-y"
                 class="app-input"
                 appFormatter
                 [numberValue]="cfg.viewPortY"
@@ -75,8 +83,9 @@
                 >
             </div>
             <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
-              <label>Width</label>
+              <label for="viewbox-width">Width</label>
               <input
+                id="viewbox-width"
                 class="app-input"
                 appFormatter
                 formatterType="positive-float"
@@ -86,8 +95,9 @@
                 >
             </div>
             <div class="input-block" [ngClass]="{'disabled': cfg.viewPortLocked }">
-              <label>Height</label>
+              <label for="viewbox-height">Height</label>
               <input
+                id="viewbox-height"
                 class="app-input"
                 appFormatter
                 formatterType="positive-float"
@@ -119,8 +129,9 @@
               [matTooltipDisabled]="cfg.snapToGrid"
               [ngClass]="{'disabled': cfg.snapToGrid }"
               >
-              <label>Point Precision</label>
+              <label for="point-precision">Point Precision</label>
               <input
+                id="point-precision"
                 class="app-input"
                 appFormatter
                 formatterType="positive-integer"
@@ -140,12 +151,12 @@
         <app-expandable panelTitle="Path Operations" [opened]="true">
           <div class="row path-operations-grid">
             <div class="input-block" style="flex:1">
-              <label>Scale X</label>
-              <input appFormatter [(numberValue)]="scaleX" class="app-input" (keydown.enter)="scale(scaleX, scaleY)" >
+              <label for="scale-x">Scale X</label>
+              <input id="scale-x" appFormatter [(numberValue)]="scaleX" class="app-input" (keydown.enter)="scale(scaleX, scaleY)" >
             </div>
             <div class="input-block" style="flex:1">
-              <label>Scale Y</label>
-              <input appFormatter [(numberValue)]="scaleY" class="app-input" (keydown.enter)="scale(scaleX, scaleY)">
+              <label for="scale-y">Scale Y</label>
+              <input id="scale-y" appFormatter [(numberValue)]="scaleY" class="app-input" (keydown.enter)="scale(scaleX, scaleY)">
             </div>
             <button
               mat-flat-button
@@ -158,12 +169,12 @@
           </div>
           <div class="row path-operations-grid">
             <div class="input-block" style="flex:1">
-              <label>Translate X</label>
-              <input appFormatter [(numberValue)]="translateX" class="app-input" (keydown.enter)="translate(translateX, translateY)" >
+              <label for="translate-x">Translate X</label>
+              <input id="translate-x" appFormatter [(numberValue)]="translateX" class="app-input" (keydown.enter)="translate(translateX, translateY)" >
             </div>
             <div class="input-block" style="flex:1">
-              <label>Translate Y</label>
-              <input appFormatter [(numberValue)]="translateY" class="app-input" (keydown.enter)="translate(translateX, translateY)" >
+              <label for="translate-y">Translate Y</label>
+              <input id="translate-y" appFormatter [(numberValue)]="translateY" class="app-input" (keydown.enter)="translate(translateX, translateY)" >
             </div>
             <button
               mat-flat-button
@@ -176,16 +187,16 @@
           </div>
           <div class="row path-operations-grid4">
             <div class="input-block" style="flex:1">
-              <label>Origin X</label>
-              <input appFormatter [(numberValue)]="rotateX" class="app-input" (keydown.enter)="rotate(rotateX, rotateY, rotateAngle)">
+              <label for="origin-x">Origin X</label>
+              <input id="origin-x" appFormatter [(numberValue)]="rotateX" class="app-input" (keydown.enter)="rotate(rotateX, rotateY, rotateAngle)">
             </div>
             <div class="input-block" style="flex:1">
-              <label>Origin Y</label>
-              <input appFormatter [(numberValue)]="rotateY" class="app-input" (keydown.enter)="rotate(rotateX, rotateY, rotateAngle)">
+              <label for="origin-y">Origin Y</label>
+              <input id="origin-y" appFormatter [(numberValue)]="rotateY" class="app-input" (keydown.enter)="rotate(rotateX, rotateY, rotateAngle)">
             </div>
             <div class="input-block" style="flex:1">
-              <label>Angle</label>
-              <input appFormatter suffix="°" [(numberValue)]="rotateAngle" class="app-input" (keydown.enter)="rotate(rotateX, rotateY, rotateAngle)">
+              <label for="rotate-angle">Angle</label>
+              <input id="rotate-angle" appFormatter suffix="°" [(numberValue)]="rotateAngle" class="app-input" (keydown.enter)="rotate(rotateX, rotateY, rotateAngle)">
             </div>
             <button
               mat-flat-button
@@ -198,8 +209,8 @@
           </div>
           <div class="row path-operations-grid">
             <div class="input-block" style="grid-column: span 2;">
-              <label>Number of decimals</label>
-              <input appFormatter formatterType="positive-integer" [(numberValue)]="roundValuesDecimals" class="app-input" (keydown.enter)="roundValues(roundValuesDecimals)">
+              <label for="round-decimals">Number of decimals</label>
+              <input id="round-decimals" appFormatter formatterType="positive-integer" [(numberValue)]="roundValuesDecimals" class="app-input" (keydown.enter)="roundValues(roundValuesDecimals)">
             </div>
             <button
               mat-flat-button
@@ -251,13 +262,22 @@
               class="row"
               style="padding-top:1px; padding-bottom:1px;"
               (click)="focusedItem=item"
+              (keydown.enter)="focusedItem=item"
+              (keydown.space)="focusedItem=item; $event.preventDefault()"
+              tabindex="0"
               id="svg_command_row_{{j}}"
               >
               <div
                 class="type-token"
+                role="button"
+                [attr.aria-label]="'Toggle ' + item.getType() + ' command type'"
+                [attr.aria-pressed]="item.relative"
                 [ngClass]="{'type-token-relative':item.relative}"
                 style="user-select: none;-webkit-user-select: none;"
                 (click)="item.setRelative(!item.relative); afterModelChange();"
+                (keydown.enter)="item.setRelative(!item.relative); afterModelChange();"
+                (keydown.space)="item.setRelative(!item.relative); afterModelChange(); $event.preventDefault()"
+                tabindex="0"
               >{{item.getType()}}</div>
               @for (value of item.values; track trackByIndex(i, value); let i = $index) {
                 @if (item.getType().toLowerCase()==='a' && (i===3 || i===4)) {
@@ -330,17 +350,17 @@
     }
 
     @if (cursorPosition) {
-      <label class="cursor-position" >
+      <span class="cursor-position">
         {{cursorPosition.x.toFixed(cursorPosition.decimals)}},
         {{cursorPosition.y.toFixed(cursorPosition.decimals)}}
-      </label>
+      </span>
     }
 
     @if (!cursorPosition && hoverPosition && !isEditingImages) {
-      <label class="hover-position" >
+      <span class="hover-position">
         {{hoverPosition.x.toFixed(3)}},
         {{hoverPosition.y.toFixed(3)}}
-      </label>
+      </span>
     }
 
     @if ((focusedImage && !cfg.preview && !dragging)) {
@@ -551,7 +571,13 @@
 
 <mat-menu #appImage="matMenu">
   <ng-template matMenuContent let-image="image">
-    <div mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
+    <div
+      mat-menu-item
+      [disableRipple]="true"
+      (click)="$event.stopPropagation()"
+      (keydown)="$event.stopPropagation()"
+      tabindex="0"
+    >
       <mat-icon>opacity</mat-icon>
       <ng-container>Opacity</ng-container>
       <div style="display:inline-block; width:180px;">
