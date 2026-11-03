@@ -10,9 +10,8 @@ describe('ShareComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatDialogModule, MatIconModule ],
-      declarations: [ ShareComponent ]
-    })
+    imports: [MatDialogModule, MatIconModule, ShareComponent]
+})
     .compileComponents();
   });
 

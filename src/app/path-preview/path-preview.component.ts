@@ -2,8 +2,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { browserComputePathBoundingBox } from '../svg-bbox';
 
 @Component({
-  selector: 'app-path-preview',
-  templateUrl: './path-preview.component.html'
+    selector: 'app-path-preview',
+    templateUrl: './path-preview.component.html'
 })
 export class PathPreviewComponent implements OnInit {
   @Input() x?: number;

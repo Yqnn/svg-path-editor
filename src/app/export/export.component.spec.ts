@@ -10,9 +10,8 @@ describe('ExportComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatDialogModule, MatIconModule ],
-      declarations: [ ExportComponent ]
-    })
+    imports: [MatDialogModule, MatIconModule, ExportComponent]
+})
     .compileComponents();
   });
 

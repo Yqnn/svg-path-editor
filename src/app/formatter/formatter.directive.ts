@@ -1,9 +1,7 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { formatNumber } from '../../lib/svg';
 
-@Directive({
-  selector: '[appFormatter]'
-})
+@Directive({ selector: '[appFormatter]' })
 export class FormatterDirective implements OnChanges {
   @Input() formatterType: 'float'|'positive-float'|'integer'|'positive-integer' = 'float';
   @Input() numberValue = 0;

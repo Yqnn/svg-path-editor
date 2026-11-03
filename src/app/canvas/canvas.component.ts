@@ -3,12 +3,14 @@ import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Image } from '../image';
 import { Point, SvgPath, SvgControlPoint, SvgItem, SvgPoint } from '../../lib/svg';
+import { NgIf, NgFor, NgClass, NgStyle } from '@angular/common';
 
 /* eslint-disable @angular-eslint/component-selector */
 @Component({
-  selector: '[app-canvas]',
-  templateUrl: './canvas.component.html',
-  styleUrls: ['./canvas.component.css']
+    selector: '[app-canvas]',
+    templateUrl: './canvas.component.html',
+    styleUrls: ['./canvas.component.css'],
+    imports: [NgIf, NgFor, NgClass, NgStyle]
 })
 export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
   get canvasWidth(): number { return this._canvasWidth; }

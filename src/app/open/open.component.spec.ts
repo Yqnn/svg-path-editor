@@ -10,9 +10,8 @@ describe('OpenComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ MatDialogModule, MatIconModule ],
-      declarations: [ OpenComponent ]
-    })
+    imports: [MatDialogModule, MatIconModule, OpenComponent]
+})
     .compileComponents();
   });
 

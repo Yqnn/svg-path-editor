@@ -7,7 +7,8 @@
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -35,7 +36,8 @@ $svg-path-editor-theme: mat.m2-define-dark-theme((
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include mat.core-theme($svg-path-editor-theme);
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.button-theme($svg-path-editor-theme);
 @include mat.fab-theme($svg-path-editor-theme);
 @include mat.icon-button-theme($svg-path-editor-theme);

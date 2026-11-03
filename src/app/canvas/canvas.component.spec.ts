@@ -8,8 +8,8 @@ describe('CanvasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CanvasComponent ]
-    })
+    imports: [CanvasComponent]
+})
     .compileComponents();
   });
 

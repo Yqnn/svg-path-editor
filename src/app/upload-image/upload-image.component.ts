@@ -1,12 +1,21 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Image } from '../image';
+import { MatMiniFabButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { NgIf } from '@angular/common';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'app-upload-image-dialog',
-  templateUrl: 'upload-image-dialog.component.html',
-  styleUrls: ['./upload-image-dialog.component.scss']
+    selector: 'app-upload-image-dialog',
+    templateUrl: 'upload-image-dialog.component.html',
+    styleUrls: ['./upload-image-dialog.component.scss'],
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatButton, NgIf, MatFormField, MatLabel, MatInput, FormsModule, MatCheckbox, MatDialogActions]
 })
 export class UploadImageDialogComponent {
   data: string | null = null;
@@ -77,8 +86,9 @@ export class UploadImageDialogComponent {
 }
 
 @Component({
-  selector: 'app-upload-image',
-  templateUrl: './upload-image.component.html'
+    selector: 'app-upload-image',
+    templateUrl: './upload-image.component.html',
+    imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class UploadImageComponent {
   @Output() addImage = new EventEmitter<Image>();
