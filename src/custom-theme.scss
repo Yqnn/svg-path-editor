@@ -1,17 +1,58 @@
 @use '@angular/material' as mat;
 
-html {
-  color-scheme: dark;
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+// Plus imports for other components in your app.
 
-  @include mat.theme(
-    (
-      color: (
-        theme-type: dark,
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$svg-path-editor-primary: mat.m2-define-palette(mat.$m2-grey-palette, 800);
+$svg-path-editor-accent: mat.m2-define-palette(mat.$m2-blue-palette);
+
+// The warn palette is optional (defaults to red).
+$svg-path-editor-warn: mat.m2-define-palette(mat.$m2-red-palette);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$svg-path-editor-theme: mat.m2-define-dark-theme(
+  (
+    color: (
+      primary: $svg-path-editor-primary,
+      accent: $svg-path-editor-accent,
+      warn: $svg-path-editor-warn,
+    ),
+    typography: mat.m2-define-typography-config(
+        $body-2: mat.m2-define-typography-level(
+            $font-size: 12px,
+          ),
+        $button: mat.m2-define-typography-level(
+            $font-size: 14px,
+            $font-weight: 500,
+          ),
       ),
-      typography: 'Roboto',
-      density: 0,
-    )
-  );
-}
+    density: 0,
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.core-theme($svg-path-editor-theme);
+@include mat.button-theme($svg-path-editor-theme);
+@include mat.fab-theme($svg-path-editor-theme);
+@include mat.icon-button-theme($svg-path-editor-theme);
+@include mat.checkbox-theme($svg-path-editor-theme);
+@include mat.menu-theme($svg-path-editor-theme);
+@include mat.dialog-theme($svg-path-editor-theme);
+@include mat.tooltip-theme($svg-path-editor-theme);
+@include mat.form-field-theme($svg-path-editor-theme);
+@include mat.table-theme($svg-path-editor-theme);
+@include mat.slider-theme($svg-path-editor-theme);
+@include mat.snack-bar-theme($svg-path-editor-theme);
+
+@include mat.typography-hierarchy($svg-path-editor-theme);
