@@ -1,0 +1,134 @@
+import { Component, Input, inject, ChangeDetectionStrategy } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import { ExportConfig } from '../config';
+import { Storage } from '../storage';
+import { SvgPath } from '../../lib/svg';
+import { browserComputePathBoundingBox } from '../svg-bbox';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CopiedSnackbar } from '../copied-snackbar/copied-snackbar';
+import { MatMiniFabButton, MatButton } from '@angular/material/button';
+import { MatTooltip } from '@angular/material/tooltip';
+import { MatIcon } from '@angular/material/icon';
+import { CdkScrollable } from '@angular/cdk/scrolling';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { MatFormField, MatLabel, MatInput } from '@angular/material/input';
+import { Formatter } from '../formatter/formatter';
+import { PathPreview } from '../path-preview/path-preview';
+
+interface DialogData {
+  path: string;
+  name: string;
+}
+
+@Component({
+    selector: 'app-export-dialog',
+    templateUrl: 'export-dialog.html',
+    styleUrls: ['./export-dialog.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatCheckbox, FormsModule, MatFormField, MatLabel, MatInput, MatButton, Formatter, PathPreview, MatDialogActions]
+})
+export class ExportDialog {
+  dialogRef = inject<MatDialogRef<ExportDialog>>(MatDialogRef);
+  storageService = inject(Storage);
+  data = inject<DialogData>(MAT_DIALOG_DATA);
+  cfg = inject(ExportConfig);
+  private snackBar = inject(MatSnackBar);
+
+  x = 0;
+  y = 0;
+  width = 0;
+  height = 0;
+
+  constructor() {
+    this.refreshViewbox();
+  }
+
+  download(fileName: string, data: string) {
+    const blob = new Blob([data], { type: 'image/svg+xml' });
+    const anchor = document.createElement('a');
+    anchor.href = window.URL.createObjectURL(blob);
+    anchor.setAttribute('download', fileName);
+    anchor.style.display = 'none';
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    setTimeout(() => window.URL.revokeObjectURL(anchor.href), 100);
+  }
+	
+	copyToClipboard(data: string) {
+    navigator.clipboard.writeText(data);
+    this.snackBar.openFromComponent(CopiedSnackbar, {
+      horizontalPosition:'center',
+      verticalPosition: 'top',
+      duration: 2000
+    });
+	}
+
+	makeSVG(): string {
+		return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
+	<path d="${this.data.path}"${this.cfg.stroke ? ` stroke="${this.cfg.strokeColor}" stroke-width="${this.cfg.strokeWidth}"` : ''} fill="${this.cfg.fill ? this.cfg.fillColor : 'none'}"/>
+</svg>`;
+	}
+
+  onCancel(): void {
+    this.dialogRef.close();
+  }
+  onExport(): void {
+    const svg = this.makeSVG();
+
+    this.download(this.data.name || 'svg-path.svg', svg);
+    this.dialogRef.close();
+  }
+	onCopyToClipboard(): void {
+		const svg = this.makeSVG();
+		this.copyToClipboard(svg);
+	}
+
+  refreshViewbox() {
+    const p = new SvgPath(this.data.path);
+    const locs = p.targetLocations();
+    if (locs.length > 0) {
+      const bbox = browserComputePathBoundingBox(this.data.path);
+
+      this.x = bbox.x;
+      this.y = bbox.y;
+      this.width = bbox.width;
+      this.height = bbox.height;
+      if (this.cfg.stroke) {
+        this.x -= this.cfg.strokeWidth;
+        this.y -= this.cfg.strokeWidth;
+        this.width += 2 * this.cfg.strokeWidth;
+        this.height += 2 * this.cfg.strokeWidth;
+      }
+      this.x = parseFloat(this.x.toPrecision(6));
+      this.y = parseFloat(this.y.toPrecision(6));
+      this.width = parseFloat(this.width.toPrecision(4));
+      this.height = parseFloat(this.height.toPrecision(4));
+    }
+  }
+}
+
+
+
+@Component({
+    selector: 'app-export',
+    templateUrl: './export.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    imports: [MatMiniFabButton, MatTooltip, MatIcon]
+})
+export class Export {
+  dialog = inject(MatDialog);
+
+  @Input() path = '';
+  @Input() name = '';
+
+  openDialog(): void {
+    this.dialog.open(ExportDialog, {
+      width: '800px',
+      panelClass: 'dialog',
+      data: {path: this.path, name: this.name},
+      autoFocus: false
+    });
+  }
+}

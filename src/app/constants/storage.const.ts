@@ -10,7 +10,7 @@ export const STORAGE = {
 } as const;
 
 /**
- * Generate a localStorage key for ConfigService properties
+ * Generate a localStorage key for Config properties
  */
 export function getConfigKey(className: string, propertyKey: string): string {
   return `${STORAGE.CONFIG_PREFIX}.${className}.${propertyKey}`;
