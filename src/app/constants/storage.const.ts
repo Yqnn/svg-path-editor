@@ -6,7 +6,7 @@
 
 export const STORAGE = {
   STORED_PATHS: 'storedPaths',
-  CONFIG_PREFIX: 'SaveDecorator'
+  CONFIG_PREFIX: 'SaveDecorator',
 } as const;
 
 /**

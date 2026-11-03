@@ -1,12 +1,12 @@
+import { Component, ElementRef, afterNextRender, inject, input, viewChild } from '@angular/core';
 import {
-  Component,
-  ElementRef,
-  afterNextRender,
-  inject,
-  input,
-  viewChild,
-} from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CopiedSnackbar } from '../copied-snackbar/copied-snackbar';
 import { MatMiniFabButton, MatIconButton, MatButton } from '@angular/material/button';
@@ -22,9 +22,24 @@ export class DialogData {
 }
 
 @Component({
-    selector: 'app-share-dialog',
-    templateUrl: 'share-dialog.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreview, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, MatDialogActions, MatButton]
+  selector: 'app-share-dialog',
+  templateUrl: 'share-dialog.html',
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    PathPreview,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    FormsModule,
+    MatIconButton,
+    MatSuffix,
+    MatTooltip,
+    MatIcon,
+    MatDialogActions,
+    MatButton,
+  ],
 })
 export class ShareDialog {
   dialogRef = inject<MatDialogRef<ShareDialog>>(MatDialogRef);
@@ -65,9 +80,9 @@ export class ShareDialog {
 }
 
 @Component({
-    selector: 'app-share',
-    templateUrl: './share.html',
-    imports: [MatMiniFabButton, MatTooltip, MatIcon]
+  selector: 'app-share',
+  templateUrl: './share.html',
+  imports: [MatMiniFabButton, MatTooltip, MatIcon],
 })
 export class Share {
   dialog = inject(MatDialog);

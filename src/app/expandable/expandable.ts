@@ -5,7 +5,7 @@ import { MatIcon } from '@angular/material/icon';
 @Component({
   selector: 'app-expandable',
   templateUrl: './expandable.html',
-  styleUrls: ['./expandable.scss'],
+  styleUrl: './expandable.scss',
   imports: [MatIcon],
 })
 export class Expandable {

@@ -8,9 +8,8 @@ describe('Canvas', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [Canvas]
-})
-    .compileComponents();
+      imports: [Canvas],
+    }).compileComponents();
   });
 
   beforeEach(() => {

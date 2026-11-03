@@ -6,7 +6,7 @@
   (click)="toggle()"
   (keydown.enter)="toggle()"
   (keydown.space)="toggle(); $event.preventDefault()"
-  style="margin-top:0;"
+  style="margin-top: 0"
 >
   <span>{{ panelTitle() }}</span>
   @if (panelInfo()) {
@@ -17,7 +17,7 @@
 @if (opened()) {
   <div animate.enter="panel-enter" animate.leave="panel-leave" class="panel">
     <div class="panel-content">
-      <div #contentWrapper style="padding-top:2px;padding-bottom:6px">
+      <div #contentWrapper style="padding-top: 2px; padding-bottom: 6px">
         <ng-content></ng-content>
       </div>
     </div>

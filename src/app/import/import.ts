@@ -1,5 +1,12 @@
 import { Component, OnInit, inject, output } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { kDefaultPath } from '../constants/default-path.const';
 import { Storage } from '../storage';
 import { SvgPath } from '../../lib/svg';
@@ -12,14 +19,20 @@ export class DialogData {
 }
 
 @Component({
-    selector: 'app-import-dialog',
-    templateUrl: 'import-dialog.html',
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreview, MatDialogActions, MatButton]
+  selector: 'app-import-dialog',
+  templateUrl: 'import-dialog.html',
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    PathPreview,
+    MatDialogActions,
+    MatButton,
+  ],
 })
 export class ImportDialog {
   dialogRef = inject<MatDialogRef<ImportDialog>>(MatDialogRef);
   data = inject<DialogData>(MAT_DIALOG_DATA);
-
 
   onConfirm(): void {
     this.dialogRef.close(true);
@@ -30,8 +43,8 @@ export class ImportDialog {
 }
 
 @Component({
-    selector: 'app-import',
-    template: ''
+  selector: 'app-import',
+  template: '',
 })
 export class Import implements OnInit {
   dialog = inject(MatDialog);
@@ -47,7 +60,7 @@ export class Import implements OnInit {
   private readPath(): string {
     const fragment = decodeURIComponent(window.location.hash.slice(1));
     const check = /^P=[mMlLvVhHcCsSqQtTaAzZ0-9\-e._,]+$/;
-    if(check.test(fragment)) {
+    if (check.test(fragment)) {
       const path = fragment.slice(2).replace(/_/g, ' ');
       try {
         const _ = new SvgPath(path);
@@ -62,8 +75,8 @@ export class Import implements OnInit {
   ngOnInit() {
     const openedPath = this.storageService.getPath();
     const unsavedChanges = openedPath && openedPath.path !== kDefaultPath;
-    if(this.urlPath && this.urlPath !== openedPath?.path) {
-      if(unsavedChanges) {
+    if (this.urlPath && this.urlPath !== openedPath?.path) {
+      if (unsavedChanges) {
         this.openDialog();
       } else {
         this.finalize(true);
@@ -76,10 +89,10 @@ export class Import implements OnInit {
       width: '800px',
       panelClass: 'dialog',
       autoFocus: false,
-      data: {path: this.urlPath}
+      data: { path: this.urlPath },
     });
 
-    dialogRef.afterClosed().subscribe((result: boolean)  => {
+    dialogRef.afterClosed().subscribe((result: boolean) => {
       this.finalize(result);
     });
   }

@@ -10,9 +10,9 @@ function save() {
     let isInitialized = false;
 
     const setter = (newVal: unknown) => {
-      if(!wasStored || isInitialized) {
+      if (!wasStored || isInitialized) {
         value = newVal;
-        if(isInitialized) {
+        if (isInitialized) {
           localStorage.setItem(localStorageKey, JSON.stringify(value));
         }
       }
@@ -21,15 +21,13 @@ function save() {
 
     Object.defineProperty(target, propertyKey, {
       get: () => value,
-      set: setter
-    }); 
-  }
+      set: setter,
+    });
+  };
 }
 
-
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Config {
   @save() viewPortX = 0;
@@ -45,14 +43,13 @@ export class Config {
   @save() decimalPrecision = 3;
 }
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ExportConfig {
   @save() fill = true;
   @save() fillColor = '#000000';
   @save() stroke = false;
-  @save() strokeColor =  '#FF0000';
+  @save() strokeColor = '#FF0000';
   @save() strokeWidth = 0.1;
 }

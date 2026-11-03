@@ -21,7 +21,7 @@ export class KeyboardNavigable {
     return false;
   }
 
-  moveFocusTo(type: 'left'|'right'|'up'|'down', event: KeyboardEvent) {
+  moveFocusTo(type: 'left' | 'right' | 'up' | 'down', event: KeyboardEvent) {
     const id = this.el.nativeElement.getAttribute('id') || '';
     let row = parseInt(id.replace(/.*_([0-9]+)_[0-9]+$/, '$1'), 10);
     let col = parseInt(id.replace(/.*_[0-9]+_([0-9]+)$/, '$1'), 10);
@@ -54,7 +54,7 @@ export class KeyboardNavigable {
         }
         let col2 = 7;
         while (col2 >= 0) {
-          col2 --;
+          col2--;
           if (this.setFocus(row - 1, col2, event)) {
             return;
           }
@@ -62,16 +62,16 @@ export class KeyboardNavigable {
       }
       let col3 = col;
       while ((type === 'down' || type === 'up') && col3 > 0) {
-        col3 --;
+        col3--;
         if (this.setFocus(row, col3, event)) {
           return;
         }
       }
-      count ++;
+      count++;
       if (type === 'up' || type === 'left') {
-        row --;
+        row--;
       } else {
-        row ++;
+        row++;
       }
     }
   }

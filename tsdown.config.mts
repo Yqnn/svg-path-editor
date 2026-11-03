@@ -5,5 +5,6 @@ export default defineConfig({
   dts: true,
   sourcemap: true,
   outDir: './src/lib/dist',
-  format:['esm', 'cjs']
+  format: ['esm', 'cjs'],
+  tsconfig: './tsconfig.lib.json',
 });

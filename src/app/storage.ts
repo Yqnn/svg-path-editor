@@ -9,7 +9,7 @@ export class StoredPath {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Storage {
   storedPaths: StoredPath[] = [];
@@ -22,11 +22,11 @@ export class Storage {
   }
 
   getPath(name: string | null = null): StoredPath | undefined {
-    return this.storedPaths.find(it => it.name === name);
+    return this.storedPaths.find((it) => it.name === name);
   }
 
   removePath(name: string) {
-    this.storedPaths = this.storedPaths.filter(it => it.name !== name);
+    this.storedPaths = this.storedPaths.filter((it) => it.name !== name);
     this.save();
   }
 
@@ -43,19 +43,24 @@ export class Storage {
   }
 
   isEmpty(): boolean {
-    return this.storedPaths.filter(it => !!it.name).length === 0;
+    return this.storedPaths.filter((it) => !!it.name).length === 0;
   }
 
   load() {
     this.storedPaths = [];
     const stored = localStorage.getItem(STORAGE.STORED_PATHS);
     if (stored) {
-      const parsed = JSON.parse(stored) as {creationDate: string, changeDate: string, name: string, path: string}[];
-      this.storedPaths = parsed.map(it => ({
+      const parsed = JSON.parse(stored) as {
+        creationDate: string;
+        changeDate: string;
+        name: string;
+        path: string;
+      }[];
+      this.storedPaths = parsed.map((it) => ({
         creationDate: new Date(it.creationDate),
         changeDate: new Date(it.changeDate),
         name: it.name,
-        path: it.path
+        path: it.path,
       }));
     }
   }

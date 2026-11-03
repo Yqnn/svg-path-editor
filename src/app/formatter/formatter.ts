@@ -1,12 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  HostListener,
-  effect,
-  inject,
-  input,
-  model,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, effect, inject, input, model } from '@angular/core';
 import { formatNumber } from '../../lib/svg';
 
 @Directive({

@@ -10,9 +10,8 @@ describe('UploadImage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [MatDialogModule, MatIconModule, UploadImage]
-})
-    .compileComponents();
+      imports: [MatDialogModule, MatIconModule, UploadImage],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,5 +1,12 @@
 import { Component, inject, input } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+} from '@angular/material/dialog';
 import { ExportConfig } from '../config';
 import { Storage } from '../storage';
 import { SvgPath } from '../../lib/svg';
@@ -22,10 +29,23 @@ interface DialogData {
 }
 
 @Component({
-    selector: 'app-export-dialog',
-    templateUrl: 'export-dialog.html',
-    styleUrls: ['./export-dialog.scss'],
-    imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatCheckbox, FormsModule, MatFormField, MatLabel, MatInput, MatButton, Formatter, PathPreview, MatDialogActions]
+  selector: 'app-export-dialog',
+  templateUrl: 'export-dialog.html',
+  styleUrl: './export-dialog.scss',
+  imports: [
+    MatDialogTitle,
+    CdkScrollable,
+    MatDialogContent,
+    MatCheckbox,
+    FormsModule,
+    MatFormField,
+    MatLabel,
+    MatInput,
+    MatButton,
+    Formatter,
+    PathPreview,
+    MatDialogActions,
+  ],
 })
 export class ExportDialog {
   dialogRef = inject<MatDialogRef<ExportDialog>>(MatDialogRef);
@@ -54,21 +74,21 @@ export class ExportDialog {
     document.body.removeChild(anchor);
     setTimeout(() => window.URL.revokeObjectURL(anchor.href), 100);
   }
-	
-	copyToClipboard(data: string) {
+
+  copyToClipboard(data: string) {
     navigator.clipboard.writeText(data);
     this.snackBar.openFromComponent(CopiedSnackbar, {
-      horizontalPosition:'center',
+      horizontalPosition: 'center',
       verticalPosition: 'top',
-      duration: 2000
+      duration: 2000,
     });
-	}
+  }
 
-	makeSVG(): string {
-		return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
+  makeSVG(): string {
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${this.x} ${this.y} ${this.width} ${this.height}">
 	<path d="${this.data.path}"${this.cfg.stroke ? ` stroke="${this.cfg.strokeColor}" stroke-width="${this.cfg.strokeWidth}"` : ''} fill="${this.cfg.fill ? this.cfg.fillColor : 'none'}"/>
 </svg>`;
-	}
+  }
 
   onCancel(): void {
     this.dialogRef.close();
@@ -79,10 +99,10 @@ export class ExportDialog {
     this.download(this.data.name || 'svg-path.svg', svg);
     this.dialogRef.close();
   }
-	onCopyToClipboard(): void {
-		const svg = this.makeSVG();
-		this.copyToClipboard(svg);
-	}
+  onCopyToClipboard(): void {
+    const svg = this.makeSVG();
+    this.copyToClipboard(svg);
+  }
 
   refreshViewbox() {
     const p = new SvgPath(this.data.path);
@@ -108,12 +128,10 @@ export class ExportDialog {
   }
 }
 
-
-
 @Component({
-    selector: 'app-export',
-    templateUrl: './export.html',
-    imports: [MatMiniFabButton, MatTooltip, MatIcon]
+  selector: 'app-export',
+  templateUrl: './export.html',
+  imports: [MatMiniFabButton, MatTooltip, MatIcon],
 })
 export class Export {
   dialog = inject(MatDialog);

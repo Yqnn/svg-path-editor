@@ -34,10 +34,7 @@
                 "input": "public"
               }
             ],
-            "styles": [
-              "src/custom-theme.scss",
-              "src/styles.scss"
-            ],
+            "styles": ["src/custom-theme.scss", "src/styles.scss"],
             "serviceWorker": "ngsw-config.json"
           },
           "configurations": {
@@ -82,10 +79,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
-            "lintFilePatterns": [
-              "src/**/*.ts",
-              "src/**/*.html"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }

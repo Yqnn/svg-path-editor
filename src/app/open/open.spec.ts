@@ -10,9 +10,8 @@ describe('Open', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [MatDialogModule, MatIconModule, Open]
-})
-    .compileComponents();
+      imports: [MatDialogModule, MatIconModule, Open],
+    }).compileComponents();
   });
 
   beforeEach(() => {

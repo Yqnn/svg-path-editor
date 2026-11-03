@@ -1,18 +1,14 @@
 <h1 mat-dialog-title>Save path</h1>
 <div mat-dialog-content>
-  <mat-form-field style="width: 100%;">
+  <mat-form-field style="width: 100%">
     <mat-label>Name</mat-label>
-    <input matInput [(ngModel)]="data.name" cdkFocusInitial>
+    <input matInput [(ngModel)]="data.name" cdkFocusInitial />
   </mat-form-field>
   @if (storageService.hasPath(data.name)) {
-    <p>
-      A path with this name already exists, press <i>Replace</i> to replace it.
-    </p>
+    <p>A path with this name already exists, press <i>Replace</i> to replace it.</p>
   }
   @if (!storageService.hasPath(data.name)) {
-    <p>
-      Press <i>Save</i> to save current path in your browser.
-    </p>
+    <p>Press <i>Save</i> to save current path in your browser.</p>
   }
 </div>
 <div mat-dialog-actions align="end">

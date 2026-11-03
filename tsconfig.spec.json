@@ -3,14 +3,9 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "types": [
-      "vitest/globals"
-    ]
+    "types": ["vitest/globals"]
   },
-  "include": [
-    "src/**/*.d.ts",
-    "src/**/*.spec.ts"
-  ],
+  "include": ["src/**/*.d.ts", "src/**/*.spec.ts"],
   "angularCompilerOptions": {
     "extendedDiagnostics": {
       "checks": {
