@@ -1,13 +1,11 @@
-FROM node:current
+FROM node:22-slim
 
-RUN mkdir -p /app
 WORKDIR /app
 
-COPY package.json .
-RUN npm install -g npm@latest
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
 
 EXPOSE 4200
-CMD ["npx", "ng", "serve", "--host", "0.0.0.0", "--port", "4200"]
+CMD ["npm", "start", "--", "--host", "0.0.0.0", "--port", "4200"]

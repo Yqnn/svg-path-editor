@@ -1,0 +1,55 @@
+import { Injectable } from '@angular/core';
+import { getConfigKey } from './constants/storage.const';
+
+function save() {
+  return function (target: object, propertyKey: string) {
+    const localStorageKey = getConfigKey(target.constructor.name, propertyKey);
+    const storedValue = localStorage.getItem(localStorageKey);
+    let value = JSON.parse(storedValue ?? 'null');
+    const wasStored = storedValue !== null;
+    let isInitialized = false;
+
+    const setter = (newVal: unknown) => {
+      if (!wasStored || isInitialized) {
+        value = newVal;
+        if (isInitialized) {
+          localStorage.setItem(localStorageKey, JSON.stringify(value));
+        }
+      }
+      isInitialized = true;
+    };
+
+    Object.defineProperty(target, propertyKey, {
+      get: () => value,
+      set: setter,
+    });
+  };
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class Config {
+  @save() viewPortX = 0;
+  @save() viewPortY = 0;
+  @save() viewPortWidth = 30;
+  @save() viewPortHeight = 30;
+  @save() viewPortLocked = false;
+  @save() filled = true;
+  @save() preview = false;
+  @save() showTicks = false;
+  @save() minifyOutput = false;
+  @save() snapToGrid = true;
+  @save() decimalPrecision = 3;
+}
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ExportConfig {
+  @save() fill = true;
+  @save() fillColor = '#000000';
+  @save() stroke = false;
+  @save() strokeColor = '#FF0000';
+  @save() strokeWidth = 0.1;
+}

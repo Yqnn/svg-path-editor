@@ -1,4 +1,4 @@
-import { SvgPath } from "./svg";
+import { SvgPath } from './svg';
 
 const findPreviousMoveTo = (svg: SvgPath, index: number) => {
   let i = index;
