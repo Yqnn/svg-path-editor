@@ -40,7 +40,7 @@ export class FormatterDirective implements OnChanges {
   }
 
   @HostListener('input', ['$event'])
-  onInput(e: InputEvent) {
+  onInput(_e: Event) {
     let value = '';
     if (this.formatterType === 'float') { value = this.viewValue.replace(/[\u066B,]/g, '.').replace(/[^\-0-9.eE]/g, ''); }
     if (this.formatterType === 'integer') { value = this.viewValue.replace(/[^\-0-9]/g, ''); }
