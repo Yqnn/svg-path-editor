@@ -26,8 +26,7 @@ export const appConfig: ApplicationConfig = {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
       useValue: {
         appearance: 'fill',
-        floatLabels: 'always',
-        color: 'accent',
+        floatLabel: 'always',
       },
     },
     {
