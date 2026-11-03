@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ViewChild, AfterViewInit, inject } from '@angular/core';
+import { Component, Output, EventEmitter, ViewChild, AfterViewInit, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
@@ -18,6 +18,7 @@ export class DialogData {
     selector: 'app-open-dialog',
     templateUrl: 'open-dialog.component.html',
     styleUrls: ['./open-dialog.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatTable, MatSort, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatSortHeader, MatCellDef, MatCell, MatMiniFabButton, MatTooltip, MatIcon, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow, MatDialogActions, MatButton]
 })
 export class OpenDialogComponent implements AfterViewInit {
@@ -80,6 +81,7 @@ export class OpenDialogComponent implements AfterViewInit {
     selector: 'app-open',
     templateUrl: './open.component.html',
     styleUrls: ['./open.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class OpenComponent {

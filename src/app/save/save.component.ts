@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { StorageService } from '../storage.service';
 import { MatMiniFabButton, MatButton } from '@angular/material/button';
@@ -16,6 +16,7 @@ export interface DialogData {
 @Component({
     selector: 'app-save-dialog',
     templateUrl: 'save-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatFormField, MatLabel, MatInput, FormsModule, MatDialogActions, MatButton]
 })
 export class SaveDialogComponent {
@@ -35,6 +36,7 @@ export class SaveDialogComponent {
     selector: 'app-save',
     templateUrl: './save.component.html',
     styleUrls: ['./save.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class SaveComponent {

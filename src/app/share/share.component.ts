@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input, ViewChild, AfterViewInit, ElementRef, inject } from '@angular/core';
+import { Component, Output, EventEmitter, Input, ViewChild, AfterViewInit, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StorageService } from '../storage.service';
@@ -18,6 +18,7 @@ export class DialogData {
 @Component({
     selector: 'app-share-dialog',
     templateUrl: 'share-dialog.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, PathPreviewComponent, MatFormField, MatLabel, MatInput, FormsModule, MatIconButton, MatSuffix, MatTooltip, MatIcon, MatDialogActions, MatButton]
 })
 export class ShareDialogComponent implements AfterViewInit {
@@ -61,6 +62,7 @@ export class ShareDialogComponent implements AfterViewInit {
 @Component({
     selector: 'app-share',
     templateUrl: './share.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class ShareComponent {

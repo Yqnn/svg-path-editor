@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { browserComputePathBoundingBox } from '../svg-bbox';
 
 @Component({
     selector: 'app-path-preview',
+    changeDetection: ChangeDetectionStrategy.Eager,
     templateUrl: './path-preview.component.html'
 })
 export class PathPreviewComponent implements OnInit {

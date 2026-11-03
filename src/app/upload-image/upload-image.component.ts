@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Output, EventEmitter, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialog, MatDialogRef, MatDialogTitle, MatDialogContent, MatDialogActions } from '@angular/material/dialog';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Image } from '../image';
@@ -15,6 +15,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     selector: 'app-upload-image-dialog',
     templateUrl: 'upload-image-dialog.component.html',
     styleUrls: ['./upload-image-dialog.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatDialogTitle, CdkScrollable, MatDialogContent, MatButton, MatFormField, MatLabel, MatInput, FormsModule, MatCheckbox, MatDialogActions]
 })
 export class UploadImageDialogComponent {
@@ -85,6 +86,7 @@ export class UploadImageDialogComponent {
 @Component({
     selector: 'app-upload-image',
     templateUrl: './upload-image.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MatMiniFabButton, MatTooltip, MatIcon]
 })
 export class UploadImageComponent {

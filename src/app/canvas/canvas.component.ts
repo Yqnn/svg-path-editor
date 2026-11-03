@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges, inject, ChangeDetectionStrategy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { buffer, map, throttleTime } from 'rxjs/operators';
 import { Image } from '../image';
@@ -10,6 +10,7 @@ import { NgClass, NgStyle } from '@angular/common';
     selector: '[app-canvas]',
     templateUrl: './canvas.component.html',
     styleUrls: ['./canvas.component.css'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, NgStyle]
 })
 export class CanvasComponent implements OnInit, OnChanges, AfterViewInit {
