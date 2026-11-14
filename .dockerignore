@@ -1,2 +1,7 @@
 node_modules
 npm-debug.log
+.git
+.angular
+dist
+src/lib/dist
+coverage

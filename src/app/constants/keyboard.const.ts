@@ -9,9 +9,9 @@ export const KEYBOARD = {
     UNDO: 'z',
     ESCAPE: 'Escape',
     DELETE: 'Delete',
-    BACKSPACE: 'Backspace'
+    BACKSPACE: 'Backspace',
   },
   PATTERNS: {
-    SVG_COMMAND: /^[mlvhcsqtaz]$/i
-  }
+    SVG_COMMAND: /^[mlvhcsqtaz]$/i,
+  },
 } as const;

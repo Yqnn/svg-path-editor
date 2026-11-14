@@ -1,21 +1,20 @@
-import { Point, SvgPath, SvgItem } from "./svg";
-import { optimizePath } from "./optimize-path";
-import { getSubPathBounds } from "./get-sub-path-bounds";
+import { Point, SvgPath, SvgItem } from './svg';
+import { optimizePath } from './optimize-path';
+import { getSubPathBounds } from './get-sub-path-bounds';
 
 const toStr = (pt: Point): [string, string] => {
   return [String(pt.x), String(pt.y)];
 };
 
+export const reversePath = (svg: SvgPath, subpathOfItem?: number) => {
+  const { start, end } = getSubPathBounds(svg, subpathOfItem);
 
-export const reversePath = (svg: SvgPath, subpathOfItem?: number)=> {
-  const {start, end} = getSubPathBounds(svg, subpathOfItem);
-
-  if((end - start) <= 1) {
+  if (end - start <= 1) {
     return;
   }
 
   const isBeforeRelative = end < svg.path.length && svg.path[end].relative;
-  if(isBeforeRelative) {
+  if (isBeforeRelative) {
     svg.path[end].setRelative(false);
   }
 
@@ -28,49 +27,49 @@ export const reversePath = (svg: SvgPath, subpathOfItem?: number)=> {
   let previousType = '';
   let isClosed = false;
 
-  for(const component of reversedPath) {
+  for (const component of reversedPath) {
     const pt = toStr(component.previousPoint);
     const ctrl = component.absolutePoints.map(toStr);
     const type = component.getType(true);
-    switch(type) {
-      case 'M' :
-      case 'Z' :
-        if(isClosed) {
+    switch (type) {
+      case 'M':
+      case 'Z':
+        if (isClosed) {
           outputPath.push(SvgItem.Make(['Z']));
         }
         isClosed = type === 'Z';
-        if(outputPath[outputPath.length - 1].getType(true) === 'M') {
-          outputPath[outputPath.length - 1] = SvgItem.Make(['M',  ...pt]);
+        if (outputPath[outputPath.length - 1].getType(true) === 'M') {
+          outputPath[outputPath.length - 1] = SvgItem.Make(['M', ...pt]);
         } else {
-          outputPath.push(SvgItem.Make(['M',  ...pt]));
+          outputPath.push(SvgItem.Make(['M', ...pt]));
         }
         break;
-      case 'L' :
+      case 'L':
         outputPath.push(SvgItem.Make(['L', ...pt]));
         break;
-      case 'H' :
+      case 'H':
         outputPath.push(SvgItem.Make(['H', pt[0]]));
         break;
-      case 'V' :
+      case 'V':
         outputPath.push(SvgItem.Make(['V', pt[1]]));
         break;
-      case 'C' :
+      case 'C':
         outputPath.push(SvgItem.Make(['C', ...ctrl[1], ...ctrl[0], ...pt]));
         break;
-      case 'S' : {
+      case 'S': {
         const a = toStr(component.controlLocations()[0]);
-        if(previousType !== 'S') {
-          outputPath.push(SvgItem.Make(['C', ...ctrl[0], ...a, ...pt])); 
+        if (previousType !== 'S') {
+          outputPath.push(SvgItem.Make(['C', ...ctrl[0], ...a, ...pt]));
         } else {
           outputPath.push(SvgItem.Make(['S', ...a, ...pt]));
         }
         break;
       }
-      case 'Q' :
+      case 'Q':
         outputPath.push(SvgItem.Make(['Q', ...ctrl[0], ...pt]));
         break;
-      case 'T' : {
-        if(previousType !== 'T') {
+      case 'T': {
+        if (previousType !== 'T') {
           const a = toStr(component.controlLocations()[0]);
           outputPath.push(SvgItem.Make(['Q', ...a, ...pt]));
         } else {
@@ -78,27 +77,30 @@ export const reversePath = (svg: SvgPath, subpathOfItem?: number)=> {
         }
         break;
       }
-      case 'A' :
-        outputPath.push(SvgItem.Make(['A', ...(component.values.slice(0, 4).map(String)), String(1-component.values[4]) , ...pt]));
+      case 'A':
+        outputPath.push(
+          SvgItem.Make([
+            'A',
+            ...component.values.slice(0, 4).map(String),
+            String(1 - component.values[4]),
+            ...pt,
+          ]),
+        );
         break;
     }
     previousType = type;
   }
-  if(isClosed) {
+  if (isClosed) {
     outputPath.push(SvgItem.Make(['Z']));
   }
-  svg.path = [
-    ...svg.path.slice(0, start),
-    ...outputPath,
-    ...svg.path.slice(end),
-  ];
+  svg.path = [...svg.path.slice(0, start), ...outputPath, ...svg.path.slice(end)];
   svg.refreshAbsolutePositions();
-  if(isBeforeRelative) {
+  if (isBeforeRelative) {
     svg.path[start + outputPath.length].setRelative(true);
   }
 
   optimizePath(svg, {
     removeUselessCommands: true,
-    useShorthands: true
+    useShorthands: true,
   });
 };
