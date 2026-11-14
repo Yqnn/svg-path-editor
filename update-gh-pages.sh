@@ -4,11 +4,11 @@ set -e
 
 git clone "https://github.com/Yqnn/svg-path-editor.git" .svg-path-editor-master
 cd .svg-path-editor-master
-npm install
+npm ci
 npm run build-prod
 git checkout gh-pages
 rm -rf *.ico *.html *.js *.css *.txt assets
-mv dist/svg-path-editor/* .
+mv dist/svg-path-editor/browser/* .
 git add --all
 git commit -m "Refreshed gh-pages from master"
 git show --stat
