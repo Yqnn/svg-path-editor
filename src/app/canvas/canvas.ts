@@ -66,6 +66,7 @@ export class Canvas implements OnInit, OnChanges {
   readonly hoverPosition = output<{ x: number; y: number } | undefined>();
   readonly cursorPosition = output<(Point & { decimals?: number }) | undefined>();
 
+  private resizeObserver?: ResizeObserver;
   draggedEvt: MouseEvent | TouchEvent | null = null;
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
@@ -99,6 +100,15 @@ export class Canvas implements OnInit, OnChanges {
 
   constructor() {
     afterNextRender(() => {
+      const parent = this.canvas.nativeElement.parentNode;
+      if (parent && typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver(() => {
+          this.refreshCanvasSize();
+          this.cd.markForCheck();
+        });
+        this.resizeObserver.observe(parent);
+      }
+
       this.refreshCanvasSize();
       this.cd.markForCheck();
     });
@@ -113,6 +123,7 @@ export class Canvas implements OnInit, OnChanges {
     window.addEventListener('resize', onResize);
     window.addEventListener('wheel', onWheel);
     this.destroyRef.onDestroy(() => {
+      this.resizeObserver?.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('wheel', onWheel);
     });
