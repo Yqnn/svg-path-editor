@@ -15,7 +15,11 @@
   <mat-icon>{{ opened() ? 'expand_more' : 'expand_less' }}</mat-icon>
 </div>
 @if (opened()) {
-  <div animate.enter="panel-enter" animate.leave="panel-leave" class="panel">
+  <div
+    [animate.enter]="hasToggled ? 'panel-enter' : ''"
+    [animate.leave]="hasToggled ? 'panel-leave' : ''"
+    class="panel"
+  >
     <div class="panel-content">
       <div #contentWrapper style="padding-top: 2px; padding-bottom: 6px">
         <ng-content></ng-content>

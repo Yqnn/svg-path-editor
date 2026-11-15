@@ -125,6 +125,7 @@ export class App {
   isLeftPanelOpened = true;
   isContextualMenuOpened = false;
   isEditingImages = false;
+  hasToggledLeftPanel = false;
 
   // Utility functions:
   max = Math.max;
@@ -599,17 +600,32 @@ export class App {
   }
 
   toggleLeftPanel(): void {
+    this.hasToggledLeftPanel = true;
     this.isLeftPanelOpened = !this.isLeftPanelOpened;
   }
 
   deleteImage(image: Image): void {
-    this.images.splice(this.images.indexOf(image), 1);
+    this.images = this.images.filter((item) => item !== image);
     this.focusedImage = null;
   }
 
   addImage(newImage: Image): void {
     this.focusedImage = newImage;
-    this.images.push(newImage);
+    this.images = [...this.images, newImage];
+  }
+
+  setImageOpacity(image: Image, opacity: number): void {
+    image.opacity = opacity;
+    this.refreshImages();
+  }
+
+  togglePreserveAspectRatio(image: Image): void {
+    image.preserveAspectRatio = !image.preserveAspectRatio;
+    this.refreshImages();
+  }
+
+  private refreshImages(): void {
+    this.images = [...this.images];
   }
 
   cancelAddImage(): void {

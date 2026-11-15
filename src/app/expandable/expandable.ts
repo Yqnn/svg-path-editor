@@ -12,8 +12,10 @@ export class Expandable {
   readonly opened = model(true);
   readonly panelTitle = input('');
   readonly panelInfo = input('');
+  hasToggled = false;
 
   toggle() {
+    this.hasToggled = true;
     this.opened.update((opened) => !opened);
   }
 }

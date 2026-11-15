@@ -1,5 +1,6 @@
 dist
 node_modules
+.svg-path-editor-master
 .angular
 src/lib/dist
 package-lock.json

@@ -1,9 +1,8 @@
 <div style="display: flex; flex-direction: row; height: 100%">
   @if (isLeftPanelOpened) {
     <div
-      animate.enter="left-column-enter"
-      animate.leave="left-column-leave"
-      (animationend)="canvas()?.refreshCanvasSize()"
+      [animate.enter]="hasToggledLeftPanel ? 'left-column-enter' : ''"
+      [animate.leave]="hasToggledLeftPanel ? 'left-column-leave' : ''"
       class="left-column-wrapper"
     >
       <button mat-raised-button class="left-column-close" (click)="toggleLeftPanel()">
@@ -767,15 +766,16 @@
           style="margin: 0 16px; min-width: 100px"
           color="accent"
         >
-          <input matSliderThumb [(ngModel)]="image.opacity" />
+          <input
+            matSliderThumb
+            [ngModel]="image.opacity"
+            (ngModelChange)="setImageOpacity(image, $event)"
+          />
         </mat-slider>
         {{ image.opacity }}
       </div>
     </div>
-    <button
-      mat-menu-item
-      (click)="image.preserveAspectRatio = !image.preserveAspectRatio; $event.stopPropagation()"
-    >
+    <button mat-menu-item (click)="togglePreserveAspectRatio(image); $event.stopPropagation()">
       <mat-icon>aspect_ratio</mat-icon>
       <ng-container>Toggle Preserve Aspect Ratio</ng-container>
     </button>

@@ -8,6 +8,7 @@ import {
   OnInit,
   SimpleChanges,
   afterNextRender,
+  computed,
   inject,
   input,
   model,
@@ -52,6 +53,15 @@ export class Canvas implements OnInit, OnChanges {
   readonly showTicks = input(false);
   readonly draggedIsNew = input(false);
   readonly images = input<Image[]>([]);
+  // Safari does not repaint an existing SVG <image> when preserveAspectRatio
+  // changes. Recreating the element through a changing track key works around
+  // that browser bug; Chrome updates the existing element correctly without it.
+  readonly imageViews = computed(() =>
+    this.images().map((image, index) => ({
+      image,
+      key: `${index}-${image.preserveAspectRatio}`,
+    })),
+  );
   readonly editImages = input(true);
 
   readonly afterModelChange = output<void>();
@@ -66,6 +76,7 @@ export class Canvas implements OnInit, OnChanges {
   readonly hoverPosition = output<{ x: number; y: number } | undefined>();
   readonly cursorPosition = output<(Point & { decimals?: number }) | undefined>();
 
+  private resizeObserver?: ResizeObserver;
   draggedEvt: MouseEvent | TouchEvent | null = null;
   wheel$ = new Subject<WheelEvent>();
   dragWithoutClick = true;
@@ -99,6 +110,15 @@ export class Canvas implements OnInit, OnChanges {
 
   constructor() {
     afterNextRender(() => {
+      const parent = this.canvas.nativeElement.parentNode;
+      if (parent && typeof ResizeObserver !== 'undefined') {
+        this.resizeObserver = new ResizeObserver(() => {
+          this.refreshCanvasSize();
+          this.cd.markForCheck();
+        });
+        this.resizeObserver.observe(parent);
+      }
+
       this.refreshCanvasSize();
       this.cd.markForCheck();
     });
@@ -113,6 +133,7 @@ export class Canvas implements OnInit, OnChanges {
     window.addEventListener('resize', onResize);
     window.addEventListener('wheel', onWheel);
     this.destroyRef.onDestroy(() => {
+      this.resizeObserver?.disconnect();
       window.removeEventListener('resize', onResize);
       window.removeEventListener('wheel', onWheel);
     });
