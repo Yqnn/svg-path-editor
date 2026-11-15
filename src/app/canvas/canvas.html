@@ -78,15 +78,15 @@
     }
   }
   @if (!preview()) {
-    @for (im of images(); track im) {
+    @for (view of imageViews(); track view.key) {
       <svg:image
-        [attr.xlink:href]="im.data"
-        [attr.x]="min(im.x1, im.x2)"
-        [attr.y]="min(im.y1, im.y2)"
-        [attr.width]="abs(im.x2 - im.x1)"
-        [attr.height]="abs(im.y1 - im.y2)"
-        [attr.preserveAspectRatio]="im.preserveAspectRatio ? 'xMidYMid meet' : 'none'"
-        [style.opacity]="im.opacity"
+        [attr.xlink:href]="view.image.data"
+        [attr.x]="min(view.image.x1, view.image.x2)"
+        [attr.y]="min(view.image.y1, view.image.y2)"
+        [attr.width]="abs(view.image.x2 - view.image.x1)"
+        [attr.height]="abs(view.image.y1 - view.image.y2)"
+        [attr.preserveAspectRatio]="view.image.preserveAspectRatio ? 'xMidYMid meet' : 'none'"
+        [style.opacity]="view.image.opacity"
       />
     }
   }

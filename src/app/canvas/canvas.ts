@@ -8,6 +8,7 @@ import {
   OnInit,
   SimpleChanges,
   afterNextRender,
+  computed,
   inject,
   input,
   model,
@@ -52,6 +53,15 @@ export class Canvas implements OnInit, OnChanges {
   readonly showTicks = input(false);
   readonly draggedIsNew = input(false);
   readonly images = input<Image[]>([]);
+  // Safari does not repaint an existing SVG <image> when preserveAspectRatio
+  // changes. Recreating the element through a changing track key works around
+  // that browser bug; Chrome updates the existing element correctly without it.
+  readonly imageViews = computed(() =>
+    this.images().map((image, index) => ({
+      image,
+      key: `${index}-${image.preserveAspectRatio}`,
+    })),
+  );
   readonly editImages = input(true);
 
   readonly afterModelChange = output<void>();
