@@ -155,6 +155,8 @@ button.mat-mdc-icon-button.more-button {
   position: relative;
 
   > label {
+    user-select: none;
+    pointer-events: none;
     position: absolute;
     color: #c8c8c8;
     font-size: 8px;
